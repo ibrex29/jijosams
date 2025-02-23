@@ -42,3 +42,18 @@ export interface Manuscript {
     };
   };
 }
+
+export interface Meta {
+  page: number;
+  limit: number;
+  itemCount: number;
+  pageCount: number;
+  hasPreviousPage: boolean;
+  hasNextPage: boolean;
+}
+
+
+export interface PublishedManuscriptResponse {
+  data: Manuscript[];
+  meta : Meta;
+}

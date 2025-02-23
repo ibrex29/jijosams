@@ -35,7 +35,7 @@ export default function ManuscriptCard({ manuscript }: ManuscriptCardProps) {
   };
 
   return (
-    <div className="border-t-2 border-primary py-4 flex gap-4 items-start">
+    <div className="border-t-2 border-primary py-4 flex flex-col md:flex-row gap-4 items-start">
       {manuscript.formattedManuscript && (
         <Image
           src={"/images/manuscript_cover.png"}
@@ -59,8 +59,8 @@ export default function ManuscriptCard({ manuscript }: ManuscriptCardProps) {
             : ""}
         </p>
         <TruncatedText text={manuscript.abstract} limit={400} />
-        <div className="mt-2 flex items-center text-sm text-gray-900">
-          <span className="mr-4">
+        <div className="mt-2 flex flex-col md:flex-row items-start md:items-center text-sm text-gray-900">
+          <span className="mr-0 md:mr-4">
             DOI:{" "}
             <a
               href={manuscript.DOI}
@@ -71,7 +71,7 @@ export default function ManuscriptCard({ manuscript }: ManuscriptCardProps) {
               {manuscript.DOI}
             </a>
           </span>
-          <span className="text-blue-600">
+          <span className="text-blue-600 mt-2 md:mt-0">
             Downloads: {manuscript.downloadTimes}
           </span>
         </div>
