@@ -52,8 +52,15 @@ export interface Meta {
   hasNextPage: boolean;
 }
 
-
 export interface PublishedManuscriptResponse {
   data: Manuscript[];
-  meta : Meta;
+  meta: Meta;
+}
+
+export interface GetManuscriptByIdResponse extends Manuscript {
+  userId: string | null;
+  createdByUserId: string | null;
+  updatedByUserId: string | null;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  comments: any[]; // Define a more specific type if needed
 }

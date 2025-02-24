@@ -1,7 +1,7 @@
 "use server";
 
 import { baseUrl } from "@/constants/config";
-import { PublishedManuscriptResponse } from "@/types";
+import { GetManuscriptByIdResponse, PublishedManuscriptResponse } from "@/types";
 import { SortOrder } from "@/types/enum";
 import { request } from "@/utils/request";
 
@@ -38,3 +38,30 @@ export const getPublishedManuscript = async (
   );
   return response as Promise<PublishedManuscriptResponse>;
 };
+
+
+export const getPublishedManuscriptById = async (id : string)  => {
+  const response = request(
+    "GET",
+    `${baseUrl}/v1/publication/${id}`,
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },      
+    },
+  );
+  return response as Promise<GetManuscriptByIdResponse>; ;
+};
+
+export const updateDownloadCount = async (id: string) => {
+  const response = request(
+    "POST",
+    `${baseUrl}/v1/publication/${id}/download`,
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    },
+  );
+  return response;
+}

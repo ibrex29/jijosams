@@ -48,7 +48,7 @@ export default function ManuscriptCard({ manuscript }: ManuscriptCardProps) {
       <div>
         <h3
           className="text-black font-bold text-lg cursor-pointer"
-          onClick={() => router.push(`/details/${manuscript.id}`)}
+          onClick={() => router.push(`/manuscripts/details/${manuscript.id}`)}
         >
           {manuscript.title}
         </h3>
