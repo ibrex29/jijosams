@@ -117,6 +117,7 @@ export default function Navbar() {
                       <Link
                         href={`/manuscripts/details/${manuscript.id}`}
                         className="text-blue-600 hover:underline"
+                        onClick={() => setIsModalOpen(false)} 
                       >
                         {manuscript.title}
                       </Link>

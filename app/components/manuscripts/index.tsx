@@ -17,8 +17,8 @@ export default function VolumeIssueSelector() {
   const [page, setPage] = useState(1);
   const [query, setQuery] = useState("");
 
-  // Fetch volumes using useQuery
-  const { data: volumesData = [], isLoading: isLoadingVolumes } = useQuery({
+  // Fetch volumes
+  const { data: volumesData = [] as Volume[], isLoading: isLoadingVolumes } = useQuery({
     queryKey: ["volumes"],
     queryFn: async () => {
       const response = await getVolume();
@@ -27,16 +27,44 @@ export default function VolumeIssueSelector() {
     },
   });
 
+  // Restore selections from localStorage on mount
   useEffect(() => {
-    if (Array.isArray(volumesData) && volumesData.length > 0) {
-      setSelectedVolume(volumesData[0]);
-      if (volumesData[0].issues.length > 0) {
-        setSelectedIssue(volumesData[0].issues[0]);
+    const storedVolumeId = localStorage.getItem("selectedVolumeId");
+    const storedIssueId = localStorage.getItem("selectedIssueId");
+
+    if (volumesData.length > 0) {
+      let volume = (volumesData as Volume[])[0]; // Default to first volume
+      let issue = volume.issues[0] || null;
+
+      // Override with stored values if they exist and are valid
+      if (storedVolumeId) {
+        const foundVolume = volumesData.find((v: Volume) => v.id === storedVolumeId);
+        if (foundVolume) {
+          volume = foundVolume;
+          issue =
+            storedIssueId && foundVolume.issues.length
+              ? foundVolume.issues.find((i: Issue) => i.id === storedIssueId) ||
+                foundVolume.issues[0]
+              : null;
+        }
       }
+
+      setSelectedVolume(volume);
+      setSelectedIssue(issue);
     }
   }, [volumesData]);
 
-  // Fetch manuscripts based on selected volume, issue, and page
+  // Save selections to localStorage whenever they change
+  useEffect(() => {
+    if (selectedVolume) {
+      localStorage.setItem("selectedVolumeId", selectedVolume.id);
+    }
+    if (selectedIssue) {
+      localStorage.setItem("selectedIssueId", selectedIssue.id);
+    }
+  }, [selectedVolume, selectedIssue]);
+
+  // Fetch manuscripts
   const { data: manuscripts, isLoading: isLoadingManuscripts } = useQuery({
     queryKey: [
       "manuscripts",
@@ -74,12 +102,12 @@ export default function VolumeIssueSelector() {
                   className="mt-1 appearance-none w-full p-1 md:p-2 border border-primary bg-white rounded-lg text-gray-700 focus:ring-2 focus:ring-primary"
                   value={selectedVolume?.id || ""}
                   onChange={(e) => {
-                    const volume: Volume | undefined = volumesData.find(
+                    const volume = volumesData.find(
                       (v: Volume) => v.id === e.target.value,
                     );
                     setSelectedVolume(volume || null);
                     setSelectedIssue(volume?.issues[0] || null);
-                    setPage(1); // Reset page when volume changes
+                    setPage(1);
                   }}
                   disabled={isLoadingVolumes}
                 >
@@ -114,7 +142,7 @@ export default function VolumeIssueSelector() {
                       (i) => i.id === e.target.value,
                     );
                     setSelectedIssue(issue || null);
-                    setPage(1); // Reset page when issue changes
+                    setPage(1);
                   }}
                   disabled={
                     !selectedVolume || selectedVolume.issues.length === 0
@@ -161,7 +189,6 @@ export default function VolumeIssueSelector() {
       {selectedVolume && selectedIssue && (
         <div className="mt-6 space-y-6">
           {isLoadingManuscripts ? (
-            // Show 5 skeletons while loading
             [...Array(5)].map((_, index) => (
               <ManuscriptCardSkeleton key={index} />
             ))
