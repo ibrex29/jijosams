@@ -1,13 +1,15 @@
-import AboutUs from "./components/about";
-import AbstractIndexing from "./components/abstract_index";
-import FAQ from "./components/faq";
+import dynamic from "next/dynamic";
 import { HeroSection } from "./components/hero-section";
-import SpecialIssuesCarousel from "./components/recent-issues";
-import LatestArticles from "./components/recent-manuscripts";
+
+const AboutUs = dynamic(() => import("./components/about"));
+const AbstractIndexing = dynamic(() => import("./components/abstract_index"));
+const FAQ = dynamic(() => import("./components/faq"));
+const SpecialIssuesCarousel = dynamic(() => import("./components/recent-issues"));
+const LatestArticles = dynamic(() => import("./components/recent-manuscripts"));
 
 export default function Home() {
   return (
-    <div className="bg-white px-2  font-[family-name:var(--font-geist-sans)]">
+    <div className="bg-white px-2 font-[family-name:var(--font-geist-sans)]">
       <HeroSection />
       <AboutUs />
       <AbstractIndexing />

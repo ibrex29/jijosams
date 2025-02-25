@@ -64,3 +64,31 @@ export interface GetManuscriptByIdResponse extends Manuscript {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   comments: any[]; // Define a more specific type if needed
 }
+
+
+export interface Issue {
+  id: string;
+  name: string;
+  createdAt: string;
+  Volume?: {
+    name: string;
+  };
+}
+
+
+export interface RecentManuscript {
+    id: string;
+    title: string;
+    Authors: string[];
+    createdAt: string;
+    DOI?: string;
+    isActive: boolean;
+    Issue?: {
+      Volume?: {
+        name: string;
+      };
+      name: string;
+    };
+}
+  
+

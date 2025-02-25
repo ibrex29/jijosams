@@ -1,9 +1,16 @@
 "use server";
 
 import { baseUrl } from "@/constants/config";
-import { GetManuscriptByIdResponse, PublishedManuscriptResponse } from "@/types";
+import { GetManuscriptByIdResponse, Issue, Manuscript, PublishedManuscriptResponse } from "@/types";
 import { SortOrder } from "@/types/enum";
 import { request } from "@/utils/request";
+
+
+export interface GlobalSearchResponse {
+  data: Manuscript[];
+}
+
+
 
 export const getPublishedManuscript = async (
   sortOrder: SortOrder = SortOrder.Asc,
@@ -50,7 +57,7 @@ export const getPublishedManuscriptById = async (id : string)  => {
       },      
     },
   );
-  return response as Promise<GetManuscriptByIdResponse>; ;
+  return response as Promise<GetManuscriptByIdResponse>;
 };
 
 export const updateDownloadCount = async (id: string) => {
@@ -65,3 +72,50 @@ export const updateDownloadCount = async (id: string) => {
   );
   return response;
 }
+
+
+export const getRecentManuscriptById = async (limit : string)  => {
+  const response = request(
+    "GET",
+    `${baseUrl}/v1/publication/latest-publication`,
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },   
+      params: {
+        limit
+      } 
+    },
+  );
+  return response  ;
+};
+
+
+export const getRecentIssues = async (take : number) => {
+  const response = request(
+    "GET",
+    `${baseUrl}/v1/publication/latest-issues${take ? `?take=${take}` : ""}`,
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    },
+  );
+  return response as Promise<Issue[]>;
+};
+
+
+export const globalSearch = async (
+  search?: string, // Optional search term
+  isActive: boolean = true, // Default value set to true
+): Promise<GlobalSearchResponse> => {
+  return request("GET", `${baseUrl}/v1/publication/global-search`, {
+    headers: {
+      "Content-Type": "application/json",
+    },
+    params: {
+      ...(search ? { search } : {}), // Only include `search` if it's defined
+      isActive,
+    },
+  }) as Promise<GlobalSearchResponse>;
+};

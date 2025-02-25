@@ -1,26 +1,32 @@
 "use client";
+import { useEffect, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, Autoplay } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/pagination";
 import Image from "next/image";
+import { getRecentIssues } from "@/api/service/manuscript";
+import { Issue } from "@/types";
 
-const specialIssues = [
-  {
-    title: "Reconfigurable Intelligent Surface: Design and Applications",
-    editors: "Kwai-Man Luk and Kin Fai (Kenneth) Tong",
-    issueNumber: "2022-2",
-    image: "/images/manuscript_cover.png",
-  },
-  {
-    title: "Advances in Electromagnetic Theory",
-    editors: "Wei E. I. Sha",
-    issueNumber: "2022-1",
-    image: "/images/manuscript_cover.png",
-  },
-];
+
 
 export default function SpecialIssuesCarousel() {
+  const [issues, setIssues] = useState<Issue[]>([]);
+
+  useEffect(() => {
+    const fetchIssues = async () => {
+      try {
+        const response = await getRecentIssues(5);
+        console.log(response);
+        setIssues(response); // Directly set the response to the state
+      } catch (error) {
+        console.error("Error fetching recent issues:", error);
+      }
+    };
+
+    fetchIssues();
+  }, []);
+
   return (
     <div className="w-full max-w-5xl p-2 mx-auto bg-gray-100">
       <Swiper
@@ -30,28 +36,36 @@ export default function SpecialIssuesCarousel() {
         loop={true}
         className="bg-white flex justify-center items-center"
       >
-        {specialIssues.map((issue, index) => (
-          <SwiperSlide
-            key={index}
-            className="p-4 flex justify-center w-full flex-col items-center"
-          >
-            <div className="flex justify-center items-center">
-              <Image
-                src={issue.image}
-                alt={issue.title}
-                width={100}
-                height={150}
-              />
-            </div>
-            <div className="p-4 text-center">
-              <h3 className=" text-base font-semibold">{issue.title}</h3>
-              <p className="text-sm text-gray-600">Editors: {issue.editors}</p>
-              <p className="text-xs text-gray-500">
-                Special Issue {issue.issueNumber}
-              </p>
-            </div>
-          </SwiperSlide>
-        ))}
+        {issues?.length > 0 ? (
+          issues.map((issue) => (
+            <SwiperSlide
+              key={issue.id}
+              className="p-4 flex justify-center w-full flex-col items-center"
+            >
+              <div className="flex justify-center items-center">
+                <Image
+                  src="/images/manuscript_cover.png"
+                  alt={issue.name}
+                  width={100}
+                  height={150}
+                />
+              </div>
+              <div className="p-4 text-center">
+                <h3 className="text-base font-semibold">{issue.name}</h3>
+                <p className="text-sm text-gray-600">
+                  Volume: {issue.Volume?.name || "N/A"}
+                </p>
+                <p className="text-xs text-gray-500">
+                  Published: {new Date(issue.createdAt).toLocaleDateString()}
+                </p>
+              </div>
+            </SwiperSlide>
+          ))
+        ) : (
+          <div className="flex">
+           
+          </div>
+        )}
       </Swiper>
     </div>
   );
