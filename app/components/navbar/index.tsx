@@ -131,7 +131,7 @@ export default function Navbar() {
         </div>
 
         <div className="flex justify-center items-center space-x-6">
-          <div className="hidden lg:flex">
+          <div className="hidden lg:flex justify-center items-center space-x-2">
             <Button className="w-32">Sign Up</Button>
           <Link
             href="/login"
