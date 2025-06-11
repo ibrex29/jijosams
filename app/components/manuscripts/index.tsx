@@ -3,13 +3,14 @@
 import { useEffect, useState } from "react";
 import { CaretDown, MagnifyingGlass } from "@phosphor-icons/react";
 import { useQuery } from "@tanstack/react-query";
-import { getVolume } from "@/api/service/volume";
-import { getPublishedManuscript } from "@/api/service/manuscript";
+
 import ManuscriptCard from "../manuscript-card";
 import { Volume, Issue, Manuscript } from "@/types";
 import ManuscriptCardSkeleton from "../manuscript-card/loader";
 import VolumeDropdownSkeleton from "../loader/volume";
 import NoManuscriptPlaceholder from "./empty-catalogue";
+import { getPublishedManuscript } from "@/api/(landing-page)/manuscript";
+import { getVolume } from "@/api/(landing-page)/volume";
 
 export default function VolumeIssueSelector() {
   const [selectedVolume, setSelectedVolume] = useState<Volume | null>(null);
@@ -18,14 +19,15 @@ export default function VolumeIssueSelector() {
   const [query, setQuery] = useState("");
 
   // Fetch volumes
-  const { data: volumesData = [] as Volume[], isLoading: isLoadingVolumes } = useQuery({
-    queryKey: ["volumes"],
-    queryFn: async () => {
-      const response = await getVolume();
-      console.log("Fetched volumes:", response);
-      return response;
-    },
-  });
+  const { data: volumesData = [] as Volume[], isLoading: isLoadingVolumes } =
+    useQuery({
+      queryKey: ["volumes"],
+      queryFn: async () => {
+        const response = await getVolume();
+        console.log("Fetched volumes:", response);
+        return response;
+      },
+    });
 
   // Restore selections from localStorage on mount
   useEffect(() => {
@@ -38,7 +40,9 @@ export default function VolumeIssueSelector() {
 
       // Override with stored values if they exist and are valid
       if (storedVolumeId) {
-        const foundVolume = volumesData.find((v: Volume) => v.id === storedVolumeId);
+        const foundVolume = volumesData.find(
+          (v: Volume) => v.id === storedVolumeId,
+        );
         if (foundVolume) {
           volume = foundVolume;
           issue =

@@ -2,13 +2,13 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { FaRegClock } from "react-icons/fa";
-import { getRecentManuscriptById } from "@/api/service/manuscript";
+import { getRecentManuscriptById } from "@/api/(landing-page)/manuscript";
 import { RecentManuscript } from "@/types";
 import { useRouter } from "next/navigation";
 
 const LatestArticles = () => {
-    const router = useRouter();
-  
+  const router = useRouter();
+
   const [articles, setArticles] = useState<RecentManuscript[]>([]);
 
   useEffect(() => {
@@ -18,9 +18,7 @@ const LatestArticles = () => {
         // Ensure the data structure matches expectations
         if (response && Array.isArray(response.data)) {
           setArticles(response.data);
-        }
-        else
-        {
+        } else {
           console.error("Unexpected API response structure:", response);
         }
       } catch (error) {
@@ -43,7 +41,10 @@ const LatestArticles = () => {
           <h2 className="text-xl font-semibold text-gray-800">
             Latest Articles <span className="text-gray-600">› </span>
           </h2>
-          <button className="border border-gray-400 px-4 py-2 text-sm rounded-md hover:bg-gray-200" onClick={() => router.push("/manuscripts")}>
+          <button
+            className="border border-gray-400 px-4 py-2 text-sm rounded-md hover:bg-gray-200"
+            onClick={() => router.push("/manuscripts")}
+          >
             View All Manuscripts
           </button>
         </div>
@@ -53,19 +54,33 @@ const LatestArticles = () => {
           {articles
             .filter((article) => article.isActive) // Only show published articles
             .map((article) => (
-              <div key={article.id} className="bg-white p-4 rounded-lg shadow-sm border-t-2 border-primary">
-                <Image className="my-1" src={"/logo/slu_jst_logo.svg"} alt="slu-jst" width={120} height={15} />
+              <div
+                key={article.id}
+                className="bg-white p-4 rounded-lg shadow-sm border-t-2 border-primary"
+              >
+                <Image
+                  className="my-1"
+                  src={"/logo/slu_jst_logo.svg"}
+                  alt="slu-jst"
+                  width={120}
+                  height={15}
+                />
                 <div className="text-sm text-gray-600">
-                  {article.Issue?.Volume?.name && `Vol. ${article.Issue.Volume.name},`} {article.Issue?.name}
+                  {article.Issue?.Volume?.name &&
+                    `Vol. ${article.Issue.Volume.name},`}{" "}
+                  {article.Issue?.name}
                 </div>
                 <h3
                   className="text-lg font-semibold text-gray-800 hover:text-primary cursor-pointer mt-1"
-                  onClick={() => router.push(`/manuscripts/details/${article.id}`)}
-
+                  onClick={() =>
+                    router.push(`/manuscripts/details/${article.id}`)
+                  }
                 >
                   {article.title}
                 </h3>
-                <p className="text-sm text-gray-700 mt-1">{article.Authors?.join(", ")}</p>
+                <p className="text-sm text-gray-700 mt-1">
+                  {article.Authors?.join(", ")}
+                </p>
                 <div className="flex items-center text-gray-500 text-sm mt-2">
                   <FaRegClock className="mr-1" />
                   {new Date(article.createdAt).toLocaleDateString()}

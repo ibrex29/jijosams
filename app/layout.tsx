@@ -1,8 +1,6 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import Navbar from "./components/navbar";
-import Footer from "./components/footer";
-import QueryClientProvider from "@/contexts/ReactQueryProvider";
+import QueryClientProvider from "@/context/ReactQueryProvider";
 import { Metadata } from "next";
 
 const geistSans = Geist({
@@ -15,15 +13,23 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-
 export const metadata: Metadata = {
   title: "Sule Lamido University - Journal of Science and Technology",
-  description: "A peer-reviewed journal publishing cutting-edge research in science and technology from Sule Lamido University.",
-  keywords: ["Sule Lamido University", "Journal", "Science", "Technology", "Research", "Publications"],
+  description:
+    "A peer-reviewed journal publishing cutting-edge research in science and technology from Sule Lamido University.",
+  keywords: [
+    "Sule Lamido University",
+    "Journal",
+    "Science",
+    "Technology",
+    "Research",
+    "Publications",
+  ],
   authors: [{ name: "Sule Lamido University", url: "https://your-domain.com" }],
   openGraph: {
     title: "Sule Lamido University - Journal of Science and Technology",
-    description: "Explore research papers and scientific advancements at Sule Lamido University.",
+    description:
+      "Explore research papers and scientific advancements at Sule Lamido University.",
     url: "https://your-domain.com",
     siteName: "SLU Journal of Science and Technology",
     type: "website",
@@ -40,12 +46,11 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     site: "@your_twitter_handle",
     title: "Sule Lamido University - Journal of Science and Technology",
-    description: "Peer-reviewed scientific research from Sule Lamido University.",
+    description:
+      "Peer-reviewed scientific research from Sule Lamido University.",
     images: ["https://your-domain.com/images/twitter-card.jpg"],
   },
 };
-
-
 
 export default function RootLayout({
   children,
@@ -63,10 +68,8 @@ export default function RootLayout({
       >
         {" "}
         <QueryClientProvider>
-          <div className="min-h-screen flex flex-col">
-            <Navbar />
-            <main className="container flex-grow mx-auto px-4">{children}</main>
-            <Footer />
+          <div>
+            <main>{children}</main>
           </div>
         </QueryClientProvider>
       </body>

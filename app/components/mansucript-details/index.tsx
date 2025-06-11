@@ -5,8 +5,11 @@ import Image from "next/image";
 import Button from "../ui/button";
 import { useParams, useRouter } from "next/navigation";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { getPublishedManuscriptById, updateDownloadCount } from "@/api/service/manuscript";
 import { GetManuscriptByIdResponse } from "@/types";
+import {
+  getPublishedManuscriptById,
+  updateDownloadCount,
+} from "@/api/(landing-page)/manuscript";
 
 const SkeletonLoader = () => (
   <div className="animate-pulse">
@@ -25,8 +28,6 @@ const SkeletonImageLoader = () => (
     <div className="mt-2 h-10 w-48 bg-gray-300 rounded" />
   </div>
 );
-
-
 
 const ManuscriptDetails = () => {
   const params = useParams();
@@ -61,9 +62,14 @@ const ManuscriptDetails = () => {
             <SkeletonLoader />
           ) : (
             <>
-              <h2 className="text-xl font-semibold mt-4">{manuscript?.title}</h2>
+              <h2 className="text-xl font-semibold mt-4">
+                {manuscript?.title}
+              </h2>
               <p className="text-primary font-medium mt-1">
-                By {Array.isArray(manuscript?.Authors) ? manuscript.Authors.join(", ") : ""}
+                By{" "}
+                {Array.isArray(manuscript?.Authors)
+                  ? manuscript.Authors.join(", ")
+                  : ""}
               </p>
 
               <div className="mt-6 border-t-2 pt-4">
@@ -75,7 +81,10 @@ const ManuscriptDetails = () => {
 
               <div className="mt-6 border-t-2 pt-4 flex justify-between items-center">
                 <p className="text-sm italic">
-                  Citation: {Array.isArray(manuscript?.Authors) ? manuscript.Authors.join(", ") : ""}
+                  Citation:{" "}
+                  {Array.isArray(manuscript?.Authors)
+                    ? manuscript.Authors.join(", ")
+                    : ""}
                   , &quot;{manuscript?.title},&quot;.
                 </p>
               </div>
@@ -111,7 +120,9 @@ const ManuscriptDetails = () => {
                 <Button
                   outlined
                   className="w-full text-sm whitespace-nowrap"
-                  onClick={() => router.push(`${manuscript?.formattedManuscript}`)}
+                  onClick={() =>
+                    router.push(`${manuscript?.formattedManuscript}`)
+                  }
                 >
                   View Manuscript
                 </Button>

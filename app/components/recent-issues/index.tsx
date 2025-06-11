@@ -5,10 +5,8 @@ import { Pagination, Autoplay } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/pagination";
 import Image from "next/image";
-import { getRecentIssues } from "@/api/service/manuscript";
+import { getRecentIssues } from "@/api/(landing-page)/manuscript";
 import { Issue } from "@/types";
-
-
 
 export default function SpecialIssuesCarousel() {
   const [issues, setIssues] = useState<Issue[]>([]);
@@ -62,9 +60,7 @@ export default function SpecialIssuesCarousel() {
             </SwiperSlide>
           ))
         ) : (
-          <div className="flex">
-           
-          </div>
+          <div className="flex"></div>
         )}
       </Swiper>
     </div>

@@ -111,7 +111,6 @@ export function request(
     const path = params ? `${url}?${buildQueryString(params)}` : url;
     console.log("Final API URL:", path); // Debugging log
 
-
     // Perform the fetch request
     fetch(path, options)
       .then((response) =>

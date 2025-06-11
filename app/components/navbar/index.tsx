@@ -4,18 +4,21 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { MagnifyingGlass, X, List } from "@phosphor-icons/react";
 import Button from "../ui/button";
-import { Manuscript } from "@/types"; 
-import { globalSearch } from "@/api/service/manuscript";
+import { Manuscript } from "@/types";
+import { globalSearch } from "@/api/(landing-page)/manuscript";
 import { useMutation } from "@tanstack/react-query";
 
 export default function Navbar() {
   const [query, setQuery] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
-    const [isMenuOpen, setIsMenuOpen] = useState(false); 
-
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   // Mutation for fetching search results
-  const { mutate, data: searchResults, status } = useMutation({
+  const {
+    mutate,
+    data: searchResults,
+    status,
+  } = useMutation({
     mutationFn: globalSearch,
     onSuccess: (response) => {
       console.log("Search results:", response);
@@ -61,7 +64,7 @@ export default function Navbar() {
               height={100}
             />
           </Link>
-          <div className="hidden lg:flex space-x-6">
+          <div className="hidden lg:flex lg:space-x-2 xl:space-x-6">
             <Link href="/" className="text-gray-700 hover:text-primary">
               Home
             </Link>
@@ -83,90 +86,113 @@ export default function Navbar() {
           </div>
         </div>
 
-        {/* Search Input */}
-        <div className="hidden lg:flex relative w-full max-w-md">
-          <input
-            type="text"
-            placeholder="Search manuscripts..."
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 border-2 border-[#9e6962] rounded-lg focus:outline-none focus:ring-1 focus:ring-[#AC3122]"
-          />
-          <MagnifyingGlass
-            size={20}
-            className="absolute left-3 top-1/2 transform -translate-y-1/2 text-light-blue-500"
-          />
-          {/* Search Results Modal */}
-          {isModalOpen && (
-            <div className="absolute left-0 right-0 mt-12 bg-white rounded-lg shadow-lg p-6 max-h-80 overflow-y-auto z-50">
-              <div className="flex justify-end items-center mb-4">
-                {/* <button
+        <div className="flex items-center space-x-4 xl:space-x-6">
+          {/* Search Input */}
+          <div className="hidden w-64 lg:flex relative ">
+            <input
+              type="text"
+              placeholder="Search manuscripts..."
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              className="w-full pl-10 pr-4 py-2 border-2 border-[#9e6962] rounded-lg focus:outline-none focus:ring-1 focus:ring-[#AC3122]"
+            />
+            <MagnifyingGlass
+              size={20}
+              className="absolute left-3 top-1/2 transform -translate-y-1/2 text-light-blue-500"
+            />
+            {/* Search Results Modal */}
+            {isModalOpen && (
+              <div className="absolute left-0 right-0 mt-12 bg-white rounded-lg shadow-lg p-6 max-h-80 overflow-y-auto z-50">
+                <div className="flex justify-end items-center mb-4">
+                  {/* <button
                   className="text-gray-600 hover:text-gray-900"
                   onClick={() => setIsModalOpen(false)}
                 >
                   <X size={24} />
                 </button> */}
+                </div>
+
+                {status === "pending" ? (
+                  <p className="text-gray-500">Loading...</p>
+                ) : searchResults?.data && searchResults.data.length > 0 ? (
+                  <ul>
+                    {searchResults?.data.map((manuscript: Manuscript) => (
+                      <li key={manuscript.id} className="mb-2">
+                        <Link
+                          href={`/manuscripts/details/${manuscript.id}`}
+                          className="text-blue-600 hover:underline"
+                          onClick={() => setIsModalOpen(false)}
+                        >
+                          {manuscript.title}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="text-gray-500">No results found.</p>
+                )}
               </div>
-
-              {status === 'pending' ? (
-                <p className="text-gray-500">Loading...</p>
-              ) : searchResults?.data && searchResults.data.length > 0 ? (
-                <ul>
-                  {searchResults?.data.map((manuscript: Manuscript) => (
-                    <li key={manuscript.id} className="mb-2">
-                      <Link
-                        href={`/manuscripts/details/${manuscript.id}`}
-                        className="text-blue-600 hover:underline"
-                        onClick={() => setIsModalOpen(false)} 
-                      >
-                        {manuscript.title}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              ) : (
-                <p className="text-gray-500">No results found.</p>
-              )}
-            </div>
-          )}
-        </div>
-
-        <div className="flex justify-center items-center space-x-6">
-          <div className="hidden lg:flex justify-center items-center space-x-2">
-            <Button className="w-32">Sign Up</Button>
-          <Link
-            href="/login"
-            className="text-black font-bold hover:text-primary whitespace-nowrap"
-          >
-            Log in
-          </Link>
+            )}
           </div>
-          {/* Mobile Menu Button */}
-        <button className="lg:hidden text-gray-700" onClick={() => setIsMenuOpen(!isMenuOpen)}>
-          {isMenuOpen ? <X size={32} /> : <List size={32} />}
-        </button>
 
+          <div className="flex justify-center items-center space-x-6">
+            <div className="hidden lg:flex justify-center items-center space-x-2">
+              <Button className="w-24">sign up</Button>
+              <Link
+                href="/signin"
+                className="text-black px-4 py-2 rounded-lg bg-[#f1e7e7] font-bold hover:text-primary whitespace-nowrap"
+              >
+                login
+              </Link>
+            </div>
+            {/* Mobile Menu Button */}
+            <button
+              className="lg:hidden text-gray-700"
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+            >
+              {isMenuOpen ? <X size={32} /> : <List size={32} />}
+            </button>
+          </div>
         </div>
       </div>
-       {/* Mobile Menu Overlay */}
+      {/* Mobile Menu Overlay */}
       {isMenuOpen && (
         <div className="lg:hidden fixed inset-0 bg-primary z-50 p-6 flex flex-col items-center space-y-6">
           {/* Close Button */}
-          <button className="absolute top-4 right-6 text-white" onClick={() => setIsMenuOpen(false)}>
+          <button
+            className="absolute top-4 right-6 text-white"
+            onClick={() => setIsMenuOpen(false)}
+          >
             <X size={32} />
           </button>
 
           {/* Mobile Links */}
-          <Link href="/" className="text-white text-lg hover:text-primary" onClick={() => setIsMenuOpen(false)}>
+          <Link
+            href="/"
+            className="text-white text-lg hover:text-primary"
+            onClick={() => setIsMenuOpen(false)}
+          >
             Home
           </Link>
-          <Link href="/manuscripts" className="text-white text-lg hover:text-primary" onClick={() => setIsMenuOpen(false)}>
+          <Link
+            href="/manuscripts"
+            className="text-white text-lg hover:text-primary"
+            onClick={() => setIsMenuOpen(false)}
+          >
             Manuscript
           </Link>
-          <Link href="/about-us" className="text-white text-lg hover:text-primary" onClick={() => setIsMenuOpen(false)}>
+          <Link
+            href="/about-us"
+            className="text-white text-lg hover:text-primary"
+            onClick={() => setIsMenuOpen(false)}
+          >
             About Us
           </Link>
-          <Link href="/contact-us" className="text-white text-lg hover:text-primary" onClick={() => setIsMenuOpen(false)}>
+          <Link
+            href="/contact-us"
+            className="text-white text-lg hover:text-primary"
+            onClick={() => setIsMenuOpen(false)}
+          >
             Contact Us
           </Link>
 
@@ -184,7 +210,10 @@ export default function Navbar() {
 
           {/* Mobile Auth Buttons */}
           <Button className="w-full  text-black max-w-xs">Sign Up</Button>
-          <Link href="/login" className="text-black font-bold hover:text-primary">
+          <Link
+            href="/login"
+            className="text-black font-bold hover:text-primary"
+          >
             Log in
           </Link>
         </div>
