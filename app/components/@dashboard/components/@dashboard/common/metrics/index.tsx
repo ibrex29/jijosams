@@ -1,7 +1,7 @@
 import { Grid } from "@mui/material";
 import { useEffect, useState } from "react";
 
-import { getAuthorMetrics } from "@/app/api/manuscript";
+import { getAuthorMetrics } from "@/api/manuscript";
 
 import { Approved } from "./cards/Approved";
 import { AwaitingReview } from "./cards/AwaitingReview";

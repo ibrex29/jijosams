@@ -1,4 +1,4 @@
-import CEHome from "@/app/components/@dashboard/@editor-in-chief/home";
+import CEHome from "@/app/components/@dashboard/components/@dashboard/@editor-in-chief/home";
 
 export const metadata = {
   title: "Dashboard",

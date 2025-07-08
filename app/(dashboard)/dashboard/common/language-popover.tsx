@@ -51,9 +51,8 @@ const LanguageMenuItem: React.FC<LanguageMenuItemProps> = ({
   </MenuItem>
 );
 
-interface LanguagePopoverProps {}
 
-const LanguagePopover: React.FC<LanguagePopoverProps> = () => {
+const LanguagePopover: React.FC = () => {
   const [open, setOpen] = useState<null | HTMLElement>(null);
 
   const handleOpen = (event: MouseEvent<HTMLButtonElement>) => {

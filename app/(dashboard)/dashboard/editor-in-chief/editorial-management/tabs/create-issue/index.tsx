@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
 import {
@@ -17,10 +18,10 @@ import {
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 
-import { createIssue, deleteIssue, editIssue, getVolumes } from "@/app/api/volume";
-import { getIssues } from "@/app/api/volume";
-import useNotification from "@/app/hooks/useNotification";
-import { IssueProps,VolumeProps } from "@/app/types";
+import { createIssue, deleteIssue, editIssue, getVolumes } from "@/api/volume";
+import { getIssues } from "@/api/volume";
+import useNotification from "@/hooks/useNotification";
+import { IssueProps,VolumeProps } from "@/types";
 
 import IssueCard from "../../components/issue-card";
 

@@ -1,5 +1,5 @@
 "use client";
-import { Visibility, VisibilityOff } from "@mui/icons-material"; // Import icons for visibility toggle
+import { Visibility, VisibilityOff } from "@mui/icons-material"; 
 import {
   Box,
   Button,
@@ -14,10 +14,10 @@ import {
 import { useEffect,useState } from "react";
 import { Controller,useForm } from "react-hook-form";
 
-import { getSection } from "@/app/api/sections";
-import { createUser } from "@/app/api/users";
-import useNotification from "@/app/hooks/useNotification";
-import { UserRole } from "@/app/types";
+import { getSection } from "@/api/sections";
+import { createUser } from "@/api/users";
+import useNotification from "@/hooks/useNotification";
+import { UserRole } from "@/types";
 
 type FormValues = {
   title: string;

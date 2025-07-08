@@ -25,11 +25,11 @@ import {
   createReview,
   getRecommendation,
   getReviewStatus,
-} from "@/app/api/reviewer";
-import useNotification from "@/app/hooks/useNotification";
-import { ManuscriptProps } from "@/app/types";
-import { formatDate, getInitials, truncateText } from "@/app/utils";
-import { fDate } from "@/app/utils/format-time";
+} from "@/api/reviewer";
+import useNotification from "@/hooks/useNotification";
+import { ManuscriptProps } from "@/types";
+import { formatDate, getInitials, truncateText } from "@/utils";
+import { fDate } from "@/utils/format-time";
 
 import Chat from "../chats";
 

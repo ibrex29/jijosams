@@ -1,11 +1,11 @@
 import { Box } from "@mui/material";
 
-import ManuscriptSubHeader from "@/app/components/@dashboard/common/sub-header/my-manuscript";
-import { ManuscriptProps } from "@/app/types";
+import { ManuscriptProps } from "@/types";
 import noResultIcon from "@/public/images/no_upcoming.svg";
 import noManuscriptIcon from "@/public/images/no-tickets.svg";
 
 import ManuscriptContent from "./card-content";
+import ManuscriptSubHeader from "@/app/components/@dashboard/components/@dashboard/common/sub-header/my-manuscript";
 
 interface ManuscriptDisplayProps {
   manuscripts: ManuscriptProps[];

@@ -1,4 +1,4 @@
-import CloseIcon from "@mui/icons-material/Close"; // Import the Close icon
+import CloseIcon from "@mui/icons-material/Close"; 
 import {
   Box,
   Card,
@@ -10,8 +10,8 @@ import {
 } from "@mui/material";
 import { useEffect, useState } from "react";
 
-import { getSection } from "@/app/api/sections";
-import { ManuscriptProps, SectionProps } from "@/app/types";
+import { getSection } from "@/api/sections";
+import { ManuscriptProps, SectionProps } from "@/types";
 
 interface SectionModalProps {
   manuscript: ManuscriptProps;

@@ -1,3 +1,4 @@
+import EditIcon from "@/app/components/@dashboard/components/icons/editIcon";
 import {
   Box,
   Card,
@@ -8,7 +9,6 @@ import {
 } from "@mui/material";
 import React from "react";
 
-import EditIcon from "@/app/components/icons/editIcon";
 
 interface SectionCardProps {
   name: string;

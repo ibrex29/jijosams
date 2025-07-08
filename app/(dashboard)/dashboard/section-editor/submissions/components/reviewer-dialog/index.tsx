@@ -5,8 +5,8 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs, { Dayjs } from "dayjs";
 import { useEffect, useState } from "react";
 
-import { getReviewer } from "@/app/api/sections";
-import { ManuscriptProps, Reviewer } from "@/app/types";
+import { getReviewer } from "@/api/sections";
+import { ManuscriptProps, Reviewer } from "@/types";
 
 interface ReviewerModalProps {
   manuscript: ManuscriptProps;

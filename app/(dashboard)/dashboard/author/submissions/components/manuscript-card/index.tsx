@@ -16,12 +16,12 @@ import {
 import { useState } from "react";
 
 import Chat from "@/app/(dashboard)/dashboard/author/submissions/components/chats";
-import { getReviewStatus } from "@/app/api/reviewer";
-import Iconify from "@/app/components/@dashboard/iconify";
-import useNotification from "@/app/hooks/useNotification";
-import { ManuscriptProps } from "@/app/types";
-import { getInitials, truncateText } from "@/app/utils";
-import { fDate } from "@/app/utils/format-time";
+import { getReviewStatus } from "@/api/reviewer";
+import useNotification from "@/hooks/useNotification";
+import { ManuscriptProps } from "@/types";
+import { getInitials, truncateText } from "@/utils";
+import { fDate } from "@/utils/format-time";
+import Iconify from "@/app/components/@dashboard/components/@dashboard/iconify";
 
 interface Props {
   manuscript: ManuscriptProps;

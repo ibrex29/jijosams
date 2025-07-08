@@ -9,7 +9,7 @@ import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import { useEffect, useState } from "react";
 
-import { getUserDetails } from "@/app/utils/getUserDetails";
+import { getUserDetails } from "@/utils/getUserDetails";
 
 export default function AvatarPopover() {
   const [userDetails, setUserDetails] = useState<{ email: string; role: string }>({

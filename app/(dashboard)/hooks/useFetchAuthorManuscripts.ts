@@ -1,8 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
 import React from "react";
 
-import { getAuthorManuscripts } from "@/app/api/manuscript";
-import { ManuscriptProps } from "@/app/types"; // Ensure this is the correct type
+import { getAuthorManuscripts } from "@/api/manuscript";
+import { ManuscriptProps } from "@/types"; 
 
 const useFetchManuscripts = () => {
   const [manuscripts, setManuscripts] = React.useState<ManuscriptProps[]>([]);

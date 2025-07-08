@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 import {
   Box,
@@ -12,9 +13,9 @@ import {
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 
-import { createSection, editSection, getSection } from "@/app/api/sections";
-import useNotification from "@/app/hooks/useNotification";
-import { SectionProps } from "@/app/types";
+import { createSection, editSection, getSection } from "@/api/sections";
+import useNotification from "@/hooks/useNotification";
+import { SectionProps } from "@/types";
 
 import SectionCard from "../../components/section-card";
 

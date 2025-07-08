@@ -8,7 +8,7 @@ import Typography from "@mui/material/Typography";
 import { Notebook as BookIcon } from "@phosphor-icons/react";
 import * as React from "react";
 
-import theme from "@/app/config/theme";
+import theme from "@/config/theme";
 
 export interface BudgetProps {
   sx?: SxProps;

@@ -1,3 +1,4 @@
+import EditIcon from "@/app/components/@dashboard/components/icons/editIcon";
 import DeleteIcon from "@mui/icons-material/Delete";
 import {
   Box,
@@ -9,7 +10,6 @@ import {
 } from "@mui/material";
 import React from "react";
 
-import EditIcon from "@/app/components/icons/editIcon";
 
 interface VolumeCardProps {
   name: string;

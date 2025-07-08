@@ -6,8 +6,7 @@ import Stack from "@mui/material/Stack";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-import Scrollbar from "@/app/components/@dashboard/scrollbar";
-import theme from "@/app/config/theme";
+import theme from "@/config/theme";
 
 import { useResponsive } from "../hooks/use-responsive";
 import { NAV } from "./config-layout";
@@ -19,6 +18,7 @@ import {
   reviewerNavConfig,
   sectionEditorNavConfig,
 } from "./config-navigation";
+import Scrollbar from "@/app/components/@dashboard/components/@dashboard/scrollbar";
 
 interface NavItemProps {
   item: {

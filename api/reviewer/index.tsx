@@ -1,7 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use server";
 
-import { author, baseUrl, reviewer } from "@/app/constants/config";
-import { request } from "@/app/utils/request";
+import { author, baseUrl, reviewer } from "@/constants/config";
+import { request } from "@/utils/request";
 
 import { fetchData, getBearerHeader } from "../call-methods";
 
@@ -53,7 +54,7 @@ export const openReview = async (reviewId: string) => {
   }
 };
 
-export const getRecommendation = () => fetchData(reviewer.getRecommendation);
+export const getRecommendation = async () => fetchData(reviewer.getRecommendation);
 
 export const getReviewStatus = async (manuscriptId: string) => {
   const bearerHeader = await getBearerHeader();

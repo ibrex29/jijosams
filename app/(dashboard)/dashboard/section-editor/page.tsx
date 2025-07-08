@@ -1,4 +1,4 @@
-import SectionEditorHome from "@/app/components/@dashboard/@section-editor/home";
+import SectionEditorHome from "@/app/components/@dashboard/components/@dashboard/@section-editor/home";
 
 export const metadata = {
   title: "Dashboard || Section Editor",

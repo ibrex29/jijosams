@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 import {
   Box,
@@ -12,9 +13,9 @@ import {
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 
-import { createVolume, deleteVolume,editVolume  , getVolumes  } from "@/app/api/volume";
-import useNotification from "@/app/hooks/useNotification";
-import {  VolumeProps } from "@/app/types";
+import { createVolume, deleteVolume,editVolume  , getVolumes  } from "@/api/volume";
+import useNotification from "@/hooks/useNotification";
+import {  VolumeProps } from "@/types";
 
 import VolumeCard from "../../components/volume-card";
 

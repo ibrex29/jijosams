@@ -1,7 +1,7 @@
 import { Typography } from "@mui/material";
 import React from "react";
 
-import { Status } from "@/app/types";
+import { Status } from "@/types";
 
 const statusMap: Record<Status, { color: string; backgroundColor: string }> = {
   [Status.ALL]: { color: "text.primary", backgroundColor: "background.paper" },

@@ -8,9 +8,9 @@ import {
 } from "@mui/material";
 import { useEffect, useState } from "react";
 
-import { createAuthorReply, getReplies } from "@/app/api/reviewer";
-import { Review } from "@/app/types";
-import { formatDate } from "@/app/utils";
+import { createAuthorReply, getReplies } from "@/api/reviewer";
+import { Review } from "@/types";
+import { formatDate } from "@/utils";
 
 interface ChatProps {
   manuscriptId: string;

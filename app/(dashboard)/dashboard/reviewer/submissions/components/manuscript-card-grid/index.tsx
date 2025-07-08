@@ -1,7 +1,7 @@
 import { Box, Grid } from "@mui/material";
 import { useState } from "react";
 
-import { ManuscriptProps } from "@/app/types";
+import { ManuscriptProps } from "@/types";
 
 import ReviewerManuscriptCard from "../manuscript-card";
 

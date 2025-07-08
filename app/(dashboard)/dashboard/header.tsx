@@ -6,8 +6,7 @@ import { useTheme } from "@mui/material/styles";
 import Toolbar from "@mui/material/Toolbar";
 import React from "react";
 
-import Iconify from "@/app/components/@dashboard/iconify";
-import { bgBlur } from "@/app/config/theme/styles";
+
 
 import { useResponsive } from "../hooks/use-responsive";
 import AvatarPopover from "./common/avatar-popover";
@@ -15,6 +14,8 @@ import CaretPopover from "./common/caret-popover";
 import Searchbar from "./common/searchbar";
 // import LanguagePopover from './common/language-popover';
 import { HEADER, NAV } from "./config-layout";
+import Iconify from "@/app/components/@dashboard/components/@dashboard/iconify";
+import { bgBlur } from "@/config/theme/styles";
 
 // ----------------------------------------------------------------------
 

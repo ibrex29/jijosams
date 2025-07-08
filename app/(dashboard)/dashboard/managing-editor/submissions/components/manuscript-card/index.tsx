@@ -10,10 +10,10 @@ import {
   Typography,
 } from "@mui/material";
 
-import Iconify from "@/app/components/@dashboard/iconify";
-import { ManuscriptProps } from "@/app/types";
-import { getInitials, truncateText } from "@/app/utils";
-import { fDate } from "@/app/utils/format-time";
+import { ManuscriptProps } from "@/types";
+import { getInitials, truncateText } from "@/utils";
+import { fDate } from "@/utils/format-time";
+import Iconify from "@/app/components/@dashboard/components/@dashboard/iconify";
 
 interface Props {
   manuscript: ManuscriptProps;

@@ -8,7 +8,7 @@ import Typography from "@mui/material/Typography";
 import { FileText as FileTextIcon } from "@phosphor-icons/react";
 import * as React from "react";
 
-import theme from "@/app/config/theme";
+import theme from "@/config/theme";
 
 export interface ApprovedProps {
   sx?: SxProps;

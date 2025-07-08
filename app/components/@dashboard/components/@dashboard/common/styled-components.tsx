@@ -1,6 +1,6 @@
 import { Box as BaseBox, Typography } from "@mui/material";
 
-import { ComponentProps } from "@/app/types";
+import { ComponentProps } from "@/types";
 
 export function MainBox({ children }: ComponentProps) {
   return (

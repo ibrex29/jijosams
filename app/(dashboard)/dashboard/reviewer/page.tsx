@@ -1,4 +1,4 @@
-import ReviewerHome from "@/app/components/@dashboard/@reviewer/home";
+import ReviewerHome from "@/app/components/@dashboard/components/@dashboard/@reviewer/home";
 
 export const metadata = {
   title: "Dashboard",

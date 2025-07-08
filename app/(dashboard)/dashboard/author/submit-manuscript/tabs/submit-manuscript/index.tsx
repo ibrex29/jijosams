@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import {
@@ -12,14 +14,14 @@ import { useMutation } from "@tanstack/react-query";
 import React, { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 
-import { submitManuscript } from "@/app/api/manuscript";
-import Loader from "@/app/components/loader";
-import useNotification from "@/app/hooks/useNotification";
-import { SubmitManuscriptProps } from "@/app/types";
+import { submitManuscript } from "@/api/manuscript";
+import { SubmitManuscriptProps } from "@/types";
 
 import ContactInfoStep from "../../components/contact-info";
 import FileUploadStep from "../../components/files-upload";
 import ManuscriptInfoStep from "../../components/manuscript-info";
+import Loader from "@/app/components/@dashboard/components/loader";
+import useNotification from "@/hooks/useNotification";
 
 const steps = ["Contact Information", "File Uploads", "Manuscript Information"];
 

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import Box from "@mui/material/Box";
 import { forwardRef, memo, Ref } from "react";
 
@@ -36,5 +37,7 @@ const Scrollbar = forwardRef(
     );
   },
 );
+
+Scrollbar.displayName = "Scrollbar";
 
 export default memo(Scrollbar);

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Icon } from "@iconify/react";
 import Box from "@mui/material/Box";
 import { forwardRef, ReactNode, Ref } from "react";
@@ -21,5 +22,7 @@ const Iconify = forwardRef(
     />
   ),
 );
+
+Iconify.displayName = "Iconify";
 
 export default Iconify;

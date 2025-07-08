@@ -9,7 +9,7 @@ import { request } from "@/utils/request";
 import { authOptions } from "../auth/[...nextauth]/options";
 import { fetchData } from "../call-methods";
 
-export const getSection = () => fetchData(api.getSection);
+export const getSection = async  () => fetchData(api.getSection);
 
 export const getReviewer = async () => {
   const session = await getServerSession(authOptions);

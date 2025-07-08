@@ -1,4 +1,4 @@
-import MoreVertIcon from "@mui/icons-material/MoreVert"; // Three-dot icon
+import MoreVertIcon from "@mui/icons-material/MoreVert"; 
 import {
   Avatar,
   Box,
@@ -12,9 +12,9 @@ import {
 } from "@mui/material";
 import { useEffect, useState } from "react";
 
-import { closeReview, createReviewerReply, getReplies, openReview } from "@/app/api/reviewer";
-import { Review } from "@/app/types";
-import { formatDate } from "@/app/utils";
+import { closeReview, createReviewerReply, getReplies, openReview } from "@/api/reviewer";
+import { Review } from "@/types";
+import { formatDate } from "@/utils";
 
 interface ChatProps {
   manuscriptId: string;

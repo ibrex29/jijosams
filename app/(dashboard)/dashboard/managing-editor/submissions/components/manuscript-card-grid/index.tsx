@@ -1,8 +1,8 @@
 import { Box, Grid } from "@mui/material";
 import { useState } from "react";
 
-import { assignManuscriptSection } from "@/app/api/manuscript/assign-manuscript";
-import { ManuscriptProps } from "@/app/types";
+import { assignManuscriptSection } from "@/api/manuscript/assign-manuscript";
+import { ManuscriptProps } from "@/types";
 
 import SectionModal from "../../../sections/components/section-dialog";
 import MEManuscriptCard from "../manuscript-card";

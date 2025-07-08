@@ -16,11 +16,12 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { getSession, signOut } from "next-auth/react";  
 import { MouseEvent, useEffect, useState } from "react";
+import Iconify from "@/app/components/@dashboard/components/@dashboard/iconify";
+import StyledButton from "@/app/components/@dashboard/components/button";
+import { baseUrl } from "@/constants/config";
+import { getUserDetails } from "@/utils/getUserDetails";
 
-import Iconify from "@/app/components/@dashboard/iconify";
-import StyledButton from "@/app/components/styled-button";
-import { baseUrl } from "@/app/constants/config";
-import { getUserDetails } from "@/app/utils/getUserDetails";
+
 
 const MENU_PERSONAL = [
   {
@@ -71,6 +72,8 @@ export default function CaretPopover() {
             "Authorization": `Bearer ${session.token}`,
           },
         });
+
+        console.log("Custom logout API response:", response);
 
         if (!response.ok) {
           console.error("Custom logout API failed.");
@@ -197,8 +200,6 @@ export default function CaretPopover() {
             endIcon={<LogoutTwoTone />}
             color="secondary"
             onClick={() => setOpenDialog(true)} // Open the logout confirmation dialog
-            fullWidth
-            capitalize
           >
             Logout
           </StyledButton>

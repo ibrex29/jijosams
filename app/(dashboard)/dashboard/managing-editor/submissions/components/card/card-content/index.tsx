@@ -1,4 +1,4 @@
-import { ManuscriptProps } from "@/app/types";
+import { ManuscriptProps } from "@/types";
 
 import ManuscriptCardGrid from "../../manuscript-card-grid";
 import NoTicket from "../../no-manuscript";
