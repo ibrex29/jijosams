@@ -7,11 +7,13 @@ import Button from "../ui/button";
 import { Manuscript } from "@/types";
 import { globalSearch } from "@/app/api/(landing-page)/manuscript";
 import { useMutation } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
 
 export default function Navbar() {
   const [query, setQuery] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const router = useRouter();
 
   // Mutation for fetching search results
   const {
@@ -137,8 +139,12 @@ export default function Navbar() {
 
           <div className="flex justify-center items-center space-x-6">
             <div className="hidden lg:flex justify-center items-center space-x-2">
-              <Button className="w-24">sign up</Button>
+              <Button
+                className="w-24"
+                onClick={()=>router.push("/signup")}
+              >sign up</Button>
               <Link
+                
                 href="/signin"
                 className="text-black px-4 py-2 rounded-lg bg-[#f1e7e7] font-bold hover:text-primary whitespace-nowrap"
               >
@@ -209,7 +215,10 @@ export default function Navbar() {
           </div> */}
 
           {/* Mobile Auth Buttons */}
-          <Button className="w-full  text-black max-w-xs">Sign Up</Button>
+          <Button
+            className="w-full  text-black max-w-xs"
+            onClick={()=>router.push("/signup")}
+          >Sign Up</Button>
           <Link
             href="/login"
             className="text-black font-bold hover:text-primary"
