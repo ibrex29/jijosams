@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 import { useEffect, useState } from "react";
 
-import { getSection } from "@/api/sections";
+import { getSection } from "@/app/api/sections";
 import { ManuscriptProps, SectionProps } from "@/types";
 
 interface SectionModalProps {

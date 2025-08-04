@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import React from "react";
 
-import { getAllManuscripts } from "@/api/manuscript";
+import { getAllManuscripts } from "@/app/api/manuscript";
 import { ManuscriptProps } from "@/types"; 
 
 const useFetchManuscripts = () => {

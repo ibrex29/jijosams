@@ -25,7 +25,7 @@ import {
   createReview,
   getRecommendation,
   getReviewStatus,
-} from "@/api/reviewer";
+} from "@/app/api/reviewer";
 import useNotification from "@/hooks/useNotification";
 import { ManuscriptProps } from "@/types";
 import { formatDate, getInitials, truncateText } from "@/utils";
@@ -47,7 +47,7 @@ export default function ReviewerManuscriptCard({
   const {
     title,
     keywords,
-    author,
+    authorName,
     coAuthor,
     status,
     createdAt,
@@ -173,7 +173,7 @@ export default function ReviewerManuscriptCard({
           <CardContent>
             <Box display="flex" flexDirection="row" height={250} gap={2} mt={2}>
               <Avatar sx={{ width: 60, height: 60, bgcolor: "primary.main" }}>
-                {getInitials(author.toUpperCase())}
+                {getInitials(authorName.toUpperCase())}
               </Avatar>
               <Stack direction="column" mt={1} width="100%">
                 <Typography
@@ -205,7 +205,7 @@ export default function ReviewerManuscriptCard({
                   }}
                   gutterBottom
                 >
-                  Author: {author}
+                  Author: {authorName}
                 </Typography>
                 <Typography
                   sx={{

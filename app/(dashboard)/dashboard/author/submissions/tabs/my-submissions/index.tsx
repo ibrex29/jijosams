@@ -7,6 +7,7 @@ import ManuscriptsDisplay from "../../components/card";
 const MyManuscriptTab: React.FC = () => {
   const { manuscripts, isFetching, availableManuscripts } =
     useFetchAuthorManuscripts();
+  console.log("MyManuscriptTab", manuscripts, isFetching, availableManuscripts);
 
   return (
     <ManuscriptsDisplay

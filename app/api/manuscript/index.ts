@@ -54,7 +54,7 @@ export const getAuthorManuscripts = async (): Promise<ManuscriptProps[]> => {
     },
   });
 
-  return response as Promise<ManuscriptProps[]>;
+  return response.data as Promise<ManuscriptProps[]>;
 };
 
 export const getAllManuscripts = async (): Promise<ManuscriptProps[]> => {
@@ -93,6 +93,19 @@ export const getREManuscript = async () => {
     },
   });
 
+  return response;
+};
+
+
+export const publishManuscript = async (payload: any) => {
+  const bearerHeader = await getBearerHeader();
+  const response = await request("POST", `${api.publishManuscript}`, {
+    headers: {
+      "Content-Type": "application/json",
+      ...bearerHeader.headers,
+    },
+    data: payload,
+  });
   return response;
 };
 

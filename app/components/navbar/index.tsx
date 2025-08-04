@@ -5,7 +5,7 @@ import Link from "next/link";
 import { MagnifyingGlass, X, List } from "@phosphor-icons/react";
 import Button from "../ui/button";
 import { Manuscript } from "@/types";
-import { globalSearch } from "@/api/(landing-page)/manuscript";
+import { globalSearch } from "@/app/api/(landing-page)/manuscript";
 import { useMutation } from "@tanstack/react-query";
 
 export default function Navbar() {

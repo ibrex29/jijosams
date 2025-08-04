@@ -5,7 +5,7 @@ import { Pagination, Autoplay } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/pagination";
 import Image from "next/image";
-import { getRecentIssues } from "@/api/(landing-page)/manuscript";
+import { getRecentIssues } from "@/app/api/(landing-page)/manuscript";
 import { Issue } from "@/types";
 
 export default function SpecialIssuesCarousel() {

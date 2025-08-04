@@ -9,7 +9,7 @@ import { GetManuscriptByIdResponse } from "@/types";
 import {
   getPublishedManuscriptById,
   updateDownloadCount,
-} from "@/api/(landing-page)/manuscript";
+} from "@/app/api/(landing-page)/manuscript";
 
 const SkeletonLoader = () => (
   <div className="animate-pulse">

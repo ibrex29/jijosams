@@ -2,7 +2,7 @@ import { Box, Grid } from "@mui/material";
 import { useState } from "react";
 
 import SectionModal from "@/app/(dashboard)/dashboard/managing-editor/sections/components/section-dialog";
-import { assignManuscriptSection } from "@/api/manuscript/assign-manuscript";
+import { assignManuscriptSection } from "@/app/api/manuscript/assign-manuscript";
 import { ManuscriptProps } from "@/types";
 
 import CEManuscriptCard from "../manuscript-card";

@@ -49,7 +49,7 @@ export interface ManuscriptProps {
   title: string;
   abstract: string;
   keywords: string;
-  author: string;
+  authorName: string;
   coAuthor: string;
   status: string;
   authorId: string;
@@ -180,7 +180,7 @@ export interface Volume {
   description: string;
   createdAt: string;
   updatedAt: string;
-  issues: Issue[];
+  issues?: Issue[];
 }
 
 export interface Manuscript {

@@ -14,7 +14,7 @@ import { useMutation } from "@tanstack/react-query";
 import React, { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 
-import { submitManuscript } from "@/api/manuscript";
+import { submitManuscript } from "@/app/api/manuscript";
 import { SubmitManuscriptProps } from "@/types";
 
 import ContactInfoStep from "../../components/contact-info";

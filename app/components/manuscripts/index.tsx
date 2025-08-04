@@ -1,201 +1,216 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
-import { useEffect, useState } from "react";
-import { CaretDown, MagnifyingGlass } from "@phosphor-icons/react";
+import dynamic from "next/dynamic";
+import React, { useState, useEffect } from "react";
+import { Controller, FormProvider, useForm, useFormContext } from "react-hook-form";
 import { useQuery } from "@tanstack/react-query";
+import {
+  Box,
+  Typography,
+  CircularProgress,
+  TextField,
+  InputLabel,
+  Select,
+  MenuItem,
+  FormControl,
+  Stack,
+  Button,
+} from "@mui/material";
+import SearchIcon from "@mui/icons-material/Search";
 
 import ManuscriptCard from "../manuscript-card";
 import { Volume, Issue, Manuscript } from "@/types";
 import ManuscriptCardSkeleton from "../manuscript-card/loader";
 import VolumeDropdownSkeleton from "../loader/volume";
 import NoManuscriptPlaceholder from "./empty-catalogue";
-import { getPublishedManuscript } from "@/api/(landing-page)/manuscript";
-import { getVolume } from "@/api/(landing-page)/volume";
+import { getPublishedManuscript } from "@/app/api/(landing-page)/manuscript";
+import { getVolume } from "@/app/api/(landing-page)/volume";
+import useNotification from "@/hooks/useNotification";
 
-export default function VolumeIssueSelector() {
-  const [selectedVolume, setSelectedVolume] = useState<Volume | null>(null);
-  const [selectedIssue, setSelectedIssue] = useState<Issue | null>(null);
-  const [page, setPage] = useState(1);
-  const [query, setQuery] = useState("");
+const VolumeIssueSelectorInner: React.FC = () => {
+  const { control, setValue, getValues, watch, formState: { errors: formErrors } } = useFormContext();
+  const [volumes, setVolumes] = useState<Volume[]>([]);
+  const [issues, setIssues] = useState<Issue[]>([]);
+  const [fetchError, setFetchError] = useState("");
+  const [loadingVolumes, setLoadingVolumes] = useState(true);
+  const { notify } = useNotification();
+
+  const watchedVolumeId = watch("volume");
+  const watchedIssueId = watch("issue");
+  const watchedQuery = watch("query");
+  const watchedPage = watch("page");
 
   // Fetch volumes
-  const { data: volumesData = [] as Volume[], isLoading: isLoadingVolumes } =
-    useQuery({
-      queryKey: ["volumes"],
-      queryFn: async () => {
-        const response = await getVolume();
-        console.log("Fetched volumes:", response);
-        return response;
-      },
-    });
+  useEffect(() => {
+    const fetchVolumes = async () => {
+      try {
+        setLoadingVolumes(true);
+        const response: Volume[] = await getVolume();
+        setVolumes(response ?? []);
+      } catch (error: unknown) {
+        const errorMessage = error instanceof Error ? error.message : "Unknown error";
+        setFetchError(`Failed to fetch volumes: ${errorMessage}. Please try again.`);
+        notify(`Failed to fetch volumes: ${errorMessage}`, { mode: "error" });
+      } finally {
+        setLoadingVolumes(false);
+      }
+    };
+    fetchVolumes();
+  }, [notify]);
+
+  // Update issues when volume changes
+  useEffect(() => {
+    if (!watchedVolumeId) {
+      setIssues([]);
+      setValue("issue", "");
+      return;
+    }
+
+    const selectedVolume = volumes.find((v) => v.id === watchedVolumeId);
+    if (selectedVolume) {
+      setIssues(selectedVolume.issues ?? []);
+      setValue("issue", selectedVolume.issues?.[0]?.id ?? "");
+    } else {
+      setIssues([]);
+      setValue("issue", "");
+    }
+  }, [watchedVolumeId, volumes, setValue]);
 
   // Restore selections from localStorage on mount
   useEffect(() => {
-    const storedVolumeId = localStorage.getItem("selectedVolumeId");
-    const storedIssueId = localStorage.getItem("selectedIssueId");
+    if (volumes.length > 0) {
+      const storedVolumeId = localStorage.getItem("selectedVolumeId");
+      const storedIssueId = localStorage.getItem("selectedIssueId");
 
-    if (volumesData.length > 0) {
-      let volume = (volumesData as Volume[])[0]; // Default to first volume
-      let issue = volume.issues[0] || null;
+      const volumeId = storedVolumeId && volumes.find((v) => v.id === storedVolumeId) ? storedVolumeId : volumes[0].id;
+      setValue("volume", volumeId);
 
-      // Override with stored values if they exist and are valid
-      if (storedVolumeId) {
-        const foundVolume = volumesData.find(
-          (v: Volume) => v.id === storedVolumeId,
-        );
-        if (foundVolume) {
-          volume = foundVolume;
-          issue =
-            storedIssueId && foundVolume.issues.length
-              ? foundVolume.issues.find((i: Issue) => i.id === storedIssueId) ||
-                foundVolume.issues[0]
-              : null;
-        }
+      const selectedVolume = volumes.find((v) => v.id === volumeId);
+      if (selectedVolume && selectedVolume.issues?.length) {
+        const issueId = storedIssueId && selectedVolume.issues.find((i) => i.id === storedIssueId)
+          ? storedIssueId
+          : selectedVolume.issues[0].id;
+        setValue("issue", issueId);
       }
-
-      setSelectedVolume(volume);
-      setSelectedIssue(issue);
     }
-  }, [volumesData]);
+  }, [volumes, setValue]);
 
-  // Save selections to localStorage whenever they change
+  // Save selections to localStorage
   useEffect(() => {
-    if (selectedVolume) {
-      localStorage.setItem("selectedVolumeId", selectedVolume.id);
+    if (watchedVolumeId) {
+      localStorage.setItem("selectedVolumeId", watchedVolumeId);
     }
-    if (selectedIssue) {
-      localStorage.setItem("selectedIssueId", selectedIssue.id);
+    if (watchedIssueId) {
+      localStorage.setItem("selectedIssueId", watchedIssueId);
     }
-  }, [selectedVolume, selectedIssue]);
+  }, [watchedVolumeId, watchedIssueId]);
 
   // Fetch manuscripts
   const { data: manuscripts, isLoading: isLoadingManuscripts } = useQuery({
-    queryKey: [
-      "manuscripts",
-      selectedVolume?.id,
-      selectedIssue?.id,
-      page,
-      query,
-    ],
+    queryKey: ["manuscripts", watchedVolumeId, watchedIssueId, watchedPage, watchedQuery],
     queryFn: async () =>
-      getPublishedManuscript(
-        undefined,
-        page,
-        10,
-        query,
-        selectedIssue?.id,
-        selectedVolume?.id,
-      ),
-    enabled: !!selectedVolume && !!selectedIssue,
+      getPublishedManuscript(undefined, watchedPage, 10, watchedQuery, watchedIssueId, watchedVolumeId),
+    enabled: !!watchedVolumeId && !!watchedIssueId,
   });
 
+  if (loadingVolumes) {
+    return (
+      <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh" }}>
+        <CircularProgress />
+      </Box>
+    );
+  }
+
   return (
-    <div className="p-1 md:p-4">
-      <div className="flex w-full justify-between items-center">
-        <div className="flex gap-2 mt-2 md:mt-0 md:gap-4">
+    <Box sx={{ m: 4, width: "90%" }}>
+      <Stack direction={{ xs: "column", md: "row" }} spacing={2} alignItems="center" justifyContent="space-between">
+        <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
           {/* Volume Selector */}
-          {isLoadingVolumes ? (
-            <VolumeDropdownSkeleton />
-          ) : (
-            <div className="relative w-64">
-              <label className="block text-xs font-semibold text-primary">
-                Volume
-              </label>
-              <div className="relative">
-                <select
-                  className="mt-1 appearance-none w-full p-1 md:p-2 border border-primary bg-white rounded-lg text-gray-700 focus:ring-2 focus:ring-primary"
-                  value={selectedVolume?.id || ""}
-                  onChange={(e) => {
-                    const volume = volumesData.find(
-                      (v: Volume) => v.id === e.target.value,
-                    );
-                    setSelectedVolume(volume || null);
-                    setSelectedIssue(volume?.issues[0] || null);
-                    setPage(1);
-                  }}
-                  disabled={isLoadingVolumes}
-                >
-                  {volumesData.map((volume: Volume) => (
-                    <option key={volume.id} value={volume.id}>
+          <Controller
+            name="volume"
+            control={control}
+            render={({ field }) => (
+              <FormControl sx={{ minWidth: 200 }} error={!!formErrors.volume}>
+                <InputLabel>Volume</InputLabel>
+                <Select {...field} label="Volume" disabled={loadingVolumes}>
+                  {volumes.map((volume) => (
+                    <MenuItem key={volume.id} value={volume.id}>
                       {volume.name}
-                    </option>
+                    </MenuItem>
                   ))}
-                </select>
-                <CaretDown
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500"
-                  size={20}
-                />
-              </div>
-            </div>
-          )}
+                </Select>
+                {formErrors.volume && (
+                  <Typography variant="body2" color="error">
+                    {(formErrors.volume.message as string) || ""}
+                  </Typography>
+                )}
+              </FormControl>
+            )}
+          />
 
           {/* Issue Selector */}
-          {isLoadingVolumes || !selectedVolume ? (
-            <VolumeDropdownSkeleton />
-          ) : (
-            <div className="relative w-64">
-              <label className="block text-xs font-semibold text-primary">
-                Issue
-              </label>
-              <div className="relative">
-                <select
-                  className="mt-1 appearance-none w-full p-1 md:p-2 border border-primary bg-white rounded-lg text-gray-700 focus:ring-2 focus:ring-primary"
-                  value={selectedIssue?.id || ""}
-                  onChange={(e) => {
-                    const issue = selectedVolume?.issues.find(
-                      (i) => i.id === e.target.value,
-                    );
-                    setSelectedIssue(issue || null);
-                    setPage(1);
-                  }}
-                  disabled={
-                    !selectedVolume || selectedVolume.issues.length === 0
-                  }
-                >
-                  {selectedVolume?.issues.length ? (
-                    selectedVolume.issues.map((issue) => (
-                      <option key={issue.id} value={issue.id}>
+          <Controller
+            name="issue"
+            control={control}
+            render={({ field }) => (
+              <FormControl sx={{ minWidth: 200 }} error={!!formErrors.issue}>
+                <InputLabel>Issue</InputLabel>
+                <Select {...field} label="Issue" disabled={!watchedVolumeId || !issues.length}>
+                  {issues.length ? (
+                    issues.map((issue) => (
+                      <MenuItem key={issue.id} value={issue.id}>
                         {issue.name}
-                      </option>
+                      </MenuItem>
                     ))
                   ) : (
-                    <option value="" disabled>
+                    <MenuItem value="" disabled>
                       No issues available
-                    </option>
+                    </MenuItem>
                   )}
-                </select>
-                <CaretDown
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500"
-                  size={20}
-                />
-              </div>
-            </div>
-          )}
-        </div>
+                </Select>
+                {formErrors.issue && (
+                  <Typography variant="body2" color="error">
+                    {(formErrors.issue.message as string) || ""}
+                  </Typography>
+                )}
+              </FormControl>
+            )}
+          />
+        </Stack>
 
         {/* Search Input */}
-        <div className="relative w-full mt-4 max-w-md ml-auto">
-          <input
-            type="text"
-            placeholder="Search..."
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 border-2 border-primary rounded-lg focus:outline-none focus:ring-1 focus:ring-primary"
-          />
-          <MagnifyingGlass
-            size={20}
-            className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500"
-          />
-        </div>
-      </div>
+        <Controller
+          name="query"
+          control={control}
+          render={({ field }) => (
+            <TextField
+              {...field}
+              label="Search"
+              variant="outlined"
+              sx={{ maxWidth: 400, width: "100%" }}
+              InputProps={{
+                startAdornment: <SearchIcon sx={{ mr: 1, color: "text.secondary" }} />,
+              }}
+              error={!!formErrors.query}
+              helperText={(formErrors.query?.message as string) || ""}
+            />
+          )}
+        />
+      </Stack>
+
+      {/* Error Display */}
+      {fetchError && (
+        <Typography variant="body2" color="error" sx={{ mt: 2, textAlign: "center" }}>
+          {fetchError}
+        </Typography>
+      )}
 
       {/* Manuscript List */}
-      {selectedVolume && selectedIssue && (
-        <div className="mt-6 space-y-6">
+      {watchedVolumeId && watchedIssueId && (
+        <Box sx={{ mt: 4, display: "flex", flexDirection: "column", gap: 2 }}>
           {isLoadingManuscripts ? (
-            [...Array(5)].map((_, index) => (
-              <ManuscriptCardSkeleton key={index} />
-            ))
+            [...Array(5)].map((_, index) => <ManuscriptCardSkeleton key={index} />)
           ) : manuscripts?.data?.length ? (
             manuscripts.data.map((manuscript: Manuscript) => (
               <ManuscriptCard key={manuscript.id} manuscript={manuscript} />
@@ -203,31 +218,50 @@ export default function VolumeIssueSelector() {
           ) : (
             <NoManuscriptPlaceholder />
           )}
-        </div>
+        </Box>
       )}
 
       {/* Pagination Controls */}
       {manuscripts && manuscripts.meta && (
-        <div className="mt-4 flex justify-center gap-4">
-          <button
-            className="px-4 py-2 border rounded-lg disabled:opacity-50"
-            onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
+        <Stack direction="row" spacing={2} justifyContent="center" sx={{ mt: 3 }}>
+          <Button
+            variant="outlined"
+            onClick={() => setValue("page", Math.max(watchedPage - 1, 1))}
             disabled={!manuscripts.meta.hasPreviousPage}
           >
             Previous
-          </button>
-          <span className="py-2">
+          </Button>
+          <Typography variant="body2" sx={{ py: 1 }}>
             Page {manuscripts.meta.page} of {manuscripts.meta.pageCount}
-          </span>
-          <button
-            className="px-4 py-2 border rounded-lg disabled:opacity-50"
-            onClick={() => setPage((prev) => prev + 1)}
+          </Typography>
+          <Button
+            variant="outlined"
+            onClick={() => setValue("page", watchedPage + 1)}
             disabled={!manuscripts.meta.hasNextPage}
           >
             Next
-          </button>
-        </div>
+          </Button>
+        </Stack>
       )}
-    </div>
+    </Box>
   );
-}
+};
+
+const VolumeIssueSelector: React.FC = () => {
+  const methods = useForm({
+    defaultValues: {
+      volume: "",
+      issue: "",
+      query: "",
+      page: 1,
+    },
+  });
+
+  return (
+    <FormProvider {...methods}>
+      <VolumeIssueSelectorInner />
+    </FormProvider>
+  );
+};
+
+export default VolumeIssueSelector;

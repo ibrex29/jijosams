@@ -1,7 +1,7 @@
 import { Box, Grid } from "@mui/material";
 import { useState } from "react";
 
-import { assignManuscriptReviewer } from "@/api/manuscript/assign-manuscript";
+import { assignManuscriptReviewer } from "@/app/api/manuscript/assign-manuscript";
 import { ManuscriptProps } from "@/types";
 
 import SEManuscriptCard from "../manuscript-card";

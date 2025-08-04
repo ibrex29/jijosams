@@ -14,7 +14,7 @@ interface ManuscriptContentProps {
 
 const ManuscriptContent: React.FC<ManuscriptContentProps> = ({
   isFetching,
-  manuscripts = [],
+  manuscripts ,
   noManuscriptsIcon,
   availableManuscripts,
 }) => {

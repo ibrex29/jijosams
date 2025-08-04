@@ -13,7 +13,7 @@ import {
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 
-import { createSection, editSection, getSection } from "@/api/sections";
+import { createSection, editSection, getSection } from "@/app/api/sections";
 import useNotification from "@/hooks/useNotification";
 import { SectionProps } from "@/types";
 

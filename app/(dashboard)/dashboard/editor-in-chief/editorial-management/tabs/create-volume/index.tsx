@@ -13,7 +13,7 @@ import {
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 
-import { createVolume, deleteVolume,editVolume  , getVolumes  } from "@/api/volume";
+import { createVolume, deleteVolume,editVolume  , getVolumes  } from "@/app/api/volume";
 import useNotification from "@/hooks/useNotification";
 import {  VolumeProps } from "@/types";
 

@@ -20,7 +20,7 @@ import { useRouter } from "next/navigation";
 import React, { FC, MouseEvent, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 
-import { createAuthor } from "@/api/users";
+import { createAuthor } from "@/app/api/users";
 import StyledButton from "../../styled-button";
 
 interface SignupData {

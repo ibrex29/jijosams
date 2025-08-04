@@ -3,12 +3,13 @@
  */
 
 export const baseUrl =
-  process.env.NEXT_PUBLIC_BACKEND_API_URL ?? "http://localhost:5000/api";
+  process.env.NEXT_PUBLIC_BACKEND_API_URL ?? "http://203.161.43.7/api";
 
 export const authUrl = `${baseUrl}/v1/auth`;
 
 export const api = {
-  submitManuscript: `${baseUrl}/manuscripts`,
+  submitManuscript: `${baseUrl}/v1/manuscripts`,
+  publishManuscript: `${baseUrl}/v1/publication/publish`,
   AuthorManuscripts: `${baseUrl}/v1/author/submitted-manuscripts`,
   AllManuscripts: `${baseUrl}/manuscripts/submitted`,
   SEManuscript: `${baseUrl}/manuscripts/section-editor`,

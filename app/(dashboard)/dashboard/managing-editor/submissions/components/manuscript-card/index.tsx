@@ -32,7 +32,7 @@ export default function MEManuscriptCard({
   const {
     title,
     keywords,
-    author,
+    authorName,
     coAuthor,
     status,
     createdAt,
@@ -81,7 +81,7 @@ export default function MEManuscriptCard({
         <CardContent>
           <Box display="flex" flexDirection="row" height={250} gap={2} mt={2}>
             <Avatar sx={{ width: 60, height: 60, bgcolor: "primary.main" }}>
-              {getInitials(author.toUpperCase())}
+              {getInitials(authorName.toUpperCase())}
             </Avatar>
             <Stack direction="column" mt={1} width="100%">
               <Typography
@@ -105,7 +105,7 @@ export default function MEManuscriptCard({
                 sx={{ color: "grey.800", fontSize: "14px" }}
                 gutterBottom
               >
-                Author: {author}
+                Author: {authorName}
               </Typography>
               <Typography
                 sx={{ color: "grey.600", fontSize: "14px" }}

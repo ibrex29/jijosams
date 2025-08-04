@@ -16,7 +16,7 @@ import {
 import { useState } from "react";
 
 import Chat from "@/app/(dashboard)/dashboard/author/submissions/components/chats";
-import { getReviewStatus } from "@/api/reviewer";
+import { getReviewStatus } from "@/app/api/reviewer";
 import useNotification from "@/hooks/useNotification";
 import { ManuscriptProps } from "@/types";
 import { getInitials, truncateText } from "@/utils";
@@ -38,12 +38,13 @@ export default function AuthorManuscriptCard({
     title,
     // abstract,
     keywords,
-    author,
+    authorName,
     coAuthor,
     status,
     createdAt,
     Document,
   } = manuscript;
+  console.log(manuscript);
 
   const { notify } = useNotification();
     const [open, setOpen] = useState(false);
@@ -114,7 +115,7 @@ export default function AuthorManuscriptCard({
                 height: { xs: 40, sm: 50, md: 60 },
                 bgcolor: "primary.main",
               }}>
-              {getInitials(author.toUpperCase())}
+              {getInitials(authorName.toUpperCase())}
             </Avatar>
             <Stack direction="column" mt={1} width="100%">
               <Typography
@@ -157,7 +158,7 @@ export default function AuthorManuscriptCard({
                 }}
                 gutterBottom
               >
-                Author: {author}
+                Author: {authorName}
               </Typography>
               <Typography
                 sx={{

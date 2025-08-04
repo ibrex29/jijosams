@@ -18,8 +18,8 @@ import {
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 
-import { createIssue, deleteIssue, editIssue, getVolumes } from "@/api/volume";
-import { getIssues } from "@/api/volume";
+import { createIssue, deleteIssue, editIssue, getVolumes } from "@/app/api/volume";
+import { getIssues } from "@/app/api/volume";
 import useNotification from "@/hooks/useNotification";
 import { IssueProps,VolumeProps } from "@/types";
 

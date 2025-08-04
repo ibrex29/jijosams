@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { FaRegClock } from "react-icons/fa";
-import { getRecentManuscriptById } from "@/api/(landing-page)/manuscript";
+import { getRecentManuscriptById } from "@/app/api/(landing-page)/manuscript";
 import { RecentManuscript } from "@/types";
 import { useRouter } from "next/navigation";
 

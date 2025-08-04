@@ -14,8 +14,8 @@ import {
 import { useEffect,useState } from "react";
 import { Controller,useForm } from "react-hook-form";
 
-import { getSection } from "@/api/sections";
-import { createUser } from "@/api/users";
+import { getSection } from "@/app/api/sections";
+import { createUser } from "@/app/api/users";
 import useNotification from "@/hooks/useNotification";
 import { UserRole } from "@/types";
 

@@ -12,7 +12,7 @@ import {
 } from "@mui/material";
 import { useEffect, useState } from "react";
 
-import { closeReview, createReviewerReply, getReplies, openReview } from "@/api/reviewer";
+import { closeReview, createReviewerReply, getReplies, openReview } from "@/app/api/reviewer";
 import { Review } from "@/types";
 import { formatDate } from "@/utils";
 

@@ -8,7 +8,7 @@ import {
 } from "@mui/material";
 import { useEffect, useState } from "react";
 
-import { createAuthorReply, getReplies } from "@/api/reviewer";
+import { createAuthorReply, getReplies } from "@/app/api/reviewer";
 import { Review } from "@/types";
 import { formatDate } from "@/utils";
 

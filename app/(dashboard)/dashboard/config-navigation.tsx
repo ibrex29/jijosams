@@ -3,6 +3,8 @@ import DescriptionIcon from "@mui/icons-material/Description";
 import HomeIcon from "@mui/icons-material/Home";
 import PeopleIcon from "@mui/icons-material/People";
 import SettingsIcon from "@mui/icons-material/Settings";
+import PublishIcon from '@mui/icons-material/Publish';
+
 
 // ----------------------------------------------------------------------
 
@@ -92,6 +94,11 @@ export const managingEditorNavConfig = [
     title: "Section",
     path: `${basePath.managing_editor}/sections`,
     icon: icon(DescriptionIcon),
+  },
+  {
+    title: "Publish Manuscript",
+    path: `${basePath.managing_editor}/publish-manuscript`,
+    icon: icon(PublishIcon),
   },
 ];
 
