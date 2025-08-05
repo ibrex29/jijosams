@@ -34,8 +34,8 @@ const LatestArticles = () => {
   }
 
   return (
-    <div className="flex justify-center p-4 px-6 lg:px-16">
-      <div className="max-w-5xl bg-gray-50 p-4">
+    <div className=" w-full flex justify-center p-4 px-6 lg:px-16">
+      <div className="max-w-5xl w-full bg-gray-50 p-4">
         {/* Header Section */}
         <div className="flex border-l-4 border-primary justify-between pl-2 items-center pb-2">
           <h2 className="text-xl font-semibold text-gray-800">
