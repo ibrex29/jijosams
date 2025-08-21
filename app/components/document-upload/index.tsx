@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
+import { baseUrl } from "@/constants/config";
 import {
   Box,
   CircularProgress,
@@ -48,7 +49,8 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({
     formData.append("file", file);
 
     try {
-      const response = await fetch("http://203.161.43.7/api/upload", {
+      const response = await fetch(`${baseUrl}/v1/upload`, {
+        
         method: "POST",
         headers: {
           accept: "*/*",
