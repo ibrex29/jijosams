@@ -5,6 +5,7 @@ import ListItemButton from "@mui/material/ListItemButton";
 import Stack from "@mui/material/Stack";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import  Image  from "next/image";
 
 import theme from "@/config/theme";
 
@@ -77,8 +78,14 @@ export default function Nav({ openNav, onCloseNav }: NavProps) {
         },
       }}
     >
-      {/* <Logo sx={{ mt: 2, ml: 4 }} /> */}
-
+      <Box sx={{ px: 3, pt: 3, display: "inline-flex" }}>
+        <Image
+              src="/logo/slu_jst_logo.svg"
+              alt="Logo"
+              width={160}
+              height={100}
+      />
+      </Box>
       <Box sx={{ mb: 5 }} />
 
       {renderMenu}

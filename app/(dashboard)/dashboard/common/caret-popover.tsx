@@ -1,7 +1,7 @@
 "use client";
 
 import { LogoutTwoTone } from "@mui/icons-material";
-import { MenuItem } from "@mui/material";
+import { Divider, ListItemIcon, ListItemText, MenuItem } from "@mui/material";
 import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -12,12 +12,10 @@ import DialogTitle from "@mui/material/DialogTitle";
 import IconButton from "@mui/material/IconButton";
 import Popover from "@mui/material/Popover";
 import Typography from "@mui/material/Typography";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { getSession, signOut } from "next-auth/react";  
 import { MouseEvent, useEffect, useState } from "react";
 import Iconify from "@/app/components/@dashboard/components/@dashboard/iconify";
-import StyledButton from "@/app/components/@dashboard/components/button";
 import { baseUrl } from "@/constants/config";
 import { getUserDetails } from "@/utils/getUserDetails";
 
@@ -109,102 +107,57 @@ export default function CaretPopover() {
         <Iconify icon="eva:arrow-ios-downward-fill" width={24} />
       </IconButton>
 
-      <Popover
-        open={Boolean(anchorEl)}
-        anchorEl={anchorEl}
-        onClose={handleClose}
-        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-        transformOrigin={{ vertical: "top", horizontal: "right" }}
-        PaperProps={{
-          sx: {
-            p: 0,
-            mt: 1,
-            ml: 0.75,
-            width: 200,
-          },
-        }}
-      >
-        <Box
-          sx={{
-            my: 1.5,
-            px: 2,
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <Avatar
-            src={logo}
-            alt={userDetails.email}
-            sx={{
-              fontSize: "10px",
-              mb: 1,
-              width: 36,
-              height: 36,
-              border: (theme) => `solid 2px ${theme.palette.background.default}`,
-            }}
-          />
-          <Typography
-            variant="subtitle2"
-            sx={{
-              fontSize: "10px",
-              fontWeight: "bold",
-              textAlign: "center",
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-              whiteSpace: "nowrap",
-              maxWidth: "150px",
-            }}
-          >
-            {userDetails.email.charAt(0).toUpperCase() + userDetails.email.slice(1).toLowerCase()}
-          </Typography>
-          <Typography
-            variant="caption"
-            sx={{
-              fontSize: "12px",
-              textAlign: "center",
-              color: "text.secondary",
-            }}
-          >
-            {userDetails.role.charAt(0).toUpperCase() + userDetails.role.slice(1).toLowerCase()}
-          </Typography>
-        </Box>
+     <Popover
+  open={Boolean(anchorEl)}
+  anchorEl={anchorEl}
+  onClose={handleClose}
+  anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+  transformOrigin={{ vertical: "top", horizontal: "right" }}
+  PaperProps={{
+    sx: {
+      mt: 1,
+      minWidth: 220,
+      maxWidth: 360,
+      borderRadius: 2,
+      boxShadow: 3,
+    },
+  }}
+>
+  {/* Profile Section */}
+  <Box sx={{ px: 2, py: 2, display: "flex", alignItems: "center" }}>
+    <Avatar src={logo} alt={userDetails.email} sx={{ width: 48, height: 48, mr: 1.5 }} />
+    <Box>
+      <Typography variant="subtitle2"  sx={{ maxWidth: 220 }} noWrap>
+        {userDetails.email}
+      </Typography>
+      <Typography variant="caption" color="text.secondary" noWrap>
+        {userDetails.role}
+      </Typography>
+    </Box>
+  </Box>
 
-        <Box>
-          {MENU_PERSONAL.map((option) => (
-            <MenuItem
-              key={option.label}
-              onClick={handleClose}
-              sx={{ fontSize: "14px", color: "text.primary" }}
-            >
-              <Link
-                href={option.link}
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  textDecoration: "none",
-                  color: "inherit",
-                }}
-              >
-                <Iconify icon={option.icon} width={22} sx={{ mr: 1 }} /> &nbsp;
-                {option.label}
-              </Link>
-            </MenuItem>
-          ))}
-        </Box>
+  <Divider />
 
-        <Box sx={{ p: 1, mt: 1 }}>
-          <StyledButton
-            size="small"
-            endIcon={<LogoutTwoTone />}
-            color="secondary"
-            onClick={() => setOpenDialog(true)} // Open the logout confirmation dialog
-          >
-            Logout
-          </StyledButton>
-        </Box>
-      </Popover>
+  {/* Menu Actions */}
+  <Box>
+    {MENU_PERSONAL.map((option) => (
+      <MenuItem key={option.label} onClick={handleClose}>
+        <ListItemIcon>
+          <Iconify icon={option.icon} width={20} />
+        </ListItemIcon>
+        <ListItemText>{option.label}</ListItemText>
+      </MenuItem>
+    ))}
+
+    <MenuItem onClick={() => setOpenDialog(true)} sx={{ color: "error.main" }}>
+      <ListItemIcon>
+        <LogoutTwoTone color="error" fontSize="small" />
+      </ListItemIcon>
+      <ListItemText>Logout</ListItemText>
+    </MenuItem>
+  </Box>
+</Popover>
+
 
       {/* Logout Confirmation Dialog */}
       <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>

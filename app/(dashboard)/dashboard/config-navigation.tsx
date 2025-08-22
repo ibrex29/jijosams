@@ -62,6 +62,11 @@ export const editorInChiefNavConfig = [
     path: `${basePath.editor_in_chief}/submissions`,
     icon: icon(ArticleIcon),
   },
+   {
+    title: "Publish Manuscript",
+    path: `${basePath.editor_in_chief}/publish-manuscript`,
+    icon: icon(PublishIcon),
+  },
   {
     title: "Section",
     path: `${basePath.editor_in_chief}/sections`,
@@ -112,5 +117,10 @@ export const sectionEditorNavConfig = [
     title: "Manuscript",
     path: `${basePath.section_editor}/submissions`,
     icon: icon(ArticleIcon),
+  },
+   {
+    title: "Publish Manuscript",
+    path: `${basePath.section_editor}/publish-manuscript`,
+    icon: icon(PublishIcon),
   },
 ];

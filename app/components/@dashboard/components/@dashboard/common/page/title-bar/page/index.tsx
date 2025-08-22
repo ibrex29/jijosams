@@ -20,7 +20,7 @@ const PageTitleBar: FC<PageTitleBarProps> = ({ title }) => {
         borderBottom: "1px solid #E7E7E7",
       }}
     >
-      <Typography variant="h2">{title}</Typography>
+      <Typography variant="h2" sx={{ fontSize: "18px" }}>{title}</Typography>
     </Box>
   );
 };
