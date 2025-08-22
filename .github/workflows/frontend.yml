@@ -38,15 +38,19 @@ jobs:
             node_modules
           key: ${{ runner.os }}-yarn-${{ hashFiles('yarn.lock') }}
 
-      # 5. Install dependencies (including dayjs)
+      # 5. Install dayjs (if not in package.json)
+      - name: Install dayjs
+        run: yarn add dayjs
+
+      # 6. Install dependencies (including dayjs)
       - name: Install Dependencies
         run: yarn install --frozen-lockfile
 
-      # 6. Build Next.js project
+      # 7. Build Next.js project
       - name: Build
         run: yarn build
 
-      # 7. Deploy to server via SSH
+      # 8. Deploy to server via SSH
       - name: Deploy to Server
         uses: appleboy/ssh-action@v0.1.7
         with:
