@@ -33,10 +33,9 @@ jobs:
         with:
           path: |
             ~/.yarn/cache
-            slujst-frontend/node_modules
-          key: ${{ runner.os }}-yarn-${{ hashFiles('slujst-frontend/yarn.lock') }}
+            node_modules
+          key: ${{ runner.os }}-yarn-${{ hashFiles('yarn.lock') }}
       - name: Install Dependencies
-        working-directory: ./slujst-frontend
         run: yarn install --frozen-lockfile
 
   build:
@@ -44,7 +43,6 @@ jobs:
     needs: cache-dependencies
     steps:
       - name: Build Next.js Project
-        working-directory: ./slujst-frontend
         run: yarn build
 
   deploy:
@@ -63,4 +61,4 @@ jobs:
             git pull origin main
             yarn install --frozen-lockfile
             yarn build
-            pm2 restart slujst-frontend
+            pm2 restart slujst-frontend -- start -p 3100
