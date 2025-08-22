@@ -9,25 +9,26 @@ on:
       - main
 
 jobs:
-  checkout:
+  build-and-deploy:
     runs-on: ubuntu-latest
     steps:
+      # 1. Checkout the repository
       - name: Checkout Repository
         uses: actions/checkout@v3
 
-  setup-node:
-    runs-on: ubuntu-latest
-    needs: checkout
-    steps:
-      - name: Use Node.js
+      # 2. Debug: verify working directory and files
+      - name: Debug Directory
+        run: |
+          pwd
+          ls -la
+
+      # 3. Setup Node.js
+      - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: 20
 
-  cache-dependencies:
-    runs-on: ubuntu-latest
-    needs: setup-node
-    steps:
+      # 4. Cache Yarn dependencies
       - name: Cache Yarn Dependencies
         uses: actions/cache@v3
         with:
@@ -35,21 +36,17 @@ jobs:
             ~/.yarn/cache
             node_modules
           key: ${{ runner.os }}-yarn-${{ hashFiles('yarn.lock') }}
+
+      # 5. Install dependencies
       - name: Install Dependencies
         run: yarn install --frozen-lockfile
 
-  build:
-    runs-on: ubuntu-latest
-    needs: cache-dependencies
-    steps:
-      - name: Build Next.js Project
+      # 6. Build the Next.js project
+      - name: Build
         run: yarn build
 
-  deploy:
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-      - name: Deploy to Server via SSH
+      # 7. Deploy to server via SSH with PM2
+      - name: Deploy to Server
         uses: appleboy/ssh-action@v0.1.7
         with:
           host: ${{ secrets.SERVER_HOST }}
