@@ -11,12 +11,13 @@ on:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+
     steps:
       # 1. Checkout the repository
       - name: Checkout Repository
         uses: actions/checkout@v3
 
-      # 2. Debug: verify working directory and files
+      # 2. Debug: confirm repo structure
       - name: Debug Directory
         run: |
           pwd
@@ -29,7 +30,7 @@ jobs:
           node-version: 20
 
       # 4. Cache Yarn dependencies
-      - name: Cache Yarn Dependencies
+      - name: Cache Yarn
         uses: actions/cache@v3
         with:
           path: |
@@ -37,15 +38,15 @@ jobs:
             node_modules
           key: ${{ runner.os }}-yarn-${{ hashFiles('yarn.lock') }}
 
-      # 5. Install dependencies
+      # 5. Install dependencies (including dayjs)
       - name: Install Dependencies
         run: yarn install --frozen-lockfile
 
-      # 6. Build the Next.js project
+      # 6. Build Next.js project
       - name: Build
         run: yarn build
 
-      # 7. Deploy to server via SSH with PM2
+      # 7. Deploy to server via SSH
       - name: Deploy to Server
         uses: appleboy/ssh-action@v0.1.7
         with:
@@ -58,4 +59,5 @@ jobs:
             git pull origin main
             yarn install --frozen-lockfile
             yarn build
-            pm2 restart slujst-frontend -- start -p 3100
+            # Reload PM2 to ensure zero-downtime deploy on port 3100
+            pm2 reload slujst-frontend --update-env -- start -p 3100
