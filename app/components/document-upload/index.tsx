@@ -25,7 +25,7 @@ interface DocumentUploadProps {
 const DocumentUpload: React.FC<DocumentUploadProps> = ({
   fieldName,
   label,
-  accept = ".doc,.docx,.pdf,.txt,.odt,.rtf",
+  accept = ".doc,.docx,.pdf,.txt,.odt,.rtf,.jpg,.jpeg,.png",
   onUpload,
   error,
 }) => {
@@ -65,6 +65,7 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({
         const result = await response.json();
       const fileUrl = result.fileUrl; 
       onUpload(fileUrl);
+      console.log(`File uploaded successfully: ${fileUrl}`);
       setUploadedFileName(sanitizedFileName);
     } catch (error) {
       onUpload("");

@@ -6,7 +6,6 @@ import React, { useState, useEffect } from "react";
 import { Controller, FormProvider, useForm, useFormContext } from "react-hook-form";
 import { getVolume } from "@/app/api/(landing-page)/volume";
 import { publishManuscript } from "@/app/api/manuscript";
-import { Box, Typography, CircularProgress, TextField, InputLabel, Select, MenuItem, Stack, Button, FormControl } from "@mui/material";
 import useNotification from "@/hooks/useNotification";
 import { Volume, Issue } from "@/types";
 
@@ -100,7 +99,7 @@ const PublishManuscriptInner: React.FC = () => {
     try {
       await publishManuscript(publicationData);
       notify("Manuscript Submitted Successfully", { mode: "success" });
-      reset(); // Reset form to default values
+      reset();
       setSubmitError("");
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : "Unknown error";
@@ -110,165 +109,173 @@ const PublishManuscriptInner: React.FC = () => {
 
   if (loading) {
     return (
-      <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh" }}>
-        <CircularProgress />
-      </Box>
+      <div className="flex justify-center items-center h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-primary"></div>
+      </div>
     );
   }
 
   return (
-    <Box component="form" noValidate autoComplete="off" sx={{ m: 10, width: "90%" }} key="publish-form">
-      <Controller
-        name="title"
-        control={control}
-        render={({ field }) => (
-          <TextField
-            {...field}
-            label="Title"
-            fullWidth
-            margin="normal"
-            error={!!formErrors.title}
-            helperText={(formErrors.title?.message as string) || ""}
-            required
-          />
-        )}
-      />
-      <Controller
-        name="abstract"
-        control={control}
-        render={({ field }) => (
-          <TextField
-            {...field}
-            label="Abstract"
-            fullWidth
-            margin="normal"
-            multiline
-            rows={4}
-            error={!!formErrors.abstract}
-            helperText={(formErrors.abstract?.message as string) || ""}
-            required
-          />
-        )}
-      />
-      <Controller
-        name="authors"
-        control={control}
-        render={({ field }) => (
-          <TextField
-            {...field}
-            label="Authors (comma-separated)"
-            fullWidth
-            margin="normal"
-            error={!!formErrors.authors}
-            helperText={(formErrors.authors?.message as string) || "Enter authors separated by commas"}
-            required
-          />
-        )}
-      />
-      <Controller
-        name="keywords"
-        control={control}
-        render={({ field }) => (
-          <TextField
-            {...field}
-            label="Keywords"
-            fullWidth
-            margin="normal"
-            error={!!formErrors.keywords}
-            helperText={(formErrors.keywords?.message as string) || ""}
-          />
-        )}
-      />
-      <Controller
-        name="doi"
-        control={control}
-        render={({ field }) => (
-          <TextField
-            {...field}
-            label="DOI"
-            fullWidth
-            margin="normal"
-            error={!!formErrors.doi}
-            helperText={(formErrors.doi?.message as string) || ""}
-          />
-        )}
-      />
-      <Controller
-        name="volume"
-        control={control}
-        render={({ field }) => (
-          <FormControl fullWidth margin="normal" error={!!formErrors.volume}>
-            <InputLabel>Volume</InputLabel>
-            <Select {...field} label="Volume" required>
-              {volumes.map((volume) => (
-                <MenuItem key={volume.id} value={volume.id}>
-                  {volume.name}
-                </MenuItem>
-              ))}
-            </Select>
-            {formErrors.volume && (
-              <Typography variant="body2" color="error">
-                {(formErrors.volume.message as string) || ""}
-              </Typography>
+    <div className="min-h-screen flex items-center justify-center py-10">
+      <div className="bg-white rounded-2xl shadow-xl p-8 w-full max-w-5xl">
+        <p className="mb-4 italic">Please fill out this form to publish your manuscript.</p>
+        <form className="space-y-6">
+          <Controller
+            name="title"
+            control={control}
+            render={({ field }) => (
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Title *</label>
+                <input
+                  {...field}
+                  type="text"
+                  className={`w-full p-3 border ${formErrors.title ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                  placeholder="Enter manuscript title"
+                />
+                {formErrors.title && <p className="text-red-500 text-sm mt-1">{formErrors.title.message as string}</p>}
+              </div>
             )}
-          </FormControl>
-        )}
-      />
-      <Controller
-        name="issue"
-        control={control}
-        render={({ field }) => (
-          <FormControl fullWidth margin="normal" error={!!formErrors.issue}>
-            <InputLabel>Issue</InputLabel>
-            <Select {...field} label="Issue" required disabled={!getValues("volume") || !issues.length}>
-              {issues.length ? (
-                issues.map((issue) => (
-                  <MenuItem key={issue.id} value={issue.id}>
-                    {issue.name}
-                  </MenuItem>
-                ))
-              ) : (
-                <MenuItem value="" disabled>
-                  No issues available
-                </MenuItem>
-              )}
-            </Select>
-            {formErrors.issue && (
-              <Typography variant="body2" color="error">
-                {(formErrors.issue.message as string) || ""}
-              </Typography>
-            )}
-          </FormControl>
-        )}
-      />
-      <Controller
-        name="manuscriptLink"
-        control={control}
-        render={({ field }) => (
-          <DocumentUpload
-            fieldName="manuscriptLink"
-            label="Manuscript File"
-            onUpload={(url) => setValue("manuscriptLink", url)}
-            error={formErrors.manuscriptLink?.message as string}
           />
-        )}
-      />
-      {fetchError && (
-        <Typography variant="body2" color="error" sx={{ mt: 2, textAlign: "center" }}>
-          {fetchError}
-        </Typography>
-      )}
-      {submitError && (
-        <Typography variant="body2" color="error" sx={{ mt: 2, textAlign: "center" }}>
-          {submitError}
-        </Typography>
-      )}
-      <Stack direction="row" justifyContent="space-between" sx={{ mt: 3 }}>
-        <Button type="button" onClick={validateAndSubmit} variant="contained">
-          Submit Publication
-        </Button>
-      </Stack>
-    </Box>
+          <Controller
+            name="abstract"
+            control={control}
+            render={({ field }) => (
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Abstract *</label>
+                <textarea
+                  {...field}
+                  className={`w-full p-3 border ${formErrors.abstract ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                  rows={5}
+                  placeholder="Enter abstract"
+                />
+                {formErrors.abstract && <p className="text-red-500 text-sm mt-1">{formErrors.abstract.message as string}</p>}
+              </div>
+            )}
+          />
+          <Controller
+            name="authors"
+            control={control}
+            render={({ field }) => (
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Authors (comma-separated) *</label>
+                <input
+                  {...field}
+                  type="text"
+                  className={`w-full p-3 border ${formErrors.authors ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                  placeholder="Enter authors, e.g., John Doe, Jane Smith"
+                />
+                {formErrors.authors && <p className="text-red-500 text-sm mt-1">{formErrors.authors.message as string}</p>}
+              </div>
+            )}
+          />
+          <Controller
+            name="keywords"
+            control={control}
+            render={({ field }) => (
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Keywords</label>
+                <input
+                  {...field}
+                  type="text"
+                  className={`w-full p-3 border ${formErrors.keywords ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                  placeholder="Enter keywords"
+                />
+                {formErrors.keywords && <p className="text-red-500 text-sm mt-1">{formErrors.keywords.message as string}</p>}
+              </div>
+            )}
+          />
+          <Controller
+            name="doi"
+            control={control}
+            render={({ field }) => (
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">DOI</label>
+                <input
+                  {...field}
+                  type="text"
+                  className={`w-full p-3 border ${formErrors.doi ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                  placeholder="Enter DOI"
+                />
+                {formErrors.doi && <p className="text-red-500 text-sm mt-1">{formErrors.doi.message as string}</p>}
+              </div>
+            )}
+          />
+          <Controller
+            name="volume"
+            control={control}
+            render={({ field }) => (
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Volume *</label>
+                <select
+                  {...field}
+                  className={`w-full p-3 border ${formErrors.volume ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                >
+                  <option value="" disabled>Select a volume</option>
+                  {volumes.map((volume) => (
+                    <option key={volume.id} value={volume.id}>
+                      {volume.name}
+                    </option>
+                  ))}
+                </select>
+                {formErrors.volume && <p className="text-red-500 text-sm mt-1">{formErrors.volume.message as string}</p>}
+              </div>
+            )}
+          />
+          <Controller
+            name="issue"
+            control={control}
+            render={({ field }) => (
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Issue *</label>
+                <select
+                  {...field}
+                  className={`w-full p-3 border ${formErrors.issue ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                  disabled={!getValues("volume") || !issues.length}
+                >
+                  {issues.length ? (
+                    issues.map((issue) => (
+                      <option key={issue.id} value={issue.id}>
+                        {issue.name}
+                      </option>
+                    ))
+                  ) : (
+                    <option value="" disabled>No issues available</option>
+                  )}
+                </select>
+                {formErrors.issue && <p className="text-red-500 text-sm mt-1">{formErrors.issue.message as string}</p>}
+              </div>
+            )}
+          />
+          <Controller
+            name="manuscriptLink"
+            control={control}
+            render={({ field }) => (
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Manuscript File *</label>
+                <DocumentUpload
+                  fieldName="manuscriptLink"
+                  label="Manuscript File"
+                  onUpload={(url) => setValue("manuscriptLink", url)}
+                  error={formErrors.manuscriptLink?.message as string}
+                />
+                {formErrors.manuscriptLink && <p className="text-red-500 text-sm mt-1">{formErrors.manuscriptLink.message as string}</p>}
+              </div>
+            )}
+          />
+          {fetchError && <p className="text-red-500 text-center">{fetchError}</p>}
+          {submitError && <p className="text-red-500 text-center">{submitError}</p>}
+          <div className="flex justify-end">
+            <button
+              type="button"
+              onClick={validateAndSubmit}
+              className="bg-primary text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition duration-300"
+            >
+              Submit Publication
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
   );
 };
 

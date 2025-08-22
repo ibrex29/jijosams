@@ -67,21 +67,21 @@ export default function Navbar() {
             />
           </Link>
           <div className="hidden lg:flex lg:space-x-2 xl:space-x-6">
-            <Link href="/" className="text-gray-700 hover:text-primary">
+            <Link href="/" className="text-gray-700 font-semibold hover:text-primary">
               Home
             </Link>
             <Link
               href="/manuscripts"
-              className="text-gray-700 hover:text-primary"
+              className="text-gray-700 font-semibold hover:text-primary"
             >
               Manuscript
             </Link>
-            <Link href="/about-us" className="text-gray-700 hover:text-primary">
+            <Link href="/about-us" className="text-gray-700 font-semibold hover:text-primary">
               About Us
             </Link>
             <Link
               href="/contact-us"
-              className="text-gray-700 hover:text-primary"
+              className="text-gray-700 font-semibold hover:text-primary"
             >
               Contact Us
             </Link>
