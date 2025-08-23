@@ -4,6 +4,7 @@ import { ManuscriptProps } from "@/types";
 import { request } from "@/utils/request";
 
 import { getBearerHeader } from "../call-methods";
+import { FetchManuscriptsParams, FetchManuscriptsResponse } from "./types";
 
 export const getAuthorMetrics = async () => {
   const bearerHeader = await getBearerHeader();
@@ -44,19 +45,29 @@ export const submitManuscript = async (payload: any) => {
   return response;
 };
 
-export const getAuthorManuscripts = async (): Promise<ManuscriptProps[]> => {
+
+
+export const getAuthorManuscripts = async (params: FetchManuscriptsParams = {}): Promise<FetchManuscriptsResponse> => {
+  const { sortOrder = "asc", page = 1, limit = 10, search = "", status = "" } = params;
   const bearerHeader = await getBearerHeader();
 
-  const response = await request("GET", api.AuthorManuscripts, {
+  const queryParams = new URLSearchParams({
+    sortOrder,
+    page: page.toString(),
+    limit: limit.toString(),
+    ...(search && { search }),
+    ...(status && { status }),
+  });
+
+  const response = await request("GET", `${api.AuthorManuscripts}?${queryParams.toString()}`, {
     headers: {
       "Content-Type": "application/json",
       ...bearerHeader.headers,
     },
   });
 
-  return response.data as Promise<ManuscriptProps[]>;
+  return response as FetchManuscriptsResponse;
 };
-
 export const getAllManuscripts = async (): Promise<ManuscriptProps[]> => {
   const bearerHeader = await getBearerHeader();
 
