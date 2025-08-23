@@ -9,8 +9,8 @@ interface PageBreadcrumbsProps {
 
 const PageBreadcrumbs: FC<PageBreadcrumbsProps> = ({ page, tab }) => {
   return (
-    <Box style={{ marginBottom: "15px", marginTop: "17px" }}>
-      <Typography sx={{ display: "inline-block", verticalAlign: "middle" }}>
+    <Box style={{  marginBottom: "5px", marginTop: "5px" }}>
+      <Typography sx={{ display: "inline-block", verticalAlign: "middle" , fontSize: "14px" }}>
         {page}
       </Typography>
       <ChevronRightSharp
@@ -26,6 +26,7 @@ const PageBreadcrumbs: FC<PageBreadcrumbsProps> = ({ page, tab }) => {
           display: "inline-block",
           verticalAlign: "middle",
           fontWeight: 500,
+          fontSize: "14px",
         }}
       >
         {tab}

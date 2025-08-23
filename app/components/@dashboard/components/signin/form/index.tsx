@@ -56,7 +56,7 @@ const SigninForm: FC = () => {
 
       if (user && user.user?.role !== undefined) {
         const route = rolesMap[user.user.role] || "/";
-        router.push(route);
+        router.push(route.toLowerCase());
       } else {
         console.error("User session or user role is undefined after sign in");
         setShowError(true);

@@ -10,8 +10,8 @@ export const metadata = {
 export default function SubmissionsPage() {
   return (
     <PageLayout>
-      <PageTitleBar title="Submissions" />
-      <PageTabs pageName="Submissions" tabs={AuthorSubmissionPageTabs} />
+      <PageTitleBar title="My Manuscripts" />
+      <PageTabs pageName="My Manuscripts" tabs={AuthorSubmissionPageTabs} />
     </PageLayout>
   );
 }

@@ -1,25 +1,14 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
-import {
-  Box,
-  Button,
-  CircularProgress,
-  Stack,
-  Typography,
-  useMediaQuery,
-  useTheme,
-} from "@mui/material";
-import {
-  CheckCircle as CheckCircleIcon,
-  Upload as UploadIcon,
-} from "@phosphor-icons/react";
-import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
-import React, { useState } from "react";
+import dynamic from "next/dynamic";
+import React from "react";
 import { Controller, useFormContext } from "react-hook-form";
-import { v4 as uuidv4 } from "uuid";
+import { SubmitManuscriptProps } from "@/types";
 
-import { storage } from "@/firebase";
+const DocumentUpload = dynamic(
+  () => import("@/app/components/document-upload"),
+  { ssr: false }
+);
 
 interface FileUploadStepProps {
   handleSubmit: () => void;
@@ -30,375 +19,123 @@ const FileUploadStep: React.FC<FileUploadStepProps> = ({
   handleSubmit,
   handleBack,
 }) => {
-  const { control, setValue , getValues} = useFormContext();
-  const [uploading, setUploading] = useState<{ [key: string]: boolean }>({
-    manuscriptLink: false,
-    proofofPayment: false,
-    otherDocsLink: false,
-  });
-  const [uploadedFiles, setUploadedFiles] = useState<{ [key: string]: string }>(
-    {
-      manuscriptLink: "",
-      proofofPayment: "",
-      otherDocsLink: "",
-    },
-  );
-  const [errors, setErrors] = useState<{ [key: string]: string }>({});
-
-  const theme = useTheme();
-  const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
-
-  const journalBaseURL = "slujst";
-
-  const sanitizeFileName = (fileName: string) => {
-    return fileName.replace(/[^a-zA-Z0-9_.-]/g, "_");
-  };
-
-  const handleFileUpload = async (
-    files: FileList | null,
-    fieldName: string,
-  ) => {
-    if (!files || files.length === 0) return;
-
-    setUploading((prev) => ({ ...prev, [fieldName]: true }));
-    setErrors((prev) => ({ ...prev, [fieldName]: "" }));
-
-    const file = files[0]; // Only handle single file upload for each field
-    const uniqueId = uuidv4(); // Generate a unique identifier
-    const sanitizedFileName = sanitizeFileName(file.name);
-    const storageRef = ref(
-      storage,
-      `${fieldName}/${journalBaseURL}${uniqueId}_${sanitizedFileName}`,
-    );
-    const uploadTask = uploadBytesResumable(storageRef, file);
-
-    try {
-      const fileUrl = await new Promise<string>((resolve, reject) => {
-        uploadTask.on(
-          "state_changed",
-          () => {
-            // Optionally, you can handle progress updates here
-          },
-          (error) => {
-            console.error("File upload error:", error);
-            reject(error);
-          },
-          async () => {
-            const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-            resolve(downloadURL);
-          },
-        );
-      });
-
-      setValue(fieldName, fileUrl);
-      setUploadedFiles((prev) => ({ ...prev, [fieldName]: sanitizedFileName }));
-    } catch (error) {
-      setErrors((prev) => ({
-        ...prev,
-        [fieldName]: "Failed to upload file. Please try again.",
-      }));
-    } finally {
-      setUploading((prev) => ({ ...prev, [fieldName]: false }));
-    }
-  };
-
-  const handleFileChange = (
-    event: React.ChangeEvent<HTMLInputElement>,
-    fieldName: string,
-  ) => {
-    const files = event.target.files;
-    handleFileUpload(files, fieldName);
-  };
+  const { control, setValue, getValues, setError } =
+    useFormContext<SubmitManuscriptProps>();
 
   const validateAndSubmit = () => {
-  const values = getValues();
-  const newErrors: { [key: string]: string } = {};
+    const values = getValues();
+    const newErrors: { [key: string]: string } = {};
 
-  if (!values.manuscriptLink) {
-    newErrors.manuscriptLink = "Please upload the manuscript file before proceeding.";
-  }
+    if (!values.manuscriptLink) {
+      newErrors.manuscriptLink =
+        "Please upload the manuscript file before proceeding.";
+      setError("manuscriptLink", {
+        type: "manual",
+        message: newErrors.manuscriptLink,
+      });
+    }
+    if (!values.proofofPayment) {
+      newErrors.proofofPayment =
+        "Please upload proof of payment before proceeding.";
+      setError("proofofPayment", {
+        type: "manual",
+        message: newErrors.proofofPayment,
+      });
+    }
 
-  if (!values.proofofPayment ) {
-    newErrors.proofofPayment  = "Please upload proof of payment before proceeding.";
-  }
+    if (Object.keys(newErrors).length > 0) {
+      return;
+    }
 
-  if (Object.keys(newErrors).length > 0) {
-    setErrors(newErrors); // Update the errors state
-    return; // Prevent form submission if there are errors
-  }
-
-  // Clear errors and proceed if validation passes
-  setErrors({});
-  handleSubmit(); // Call the provided `handleSubmit` function
-};
-
+    handleSubmit();
+  };
 
   return (
-    <Box
-      component="form"
-      noValidate
-      autoComplete="off"
-      sx={{ mt: 3, width: "100%" }}
-    >
-      <Typography variant="h6" sx={{ mb: 2 }}>
-        Manuscript File
-      </Typography>
+    <div className="space-y-6">
+      {/* Manuscript upload */}
       <Controller
         name="manuscriptLink"
         control={control}
-        render={({ }) => (
-          <>
-            <Box
-              sx={{
-                border: `2px dashed ${theme.palette.divider}`,
-                borderRadius: "8px",
-                padding: "40px",
-                textAlign: "center",
-                position: "relative",
-                cursor: "pointer",
-                width: "100%",
-                height: "150px",
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-                alignItems: "center",
-                boxSizing: "border-box",
-                mb: 3,
-                backgroundColor: theme.palette.background.paper,
-                "&:hover": {
-                  backgroundColor: theme.palette.action.hover,
-                },
-              }}
-              component="label"
-              aria-label="Upload Manuscript File"
-              htmlFor="manuscript-file-input"
-            >
-              <input
-                id="manuscript-file-input"
-                type="file"
-                hidden
-                accept=".doc,.docx,.pdf,.txt,.odt,.rtf"
-                onChange={(e) => handleFileChange(e, "manuscriptLink")}
-                aria-describedby="manuscript-upload-status"
-              />
-              {uploading.manuscriptLink ? (
-                <Stack
-                  direction={isSmallScreen ? "column" : "row"}
-                  alignItems="center"
-                  spacing={2}
-                >
-                  <CircularProgress size={24} />
-                  <Typography variant="body2">Uploading...</Typography>
-                </Stack>
-              ) : uploadedFiles.manuscriptLink ? (
-                <Stack
-                  direction={isSmallScreen ? "column" : "row"}
-                  alignItems="center"
-                  spacing={2}
-                >
-                  <CheckCircleIcon size={48} color="success" />
-                  <Typography variant="subtitle2">
-                    {uploadedFiles.manuscriptLink}
-                  </Typography>
-                </Stack>
-              ) : (
-                <>
-                  <UploadIcon size={48} />
-                  <Typography variant="subtitle2" sx={{ mt: 1 }}>
-                    Upload Manuscript File
-                  </Typography>
-                </>
-              )}
-              {errors.manuscriptLink && (
-                <Typography
-                  id="manuscript-upload-status"
-                  variant="body2"
-                  color="error"
-                  sx={{ mt: 1 }}
-                >
-                  {errors.manuscriptLink}
-                </Typography>
-              )}
-            </Box>
-          </>
+        render={({ fieldState: { error } }) => (
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Manuscript File (PDF/DOCX) *
+            </label>
+            <DocumentUpload
+              fieldName="manuscriptLink"
+              label="Manuscript File"
+              accept=".pdf,.docx"
+              onUpload={(url) =>
+                setValue("manuscriptLink", url, { shouldValidate: true })
+              }
+              error={error?.message}
+            />
+          </div>
         )}
       />
 
-      <Typography variant="h6" sx={{ mb: 2 }}>
-        Proof of Payment
-      </Typography>
+      {/* Proof of Payment upload */}
       <Controller
         name="proofofPayment"
         control={control}
-        render={({ }) => (
-          <>
-            <Box
-              sx={{
-                border: `2px dashed ${theme.palette.divider}`,
-                borderRadius: "8px",
-                padding: "40px",
-                textAlign: "center",
-                position: "relative",
-                cursor: "pointer",
-                width: "100%",
-                height: "150px",
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-                alignItems: "center",
-                boxSizing: "border-box",
-                mb: 3,
-                backgroundColor: theme.palette.background.paper,
-                "&:hover": {
-                  backgroundColor: theme.palette.action.hover,
-                },
-              }}
-              component="label"
-              aria-label="Upload Proof of Payment"
-              htmlFor="proof-of-payment-file-input"
-            >
-              <input
-                id="proof-of-payment-file-input"
-                type="file"
-                hidden
-                onChange={(e) => handleFileChange(e, "proofofPayment")}
-                aria-describedby="proof-of-payment-upload-status"
-              />
-              {uploading.proofofPayment ? (
-                <Stack
-                  direction={isSmallScreen ? "column" : "row"}
-                  alignItems="center"
-                  spacing={2}
-                >
-                  <CircularProgress size={24} />
-                  <Typography variant="body2">Uploading...</Typography>
-                </Stack>
-              ) : uploadedFiles.proofofPayment ? (
-                <Stack
-                  direction={isSmallScreen ? "column" : "row"}
-                  alignItems="center"
-                  spacing={2}
-                >
-                  <CheckCircleIcon size={48} color="success" />
-                  <Typography variant="subtitle2">
-                    {uploadedFiles.proofofPayment}
-                  </Typography>
-                </Stack>
-              ) : (
-                <>
-                  <UploadIcon size={48} />
-                  <Typography variant="subtitle2" sx={{ mt: 1 }}>
-                    Upload Proof of Payment
-                  </Typography>
-                </>
-              )}
-              {errors.proofofPayment && (
-                <Typography
-                  id="proof-of-payment-upload-status"
-                  variant="body2"
-                  color="error"
-                  sx={{ mt: 1 }}
-                >
-                  {errors.proofofPayment}
-                </Typography>
-              )}
-            </Box>
-          </>
+        render={({ fieldState: { error } }) => (
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Proof of Payment (Image/PDF) *
+            </label>
+            <DocumentUpload
+              fieldName="proofofPayment"
+              label="Proof of Payment"
+              accept=".pdf,.jpg,.jpeg,.png"
+              onUpload={(url) =>
+                setValue("proofofPayment", url, { shouldValidate: true })
+              }
+              error={error?.message}
+            />
+          </div>
         )}
       />
 
-      <Typography variant="h6" sx={{ mb: 2 }}>
-        Additional Documents
-      </Typography>
+      {/* Additional documents */}
       <Controller
         name="otherDocsLink"
         control={control}
-        render={({ }) => (
-          <>
-            <Box
-              sx={{
-                border: `2px dashed ${theme.palette.divider}`,
-                borderRadius: "8px",
-                padding: "40px",
-                textAlign: "center",
-                position: "relative",
-                cursor: "pointer",
-                width: "100%",
-                height: "150px",
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-                alignItems: "center",
-                boxSizing: "border-box",
-                mb: 3,
-                backgroundColor: theme.palette.background.paper,
-                "&:hover": {
-                  backgroundColor: theme.palette.action.hover,
-                },
-              }}
-              component="label"
-              aria-label="Upload Additional Documents"
-              htmlFor="additional-docs-file-input"
-            >
-              <input
-                id="additional-docs-file-input"
-                type="file"
-                hidden
-                onChange={(e) => handleFileChange(e, "otherDocsLink")}
-                aria-describedby="additional-docs-upload-status"
-              />
-              {uploading.otherDocsLink ? (
-                <Stack
-                  direction={isSmallScreen ? "column" : "row"}
-                  alignItems="center"
-                  spacing={2}
-                >
-                  <CircularProgress size={24} />
-                  <Typography variant="body2">Uploading...</Typography>
-                </Stack>
-              ) : uploadedFiles.otherDocsLink ? (
-                <Stack
-                  direction={isSmallScreen ? "column" : "row"}
-                  alignItems="center"
-                  spacing={2}
-                >
-                  <CheckCircleIcon size={48} color="success" />
-                  <Typography variant="subtitle2">
-                    {uploadedFiles.otherDocsLink}
-                  </Typography>
-                </Stack>
-              ) : (
-                <>
-                  <UploadIcon size={48} />
-                  <Typography variant="subtitle2" sx={{ mt: 1 }}>
-                    Upload Additional Documents
-                  </Typography>
-                </>
-              )}
-              {errors.otherDocsLink && (
-                <Typography
-                  id="additional-docs-upload-status"
-                  variant="body2"
-                  color="error"
-                  sx={{ mt: 1 }}
-                >
-                  {errors.otherDocsLink}
-                </Typography>
-              )}
-            </Box>
-          </>
+        render={({ fieldState: { error } }) => (
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Additional Documents (PDF/DOCX)
+            </label>
+            <DocumentUpload
+              fieldName="otherDocsLink"
+              label="Additional Documents"
+              accept=".pdf,.docx"
+              onUpload={(url) =>
+                setValue("otherDocsLink", url, { shouldValidate: true })
+              }
+              error={error?.message}
+            />
+          </div>
         )}
       />
 
-      <Stack direction="row" justifyContent="space-between" sx={{ mt: 3 }}>
-        <Button onClick={handleBack} variant="outlined">
+      {/* Navigation */}
+      <div className="flex justify-between">
+        <button
+          type="button"
+          onClick={handleBack}
+          className="bg-gray-300 text-gray-700 px-6 py-3 rounded-lg hover:bg-gray-400 transition duration-300"
+        >
           Back
-        </Button>
-        <Button type="button"  onClick={validateAndSubmit} variant="contained">
+        </button>
+        <button
+          type="button"
+          onClick={validateAndSubmit}
+          className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition duration-300"
+        >
           Next
-        </Button>
-      </Stack>
-    </Box>
+        </button>
+      </div>
+    </div>
   );
 };
 

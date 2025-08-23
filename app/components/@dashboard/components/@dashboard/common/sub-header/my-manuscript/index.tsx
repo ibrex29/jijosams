@@ -12,12 +12,13 @@ const ManuscriptSubHeader: React.FC<Props> = ({ title, subtitle }) => {
       <Paper
         sx={{
           backgroundColor: "white",
-          py: 2,
+          py: 1,
           mx: "-30px",
           px: "30px",
-          my: 2,
+          my: 0,
           boxShadow: "none",
-          border: "1px solid",
+          borderTop: "1px  solid",
+          borderBottom : "1px  solid",
           borderColor: "grey.300",
         }}
       >
@@ -28,14 +29,14 @@ const ManuscriptSubHeader: React.FC<Props> = ({ title, subtitle }) => {
                 <Typography
                   sx={{
                     fontWeight: "bold",
-                    fontSize: "18px",
+                    fontSize: "16px",
                     color: "grey.900",
                   }}
                 >
                   {title}
                 </Typography>
               </Stack>
-              <Typography sx={{ fontSize: "15px", color: "text.disabled" }}>
+              <Typography sx={{ fontSize: "13px", color: "text.disabled" }}>
                 {subtitle}
               </Typography>
             </Box>

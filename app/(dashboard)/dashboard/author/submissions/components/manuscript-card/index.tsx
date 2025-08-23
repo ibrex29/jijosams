@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Avatar,
   Box,
@@ -5,12 +7,14 @@ import {
   Card,
   CardActionArea,
   CardContent,
+  Chip,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
   Divider,
   Stack,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import { useState } from "react";
@@ -34,230 +38,211 @@ export default function AuthorManuscriptCard({
   onClick,
   selected,
 }: Props) {
-  const {
-    title,
-    // abstract,
-    keywords,
-    authorName,
-    coAuthor,
-    status,
-    createdAt,
-    Document,
-  } = manuscript;
-  console.log(manuscript);
+  const { title, keywords, authorName, coAuthor, status, createdAt, Document } =
+    manuscript;
 
   const { notify } = useNotification();
-    const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(false);
 
-
-  const manuscriptLink = Document[0]?.manuscriptLink || "";
-  const otherDocsLink = Document[0]?.otherDocsLink || "";
-
+  const manuscriptLink = Document?.[0]?.manuscriptLink || "";
+  const otherDocsLink = Document?.[0]?.otherDocsLink || "";
 
   const handleReviewClick = async () => {
-  try {
-    const response = await getReviewStatus(manuscript.id);
-    console.log("Review status response:", response);
-
-    if (response.hasReview)
-    {
-      
-      setOpen(true);
-    } else {
-      notify("No review available for this manuscript.");
+    try {
+      const response = await getReviewStatus(manuscript.id);
+      if (response.hasReview) {
+        setOpen(true);
+      } else {
+        notify("No review available for this manuscript.");
+      }
+    } catch (error) {
+      console.error("Error fetching review status:", error);
+      notify("Failed to fetch review status");
     }
-  } catch (error) {
-    console.error("Error fetching review status:", error);
-    notify("Failed to fetch review status");
-  }
-};
+  };
 
   const handleClose = () => setOpen(false);
-  
+
   return (
     <>
-    <Card
-      sx={{
-        maxWidth: { xs: "100%", md: 700 },
-        height: { xs: 430, md: 380 },
-        borderRadius: "12px",
-        position: "relative",
-        boxShadow: "0 4px 16px rgba(0, 0, 0, 0.1)",
-        border: selected ? "2px solid" : "1px solid",
-        borderColor: selected ? "primary.main" : "grey.300",
-        m: 2,
-      }}
-      onClick={onClick}
-    >
-      <CardActionArea>
-        <Box sx={{ position: "absolute", top: 8, right: 3 }}>
-          <Typography
-            variant="caption"
-            sx={{
-              backgroundColor: "primary.main",
-              color: "white",
-              padding: "8px 12px",
-              borderRadius: "8px",
-            }}
-          >
-            {status}
-          </Typography>
-        </Box>
-        <CardContent>
-            <Box display="flex" flexDirection="row"
+      <Card
+        onClick={onClick}
+        sx={{
+          maxWidth: { xs: "100%", md: 700 },
+          minHeight: { xs: 300, md: 260 },
+          borderRadius: "16px",
+          position: "relative",
+          boxShadow: selected
+            ? "0 6px 20px rgba(0, 0, 0, 0.15)"
+            : "0 4px 12px rgba(0, 0, 0, 0.08)",
+          border: "1px solid",
+          borderColor: selected ? "primary.main" : "grey.200",
+          transition: "0.3s",
+          "&:hover": {
+            boxShadow: "0 8px 24px rgba(0, 0, 0, 0.12)",
+            borderColor: "primary.main",
+          },
+          m: 2,
+        }}
+      >
+        <CardActionArea disableRipple>
+          {/* Status Chip */}
+          <Box sx={{ position: "absolute", top: 12, right: 12 }}>
+            <Chip
+              label={status}
+              color="primary"
+              size="small"
               sx={{
-                  height: { xs: 300, md: 270 }, 
-                  gap: 2,
-                  mt: 2,
-                }}>
-              <Avatar sx={{
-                width: { xs: 40, sm: 50, md: 60 }, 
-                height: { xs: 40, sm: 50, md: 60 },
-                bgcolor: "primary.main",
-              }}>
-              {getInitials(authorName.toUpperCase())}
-            </Avatar>
-            <Stack direction="column" mt={1} width="100%">
-              <Typography
-                sx={{
-                  fontWeight: "bolder", 
-                  fontSize: { xs: "14px", sm: "14px", md: "16px" },
-                  color: "grey.900",
-                  height:  { xs: "350px", sm: "350px", md: "240px" },
-                }}
-                gutterBottom
-              >
-                {truncateText(title, 150)}
-              </Typography>
-              {/* <Typography
-                sx={{
-                  color: 'grey.800',
-                  fontSize: '15px',
-                  mb: 1,
-                  mt: 4,
-                }}
-                gutterBottom
-              >
-                Abstract : {truncateText(abstract, 150)}
-              </Typography> */}
-              <Typography
-                sx={{
-                  color: "grey.600",
-                  fontSize: "14px",
-                  textTransform: "capitalize",
-                }}
-                gutterBottom
-              >
-                Keywords: {truncateText(keywords, 150)}
-              </Typography>
-              <Typography
-                sx={{
-                  color: "grey.800",
-                  fontSize: "14px",
-                  textTransform: "capitalize",
-                }}
-                gutterBottom
-              >
-                Author: {authorName}
-              </Typography>
-              <Typography
-                sx={{
-                  color: "grey.600",
-                  fontSize: "14px",
-                  textTransform: "capitalize",
-                }}
-                gutterBottom
-              >
-                Co-Authors: {truncateText(coAuthor, 50)}
-              </Typography>
-              <Typography
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  color: "grey.800",
-                  fontSize: "14px",
-                }}
-                gutterBottom
-              >
-                <Iconify
-                  icon="radix-icons:dot-filled"
-                  sx={{ color: "text.primary", mr: 1 }}
-                />
-                Submitted: {fDate(new Date(createdAt))}
-              </Typography>
-            </Stack>
+                borderRadius: "6px",
+                fontWeight: 600,
+                fontSize: "12px",
+              }}
+            />
           </Box>
-          <Divider sx={{ my: 2 }} /> {/* Added a divider */}
-          <Box
-            display="flex"
-            flexDirection="row"
-            alignItems="center"
-            justifyContent="flex-end"
-            gap={2}
-            mt={2}
-          >
-            {manuscriptLink && (
-              <Typography
-                component="a"
-                href={manuscriptLink}
-                target="_blank"
-                rel="noopener noreferrer"
+
+          <CardContent>
+            {/* Author & Title Section */}
+            <Box
+              display="flex"
+              flexDirection="row"
+              alignItems="flex-start"
+              gap={2}
+              mt={2}
+            >
+              <Avatar
                 sx={{
-                  color: "primary.main",
-                  textDecoration: "none",
-                  fontSize: "14px",
-                  "&:hover": { textDecoration: "underline" },
+                  width: 56,
+                  height: 56,
+                  bgcolor: "primary.main",
+                  fontWeight: 600,
+                  fontSize: "18px",
                 }}
               >
-                Manuscript
-              </Typography>
-            )}
-            {otherDocsLink && (
-              <Typography
-                component="a"
-                href={otherDocsLink}
-                target="_blank"
-                rel="noopener noreferrer"
-                sx={{
-                  color: "primary.main",
-                  textDecoration: "none",
-                  fontSize: "14px",
-                  "&:hover": { textDecoration: "underline" },
-                }}
-              >
-                Other Documents
-              </Typography>
-            )}
-            <Box display="flex" justifyContent="flex-end">
+                {getInitials(authorName.toUpperCase())}
+              </Avatar>
+
+              <Stack spacing={1} flex={1}>
+                {/* Title */}
+                <Tooltip title={title} placement="top">
+                  <Typography
+                    variant="h6"
+                    sx={{
+                      fontWeight: 700,
+                      fontSize: { xs: "15px", md: "17px" },
+                      color: "grey.900",
+                      lineHeight: 1.4,
+                    }}
+                  >
+                    {truncateText(title, 120)}
+                  </Typography>
+                </Tooltip>
+
+                {/* Keywords */}
+                {keywords && (
+                  <Typography
+                    variant="body2"
+                    sx={{ color: "grey.600", textTransform: "capitalize" }}
+                  >
+                    Keywords: {truncateText(keywords, 80)}
+                  </Typography>
+                )}
+
+                {/* Author */}
+                <Typography variant="body2" sx={{ color: "grey.800" }}>
+                  Author: {authorName}
+                </Typography>
+
+                {/* Co-Authors */}
+                {coAuthor && (
+                  <Typography
+                    variant="body2"
+                    sx={{ color: "grey.600", textTransform: "capitalize" }}
+                  >
+                    Co-Authors: {truncateText(coAuthor, 60)}
+                  </Typography>
+                )}
+
+                {/* Date */}
+                <Typography
+                  variant="body2"
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    color: "grey.700",
+                    mt: 1,
+                  }}
+                >
+                  <Iconify
+                    icon="radix-icons:dot-filled"
+                    sx={{ color: "text.primary", mr: 1 }}
+                  />
+                  Submitted: {fDate(new Date(createdAt))}
+                </Typography>
+              </Stack>
+            </Box>
+
+            <Divider sx={{ my: 2 }} />
+
+            {/* Action Buttons */}
+            <Box
+              display="flex"
+              flexDirection="row"
+              alignItems="center"
+              justifyContent="flex-end"
+              gap={3}
+              mt={1}
+            >
+              {manuscriptLink && (
+                <Button
+                  href={manuscriptLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  size="small"
+                  sx={{ textTransform: "none" }}
+                >
+                  Manuscript
+                </Button>
+              )}
+              {otherDocsLink && (
+                <Button
+                  href={otherDocsLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  size="small"
+                  sx={{ textTransform: "none" }}
+                >
+                  Other Docs
+                </Button>
+              )}
               <Button
                 variant="contained"
+                onClick={handleReviewClick}
                 sx={{
                   borderRadius: "50px",
                   textTransform: "none",
-                  "&:hover": { boxShadow: "none" },
+                  px: 3,
+                  fontWeight: 600,
                 }}
-                onClick={handleReviewClick}
               >
                 Review
               </Button>
             </Box>
-          </Box>
-        </CardContent>
-      </CardActionArea>
-    </Card>
-     {/* Review Dialog */}
+          </CardContent>
+        </CardActionArea>
+      </Card>
+
+      {/* Review Dialog */}
       <Dialog open={open} onClose={handleClose} fullWidth maxWidth="md">
-        <DialogTitle>Review and Chat</DialogTitle>
+        <DialogTitle sx={{ fontWeight: 700 }}>Review & Chat</DialogTitle>
         <DialogContent>
           <Chat manuscriptId={manuscript.id} />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} color="secondary">
-            Cancel
+          <Button onClick={handleClose} color="inherit">
+            Close
           </Button>
-          
         </DialogActions>
       </Dialog>
-  </>
+    </>
   );
 }

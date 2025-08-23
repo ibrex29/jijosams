@@ -5,6 +5,7 @@
 import {
   Box,
   Button,
+  Paper,
   Step,
   StepLabel,
   Stepper,
@@ -22,6 +23,7 @@ import FileUploadStep from "../../components/files-upload";
 import ManuscriptInfoStep from "../../components/manuscript-info";
 import Loader from "@/app/components/@dashboard/components/loader";
 import useNotification from "@/hooks/useNotification";
+import ManuscriptSubHeader from "@/app/components/@dashboard/components/@dashboard/common/sub-header/my-manuscript";
 
 const steps = ["Contact Information", "File Uploads", "Manuscript Information"];
 
@@ -94,8 +96,19 @@ const MultiStepForm: React.FC = () => {
   return (
     <>
       <Loader loading={loading} />
+      <ManuscriptSubHeader
+        title="Submit Manuscript"
+        subtitle="Submit your manuscript for review"
+      />
+      <Paper sx={{backgroundColor: "white",
+          py: 1,
+          mx: "-30px",
+          px: "30px",
+          my: 0,
+        boxShadow: "none",
+      }} >
       <FormProvider {...methods}>
-        <Box sx={{ width: "100%", mt: 8 }}>
+        <Box sx={{ width: "100%" , height: "100%", mt: 8 }}>
           {" "}
           {/* Added margin-top (mt) */}
           <Stepper activeStep={activeStep} sx={{ mb: 3 }}>
@@ -123,10 +136,22 @@ const MultiStepForm: React.FC = () => {
               </Button>
             </Box>
           ) : (
-            <Box>{getStepContent(activeStep)}</Box>
+           <Box
+  sx={{
+    p: 4,
+    borderRadius: 2,
+    boxShadow: 3,
+    backgroundColor: "background.paper",
+  }}
+>
+  {getStepContent(activeStep)}
+</Box>
+
           )}
         </Box>
       </FormProvider>
+      </Paper>
+      
     </>
   );
 };

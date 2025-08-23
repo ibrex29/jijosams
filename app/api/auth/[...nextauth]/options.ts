@@ -63,7 +63,7 @@ export const authOptions: AuthOptions = {
       if (user) {
         token.name = user.email;
         token.access = user.token.accessToken;
-        token.role = user.role;
+        token.role = user.role.toLowerCase();
       }
 
       return token;
@@ -79,7 +79,7 @@ export const authOptions: AuthOptions = {
     },
     async signIn({ user }) {
       if (user && user.role) {
-        const route = rolesMap[user.role];
+        const route = rolesMap[user.role.toLowerCase()];
         if (route) {
           return true;
         }
