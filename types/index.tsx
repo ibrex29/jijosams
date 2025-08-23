@@ -7,9 +7,9 @@ export type DictOf<T> = Record<string, T>;
 export enum UserRole {
   Author = "author",
   Reviewer = "reviewer",
-  ManagingEditor = "Managing-Editor",
-  SectionEditor = "Section-Editor",
-  EditorInChief = "Editor-in-Chief",
+  ManagingEditor = "managing-editor",
+  SectionEditor = "section-editor",
+  EditorInChief = "editor-in-chief",
 }
 
 export const rolesMap: Record<string, string> = {

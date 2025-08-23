@@ -2,7 +2,7 @@
 
 import useFetchAuthorManuscripts from "@/app/(dashboard)/hooks/useFetchAuthorManuscripts";
 
-import ManuscriptsDisplay from "../../components/card";
+import ManuscriptsDisplay from "../../components/manuscript-display";
 
 const MyManuscriptTab: React.FC = () => {
   const { manuscripts, isFetching, availableManuscripts } =

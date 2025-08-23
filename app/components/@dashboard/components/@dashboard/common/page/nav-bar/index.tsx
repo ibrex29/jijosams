@@ -10,8 +10,8 @@ const PageNavBar = ({ children }: { children: React.ReactNode }) => {
         bgcolor: "white",
         marginX: "-30px",
         paddingX: "30px",
-        paddingBottom: "15px",
-        paddingTop: "15px",
+        paddingBottom: "10px",
+        paddingTop: "10px",
         alignItems: "center",
         overflow: "scroll",
       }}

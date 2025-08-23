@@ -10,8 +10,8 @@ const PageTitleBar: FC<PageTitleBarProps> = ({ title }) => {
     <Box
       sx={{
         display: "flex",
-        paddingTop: "18px",
-        paddingBottom: "15px",
+        paddingTop: "10px",
+        paddingBottom: "10px",
         alignItems: "center",
         background: "white",
         marginX: "-30px",

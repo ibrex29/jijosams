@@ -45,7 +45,7 @@ export const EditorInChiefEditorialManagementPageTab = [
 
 export const AuthorSubmissionPageTabs = [
   {
-    title: "My Submission",
+    title: "Submitted Manuscripts",
     component: MyManuscriptTab,
   },
 ];

@@ -75,10 +75,12 @@ export default function Nav({ openNav, onCloseNav }: NavProps) {
           height: 1,
           display: "flex",
           flexDirection: "column",
+          borderRight: "1px solid",
+          borderColor: "grey.300",
         },
       }}
     >
-      <Box sx={{ px: 3, pt: 3, display: "inline-flex" }}>
+      <Box sx={{ px: 3, pt: 3, display: "inline-flex"  }}>
         <Image
               src="/logo/slu_jst_logo.svg"
               alt="Logo"

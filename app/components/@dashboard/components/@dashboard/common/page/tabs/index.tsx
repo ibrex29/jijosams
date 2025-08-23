@@ -35,7 +35,7 @@ const PageTabs: FC<PageTabsProps> = ({ pageName, tabs }) => {
       {tabs.map(
         (tab, index) =>
           activeTab == index && (
-            <Box key={tab.title}>
+            <Box  key={tab.title}>
               <PageBreadcrumbs page={pageName} tab={tab.title} />
               <tab.component />
             </Box>
