@@ -27,6 +27,7 @@
     "date-fns": "^2.30.0",
     "eslint-plugin-unused-imports": "^3.0.0",
     "firebase": "^10.13.0",
+    "jsonwebtoken": "^9.0.2",
     "lodash": "^4.17.21",
     "motion": "^12.4.3",
     "next": "15.1.7",
@@ -47,6 +48,7 @@
   "devDependencies": {
     "@eslint/eslintrc": "^3",
     "@types/aos": "^3.0.6",
+    "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",

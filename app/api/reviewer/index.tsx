@@ -3,59 +3,72 @@
 
 import { author, baseUrl, reviewer } from "@/constants/config";
 import { request } from "@/utils/request";
-
 import { fetchData, getBearerHeader } from "../call-methods";
+import { logout } from "@/app/components/log-out";
 
 export const closeReview = async (reviewId: string) => {
   const bearerHeader = await getBearerHeader();
 
-  const response = await fetch(
-    `http://localhost:5000/api/v1/review/${reviewId}/close`,
+  const response = await request(
+    "PATCH",
+    `${baseUrl}/v1/review/${reviewId}/close`,
     {
-      method: "PATCH",
       headers: {
         "Content-Type": "application/json",
         ...bearerHeader.headers,
       },
+      responseType: "json",
     },
   );
 
-  const contentType = response.headers.get("content-type");
-  if (contentType?.includes("application/json")) {
-    const data = await response.json();
-    return { success: true, data };
-  } else {
-    const text = await response.text();
-    return { success: true, message: text };
+  if (response && response.status === 401) {
+    logout();
   }
+
+  // Maintain original response format
+  if (response && response.status && response.status >= 400) {
+    return { success: false, message: response.error || "Request failed" };
+  }
+
+  return { success: true, data: response };
 };
 
 export const openReview = async (reviewId: string) => {
   const bearerHeader = await getBearerHeader();
 
-  const response = await fetch(
-    `http://localhost:5000/api/v1/review/${reviewId}/open`,
+  const response = await request(
+    "PATCH",
+    `${baseUrl}/v1/review/${reviewId}/open`,
     {
-      method: "PATCH",
       headers: {
         "Content-Type": "application/json",
         ...bearerHeader.headers,
       },
+      responseType: "json",
     },
   );
 
-  const contentType = response.headers.get("content-type");
-  if (contentType?.includes("application/json")) {
-    const data = await response.json();
-    return { success: true, data };
-  } else {
-    const text = await response.text();
-    return { success: true, message: text };
+  if (response && response.statusCode === 401) {
+    logout();
   }
+
+  // Maintain original response format
+  if (response && response.status && response.status >= 400) {
+    return { success: false, message: response.error || "Request failed" };
+  }
+
+  return { success: true, data: response };
 };
 
-export const getRecommendation = async () =>
-  fetchData(reviewer.getRecommendation);
+export const getRecommendation = async () => {
+  const response = await fetchData(reviewer.getRecommendation);
+
+  if (response && response.statusCode === 401) {
+    logout();
+  }
+
+  return response;
+};
 
 export const getReviewStatus = async (manuscriptId: string) => {
   const bearerHeader = await getBearerHeader();
@@ -71,6 +84,10 @@ export const getReviewStatus = async (manuscriptId: string) => {
     },
   );
 
+  if (response && response.statusCode === 401) {
+    logout();
+  }
+
   return response;
 };
 
@@ -84,6 +101,11 @@ export const createReview = async (payload: any) => {
     },
     data: payload,
   });
+
+  if (response && response.statusCode === 401) {
+    logout();
+  }
+
   return response;
 };
 
@@ -97,6 +119,11 @@ export const createReviewerReply = async (payload: any) => {
     },
     data: payload,
   });
+
+  if (response && response.statusCode === 401) {
+    logout();
+  }
+
   return response;
 };
 
@@ -110,6 +137,11 @@ export const createAuthorReply = async (payload: any) => {
     },
     data: payload,
   });
+
+  if (response && response.statusCode === 401) {
+    logout();
+  }
+
   return response;
 };
 
@@ -127,8 +159,15 @@ export const getReplies = async (manuscriptId: string) => {
     },
   );
 
+  if (response && response.statusCode === 401) {
+    logout();
+  }
+
   return response;
 };
+
+
+
 
 // export const closeReview = async (reviewId: string) => {
 //   const bearerHeader = await getBearerHeader();

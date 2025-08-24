@@ -35,6 +35,8 @@ const PublishManuscriptInner: React.FC = () => {
   const [submitError, setSubmitError] = useState("");
   const [loading, setLoading] = useState(true);
   const { notify } = useNotification();
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
 
   useEffect(() => {
     const fetchVolumes = async () => {
@@ -75,7 +77,20 @@ const PublishManuscriptInner: React.FC = () => {
     }
   }, [watchedVolumeId, volumes, setValue]);
 
+    const cleanAuthorsInput = (value: string) => {
+    return (
+      value
+        .replace(/[^a-zA-Z\s,-]/g, '') // Remove all characters except letters, spaces, commas, and hyphens
+        .replace(/\s*,\s*/g, ', ') // Normalize spacing around commas
+        .replace(/\s+/g, ' ') // Replace multiple spaces with single space
+        .trim()
+    );
+  };
+
   const validateAndSubmit = async () => {
+        if (isSubmitting) return; // Prevent multiple submissions
+
+    setIsSubmitting(true);
     const values = getValues();
     const newErrors: { [key: string]: string } = {};
 
@@ -92,11 +107,30 @@ const PublishManuscriptInner: React.FC = () => {
     if (!values.authors || values.authors.length === 0) {
       newErrors.authors = "At least one author is required.";
     }
+    if (!values.keywords) {
+      newErrors.keywords = "Keywords are required.";
+    }
+    if (!values.doi) {
+      newErrors.doi = "DOI is required.";
+    }
     if (!values.volume) {
       newErrors.volume = "Volume is required.";
     }
     if (!values.issue) {
       newErrors.issue = "Issue is required.";
+    }
+    if (!values.startPage || isNaN(Number(values.startPage)) || Number(values.startPage) <= 0) {
+      newErrors.startPage = "Please enter a valid start page number.";
+    }
+    if (!values.endPage || isNaN(Number(values.endPage)) || Number(values.endPage) <= 0) {
+      newErrors.endPage = "Please enter a valid end page number.";
+    }
+    if (
+      values.startPage &&
+      values.endPage &&
+      Number(values.startPage) > Number(values.endPage)
+    ) {
+      newErrors.endPage = "End page must be greater than or equal to start page.";
     }
 
     if (Object.keys(newErrors).length > 0) {
@@ -110,15 +144,16 @@ const PublishManuscriptInner: React.FC = () => {
       title: values.title,
       abstract: values.abstract,
       authors: values.authors.split(",").map((author: string) => author.trim()),
-      keywords: values.keywords || "",
+      keywords: values.keywords,
       issue: values.issue,
-      doi: values.doi || "",
+      doi: values.doi,
+      pageRange: `pp. ${values.startPage}-${values.endPage}`,
       formattedManuscript: values.manuscriptLink,
     };
 
-    try {
+     try {
       await publishManuscript(publicationData);
-      notify("Manuscript Submitted Successfully", { mode: "success" });
+      notify("Manuscript Published Successfully", { mode: "success" });
       reset();
       setSubmitError("");
     } catch (error: unknown) {
@@ -127,6 +162,8 @@ const PublishManuscriptInner: React.FC = () => {
       setSubmitError(
         `Failed to submit publication: ${errorMessage}. Please try again.`,
       );
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -142,7 +179,7 @@ const PublishManuscriptInner: React.FC = () => {
     <div className="min-h-screen flex items-center justify-center py-10">
       <div className="bg-white rounded-2xl shadow-xl p-8 w-full max-w-5xl">
         <p className="mb-4 italic">
-          Please fill out this form to publish your manuscript.
+          Please fill out this form to publish your manuscript. All fields are required.
         </p>
         <form className="space-y-6">
           <Controller
@@ -168,28 +205,48 @@ const PublishManuscriptInner: React.FC = () => {
             )}
           />
           <Controller
-            name="abstract"
-            control={control}
-            render={({ field }) => (
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Abstract *
-                </label>
-                <textarea
-                  {...field}
-                  className={`w-full p-3 border ${formErrors.abstract ? "border-red-500" : "border-gray-300"} rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500`}
-                  rows={5}
-                  placeholder="Enter abstract"
-                />
-                {formErrors.abstract && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {formErrors.abstract.message as string}
-                  </p>
-                )}
-              </div>
-            )}
-          />
-          <Controller
+  name="abstract"
+  control={control}
+  render={({ field }) => (
+    <div>
+      <label className="block text-sm font-medium text-gray-700 mb-1">
+        Abstract *
+      </label>
+      <textarea
+        {...field}
+        className={`w-full p-3 border ${
+          formErrors.abstract ? "border-red-500" : "border-gray-300"
+        } rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-justify`}
+        rows={6}
+        placeholder="Paste or type abstract here..."
+        onPaste={(e) => {
+          e.preventDefault();
+          let pasted = e.clipboardData.getData("text");
+
+          // 1. Remove multiple spaces/newlines
+          pasted = pasted
+            .replace(/\s+/g, " ")
+            .replace(/\n\s*\n/g, "\n")
+            .trim();
+
+          // 2. Capitalize first letter of sentences (optional)
+          pasted = pasted.replace(/(^\s*\w|[.!?]\s*\w)/g, (c) =>
+            c.toUpperCase()
+          );
+
+          field.onChange(pasted); // update form state
+        }}
+      />
+      {formErrors.abstract && (
+        <p className="text-red-500 text-sm mt-1">
+          {formErrors.abstract.message as string}
+        </p>
+      )}
+    </div>
+  )}
+/>
+
+           <Controller
             name="authors"
             control={control}
             render={({ field }) => (
@@ -202,6 +259,10 @@ const PublishManuscriptInner: React.FC = () => {
                   type="text"
                   className={`w-full p-3 border ${formErrors.authors ? "border-red-500" : "border-gray-300"} rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500`}
                   placeholder="Enter authors, e.g., John Doe, Jane Smith"
+                  onChange={(e) => {
+                    const cleanedValue = cleanAuthorsInput(e.target.value);
+                    field.onChange(cleanedValue);
+                  }}
                 />
                 {formErrors.authors && (
                   <p className="text-red-500 text-sm mt-1">
@@ -217,7 +278,7 @@ const PublishManuscriptInner: React.FC = () => {
             render={({ field }) => (
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Keywords
+                  Keywords *
                 </label>
                 <input
                   {...field}
@@ -239,7 +300,7 @@ const PublishManuscriptInner: React.FC = () => {
             render={({ field }) => (
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  DOI
+                  DOI *
                 </label>
                 <input
                   {...field}
@@ -255,6 +316,54 @@ const PublishManuscriptInner: React.FC = () => {
               </div>
             )}
           />
+          <div className="grid grid-cols-2 gap-4">
+            <Controller
+              name="startPage"
+              control={control}
+              render={({ field }) => (
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Start Page *
+                  </label>
+                  <input
+                    {...field}
+                    type="number"
+                    min="1"
+                    className={`w-full p-3 border ${formErrors.startPage ? "border-red-500" : "border-gray-300"} rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                    placeholder="Enter start page"
+                  />
+                  {formErrors.startPage && (
+                    <p className="text-red-500 text-sm mt-1">
+                      {formErrors.startPage.message as string}
+                    </p>
+                  )}
+                </div>
+              )}
+            />
+            <Controller
+              name="endPage"
+              control={control}
+              render={({ field }) => (
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    End Page *
+                  </label>
+                  <input
+                    {...field}
+                    type="number"
+                    min="1"
+                    className={`w-full p-3 border ${formErrors.endPage ? "border-red-500" : "border-gray-300"} rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                    placeholder="Enter end page"
+                  />
+                  {formErrors.endPage && (
+                    <p className="text-red-500 text-sm mt-1">
+                      {formErrors.endPage.message as string}
+                    </p>
+                  )}
+                </div>
+              )}
+            />
+          </div>
           <Controller
             name="volume"
             control={control}
@@ -322,9 +431,6 @@ const PublishManuscriptInner: React.FC = () => {
             control={control}
             render={({ field }) => (
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Manuscript File *
-                </label>
                 <DocumentUpload
                   fieldName="manuscriptLink"
                   label="Manuscript File"
@@ -349,9 +455,40 @@ const PublishManuscriptInner: React.FC = () => {
             <button
               type="button"
               onClick={validateAndSubmit}
-              className="bg-primary text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition duration-300"
+              disabled={isSubmitting}
+              className={`flex items-center px-6 py-3 rounded-lg transition duration-300 ${
+                isSubmitting
+                  ? "bg-gray-400 text-white cursor-not-allowed"
+                  : "bg-primary text-white hover:bg-blue-700"
+              }`}
             >
-              Submit Publication
+              {isSubmitting ? (
+                <>
+                  <svg
+                    className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    ></circle>
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                    ></path>
+                  </svg>
+                  Submitting...
+                </>
+              ) : (
+                "Submit Publication"
+              )}
             </button>
           </div>
         </form>
@@ -371,6 +508,8 @@ const PublishManuscript: React.FC = () => {
       volume: "",
       issue: "",
       doi: "",
+      startPage: "",
+      endPage: "",
       manuscriptLink: "",
     },
   });

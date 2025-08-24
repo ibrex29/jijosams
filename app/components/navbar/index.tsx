@@ -77,7 +77,7 @@ export default function Navbar() {
               href="/manuscripts"
               className="text-gray-700 font-semibold hover:text-primary"
             >
-              Manuscript
+              Manuscripts
             </Link>
             <Link
               href="/about-us"

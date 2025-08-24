@@ -71,9 +71,6 @@ export default function CaretPopover() {
             Authorization: `Bearer ${session.token}`,
           },
         });
-
-        console.log("Custom logout API response:", response);
-
         if (!response.ok) {
           console.error("Custom logout API failed.");
         }
