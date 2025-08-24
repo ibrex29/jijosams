@@ -63,10 +63,6 @@ export const openReview = async (reviewId: string) => {
 export const getRecommendation = async () => {
   const response = await fetchData(reviewer.getRecommendation);
 
-  if (response && response.statusCode === 401) {
-    logout();
-  }
-
   return response;
 };
 
