@@ -1,5 +1,5 @@
 "use client";
-import { Visibility, VisibilityOff } from "@mui/icons-material"; 
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 import {
   Box,
   Button,
@@ -11,8 +11,8 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { useEffect,useState } from "react";
-import { Controller,useForm } from "react-hook-form";
+import { useEffect, useState } from "react";
+import { Controller, useForm } from "react-hook-form";
 
 import { getSection } from "@/app/api/sections";
 import { createUser } from "@/app/api/users";

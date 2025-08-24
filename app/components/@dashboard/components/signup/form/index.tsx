@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
 import { Visibility, VisibilityOff } from "@mui/icons-material";
@@ -11,6 +12,7 @@ import {
   IconButton,
   InputAdornment,
   InputLabel,
+  Link,
   MenuItem,
   Select,
   TextField,
@@ -22,6 +24,7 @@ import { Controller, useForm } from "react-hook-form";
 
 import { createAuthor } from "@/app/api/users";
 import StyledButton from "../../styled-button";
+import { expertiseAreas } from "@/constants/constant";
 
 interface SignupData {
   title: string;
@@ -67,7 +70,7 @@ const SignupForm: FC = () => {
       console.log(response);
 
       if (response.id && response.userId) {
-        router.push("/signin"); // Redirect to login page after successful sign-up
+        router.push("/signin");
       } else if (
         response.statusCode === 409 &&
         response.message.includes("Email address already exists")
@@ -163,8 +166,8 @@ const SignupForm: FC = () => {
                             textAlign: "left",
                           },
                         }}
+                        aria-label="Select title"
                       >
-                        {" "}
                         <MenuItem value="Mr">Mr</MenuItem>
                         <MenuItem value="Mrs">Mrs</MenuItem>
                         <MenuItem value="Ms">Ms</MenuItem>
@@ -193,6 +196,7 @@ const SignupForm: FC = () => {
                       variant="filled"
                       error={!!fieldState.error}
                       helperText={fieldState.error?.message}
+                      aria-label="First name"
                     />
                   )}
                 />
@@ -210,6 +214,7 @@ const SignupForm: FC = () => {
                       variant="filled"
                       error={!!fieldState.error}
                       helperText={fieldState.error?.message}
+                      aria-label="Last name"
                     />
                   )}
                 />
@@ -233,6 +238,7 @@ const SignupForm: FC = () => {
                       variant="filled"
                       error={!!fieldState.error}
                       helperText={fieldState.error?.message}
+                      aria-label="Email address"
                     />
                   )}
                 />
@@ -253,6 +259,7 @@ const SignupForm: FC = () => {
                             <IconButton
                               onClick={handleClickShowPassword}
                               onMouseDown={handleMouseDownPassword}
+                              aria-label={showPassword ? "Hide password" : "Show password"}
                             >
                               {showPassword ? (
                                 <VisibilityOff />
@@ -280,6 +287,7 @@ const SignupForm: FC = () => {
                       variant="filled"
                       error={!!fieldState.error}
                       helperText={fieldState.error?.message}
+                      aria-label="Affiliation"
                     />
                   )}
                 />
@@ -290,14 +298,29 @@ const SignupForm: FC = () => {
                   control={control}
                   rules={{ required: "Expertise Area is required" }}
                   render={({ field, fieldState }) => (
-                    <TextField
-                      {...field}
+                    <FormControl
                       fullWidth
-                      label="Expertise Area"
                       variant="filled"
                       error={!!fieldState.error}
-                      helperText={fieldState.error?.message}
-                    />
+                    >
+                      <InputLabel>Expertise Area</InputLabel>
+                      <Select
+                        {...field}
+                        label="Expertise Area"
+                        aria-label="Select expertise area"
+                      >
+                        {expertiseAreas.map((area) => (
+                          <MenuItem key={area} value={area}>
+                            {area}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                      {fieldState.error && (
+                        <Typography variant="body2" color="error">
+                          {fieldState.error.message}
+                        </Typography>
+                      )}
+                    </FormControl>
                   )}
                 />
               </Grid>
@@ -310,6 +333,29 @@ const SignupForm: FC = () => {
                 >
                   {isLoading ? "Signing up..." : "Sign Up"}
                 </StyledButton>
+              </Grid>
+              <Grid item xs={12}>
+                <Typography
+                  variant="body2"
+                  sx={{
+                    color: "text.disabled",
+                    textAlign: "center",
+                    mt: 2,
+                  }}
+                >
+                  Already have an account?{" "}
+                  <Link
+                    href="/signin"
+                    color="primary.main"
+                    sx={{
+                      textDecoration: "none",
+                      "&:hover": { textDecoration: "underline" },
+                    }}
+                    aria-label="Navigate to sign-in page"
+                  >
+                    Sign in here
+                  </Link>
+                </Typography>
               </Grid>
             </Grid>
           </form>

@@ -10,9 +10,9 @@ import { request } from "@/utils/request";
 import { authOptions } from "../auth/[...nextauth]/options";
 import { fetchData } from "../call-methods";
 
-export const getVolumes = async  () => fetchData(volume.Volume);
+export const getVolumes = async () => fetchData(volume.Volume);
 
-export const getIssues =  async  () => fetchData(volume.Issue);
+export const getIssues = async () => fetchData(volume.Issue);
 
 export const createVolume = async (payload: CreateVolumeProps) => {
   const session = await getServerSession(authOptions);

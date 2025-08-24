@@ -21,18 +21,18 @@ const ReviewerMetrics: React.FC = (): React.JSX.Element => {
     const fetchData = async () => {
       setLoading(true);
       try {
-          const response = await getReviewerMetrics();
-          console.log(response);
+        const response = await getReviewerMetrics();
+        console.log(response);
         setData({
           totalSubmitted: response.manuscriptCounts.submitted,
-          awaitingReview: response.manuscriptCounts.under_review, 
-          assigned: response.manuscriptCounts.assigned, 
+          awaitingReview: response.manuscriptCounts.under_review,
+          assigned: response.manuscriptCounts.assigned,
           accepted: response.manuscriptCounts.accepted,
         });
       } catch (error) {
         console.error("Failed to fetch author metrics:", error);
       } finally {
-        setLoading(false); 
+        setLoading(false);
       }
     };
 

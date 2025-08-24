@@ -1,12 +1,22 @@
 "use client";
 
-import { useMediaQuery, Avatar, Box, IconButton, Tooltip, Typography } from "@mui/material";
+import {
+  useMediaQuery,
+  Avatar,
+  Box,
+  IconButton,
+  Tooltip,
+  Typography,
+} from "@mui/material";
 import { alpha } from "@mui/material/styles";
 import { useEffect, useState } from "react";
 import { getUserDetails } from "@/utils/getUserDetails";
 
 export default function AvatarPopover() {
-  const [userDetails, setUserDetails] = useState<{ email: string; role: string }>({
+  const [userDetails, setUserDetails] = useState<{
+    email: string;
+    role: string;
+  }>({
     email: "Email",
     role: "Role",
   });

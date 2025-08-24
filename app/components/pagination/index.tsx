@@ -2,7 +2,13 @@
 "use client";
 
 import React from "react";
-import { Box, Pagination as MuiPagination, MenuItem, Select, Typography } from "@mui/material";
+import {
+  Box,
+  Pagination as MuiPagination,
+  MenuItem,
+  Select,
+  Typography,
+} from "@mui/material";
 
 interface PaginationProps {
   page: number;
@@ -20,7 +26,12 @@ const Pagination: React.FC<PaginationProps> = ({
   onLimitChange,
 }) => {
   return (
-    <Box display="flex" justifyContent="space-between" alignItems="center" mt={3}>
+    <Box
+      display="flex"
+      justifyContent="space-between"
+      alignItems="center"
+      mt={3}
+    >
       <Box display="flex" alignItems="center" gap={1}>
         <Typography variant="body2" color="text.secondary">
           Items per page:

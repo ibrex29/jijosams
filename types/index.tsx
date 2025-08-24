@@ -198,6 +198,7 @@ export interface Manuscript {
   downloadTimes: number;
   manuscriptId: string;
   issueId: string;
+  pageRange?: string;
   reactions: {
     LIKE: number;
   };
@@ -247,6 +248,7 @@ export interface RecentManuscript {
   createdAt: string;
   DOI?: string;
   isActive: boolean;
+  pageRange?: string
   Issue?: {
     Volume?: {
       name: string;
@@ -254,5 +256,3 @@ export interface RecentManuscript {
     name: string;
   };
 }
-
-

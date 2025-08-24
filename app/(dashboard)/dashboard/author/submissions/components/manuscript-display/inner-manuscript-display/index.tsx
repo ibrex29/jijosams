@@ -3,7 +3,6 @@ import { ManuscriptProps } from "@/types";
 import ManuscriptCardGrid from "../../manuscript-card-view";
 import NoTicket from "../../no-manuscript";
 
-
 import ManuscriptListView from "../../manuscript-list-view";
 import ListSkeleton from "../../manuscript-list-view/skeleton";
 import ManuscriptTableView from "../../manuscript-table-view";
@@ -33,7 +32,7 @@ const ManuscriptContent: React.FC<ManuscriptContentProps> = ({
       case "list":
         return <ListSkeleton />;
       default:
-        return <ManuscriptCardSkeleton  />;
+        return <ManuscriptCardSkeleton />;
     }
   }
 

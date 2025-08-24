@@ -10,12 +10,11 @@ import {
 } from "@mui/material";
 import React from "react";
 
-
 interface VolumeCardProps {
   name: string;
   description: string;
   onEdit: () => void;
-  onDelete: () => void; 
+  onDelete: () => void;
 }
 
 const VolumeCard: React.FC<VolumeCardProps> = ({
@@ -46,7 +45,12 @@ const VolumeCard: React.FC<VolumeCardProps> = ({
         </Box>
 
         {/* Action Buttons */}
-        <Box display="flex" justifyContent="space-between" alignItems="center" mt={2}>
+        <Box
+          display="flex"
+          justifyContent="space-between"
+          alignItems="center"
+          mt={2}
+        >
           <Tooltip title="Edit">
             <IconButton color="primary" onClick={onEdit}>
               <EditIcon />

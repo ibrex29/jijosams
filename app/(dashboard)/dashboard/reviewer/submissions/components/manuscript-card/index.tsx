@@ -62,7 +62,8 @@ export default function ReviewerManuscriptCard({
   const [open, setOpen] = useState(false);
   const [comments, setComments] = useState("");
   const [recommendation, setRecommendation] = useState<string[]>([]);
-  const [selectedRecommendation, setSelectedRecommendation] = useState<string>("");
+  const [selectedRecommendation, setSelectedRecommendation] =
+    useState<string>("");
   const [hasReview, setHasReview] = useState<boolean>(false);
   const { notify } = useNotification();
 
@@ -139,7 +140,7 @@ export default function ReviewerManuscriptCard({
       <Card
         sx={{
           maxWidth: { xs: "100%", nmd: 700 },
-          height: { xs: 'fit', md: 370 },
+          height: { xs: "fit", md: 370 },
           borderRadius: "12px",
           position: "relative",
           boxShadow: "0 4px 16px rgba(0, 0, 0, 0.1)",

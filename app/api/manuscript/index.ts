@@ -5,6 +5,7 @@ import { request } from "@/utils/request";
 
 import { getBearerHeader } from "../call-methods";
 import { FetchManuscriptsParams, FetchManuscriptsResponse } from "./types";
+import { logout } from "@/app/components/log-out";
 
 export const getAuthorMetrics = async () => {
   const bearerHeader = await getBearerHeader();
@@ -15,6 +16,11 @@ export const getAuthorMetrics = async () => {
       ...bearerHeader.headers,
     },
   });
+
+  if (response && response.statusCode === 401)
+  { 
+    logout();
+  }
 
   return response;
 };
@@ -28,6 +34,10 @@ export const getReviewerMetrics = async () => {
       ...bearerHeader.headers,
     },
   });
+  if (response && response.statusCode === 401)
+  { 
+    logout();
+  }
 
   return response;
 };
@@ -42,13 +52,23 @@ export const submitManuscript = async (payload: any) => {
     },
     data: payload,
   });
+  if (response && response.statusCode === 401)
+  { 
+    logout();
+  }
   return response;
 };
 
-
-
-export const getAuthorManuscripts = async (params: FetchManuscriptsParams = {}): Promise<FetchManuscriptsResponse> => {
-  const { sortOrder = "asc", page = 1, limit = 10, search = "", status = "" } = params;
+export const getAuthorManuscripts = async (
+  params: FetchManuscriptsParams = {},
+): Promise<FetchManuscriptsResponse> => {
+  const {
+    sortOrder = "asc",
+    page = 1,
+    limit = 10,
+    search = "",
+    status = "",
+  } = params;
   const bearerHeader = await getBearerHeader();
 
   const queryParams = new URLSearchParams({
@@ -59,15 +79,25 @@ export const getAuthorManuscripts = async (params: FetchManuscriptsParams = {}):
     ...(status && { status }),
   });
 
-  const response = await request("GET", `${api.AuthorManuscripts}?${queryParams.toString()}`, {
-    headers: {
-      "Content-Type": "application/json",
-      ...bearerHeader.headers,
+  const response = await request(
+    "GET",
+    `${api.AuthorManuscripts}?${queryParams.toString()}`,
+    {
+      headers: {
+        "Content-Type": "application/json",
+        ...bearerHeader.headers,
+      },
     },
-  });
+  );
 
-  return response as FetchManuscriptsResponse;
-};
+  if (response && response.statusCode === 401)
+  { 
+    logout();
+  }
+    return response as FetchManuscriptsResponse;
+  }
+
+
 export const getAllManuscripts = async (): Promise<ManuscriptProps[]> => {
   const bearerHeader = await getBearerHeader();
 
@@ -78,6 +108,10 @@ export const getAllManuscripts = async (): Promise<ManuscriptProps[]> => {
     },
   });
 
+  if (response && response.statusCode === 401)
+  { 
+    logout();
+  }
   return response as Promise<ManuscriptProps[]>;
 };
 
@@ -90,6 +124,11 @@ export const getSEManuscript = async (): Promise<ManuscriptProps[]> => {
       ...bearerHeader.headers,
     },
   });
+
+  if (response && response.statusCode === 401)
+  { 
+    logout();
+  };
 
   return response as Promise<ManuscriptProps[]>;
 };
@@ -104,9 +143,12 @@ export const getREManuscript = async () => {
     },
   });
 
+  if (response && response.statusCode === 401)
+  { 
+    logout();
+  }
   return response;
 };
-
 
 export const publishManuscript = async (payload: any) => {
   const bearerHeader = await getBearerHeader();
@@ -117,6 +159,11 @@ export const publishManuscript = async (payload: any) => {
     },
     data: payload,
   });
+
+  if (response && response.statusCode === 401) 
+  { 
+    logout();
+  }
   return response;
 };
 

@@ -56,12 +56,16 @@ const ContactInfoStep: React.FC<ContactInfoProps> = ({ handleNext }) => {
       />
 
       <Stack direction="row" spacing={2} sx={{ mt: 2 }}>
-        <Button type="submit" variant="contained"  sx={{
-        px: 3,
-        py: 1.5,
-        borderRadius: 2,
-        textTransform: "none", // keeps text normal instead of uppercase
-      }}>
+        <Button
+          type="submit"
+          variant="contained"
+          sx={{
+            px: 3,
+            py: 1.5,
+            borderRadius: 2,
+            textTransform: "none", // keeps text normal instead of uppercase
+          }}
+        >
           Next
         </Button>
       </Stack>

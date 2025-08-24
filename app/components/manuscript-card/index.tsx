@@ -60,6 +60,11 @@ export default function ManuscriptCard({ manuscript }: ManuscriptCardProps) {
         </p>
         <TruncatedText text={manuscript.abstract} limit={400} />
         <div className="mt-2 flex flex-col md:flex-row items-start md:items-center text-sm text-gray-900">
+          {manuscript.pageRange && (
+            <span className="mr-0 md:mr-4 mt-2 md:mt-0">
+              Pages: <span className="font-bold">{manuscript.pageRange}</span>
+            </span>
+          )}
           <span className="mr-0 md:mr-4">
             DOI:{" "}
             <a
@@ -71,6 +76,7 @@ export default function ManuscriptCard({ manuscript }: ManuscriptCardProps) {
               {manuscript.DOI}
             </a>
           </span>
+          
           <span className="text-blue-600 mt-2 md:mt-0">
             Downloads: {manuscript.downloadTimes}
           </span>

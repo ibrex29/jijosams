@@ -21,8 +21,18 @@ const useFetchAuthorManuscripts = () => {
   const [status, setStatus] = React.useState<string>("");
 
   const { data, isFetching } = useQuery<FetchManuscriptsResponse>({
-    queryKey: ["manuscripts", { sortOrder, page: meta?.page, limit: meta?.limit, search, status }],
-    queryFn: () => getAuthorManuscripts({ sortOrder, page: meta?.page, limit: meta?.limit, search, status }),
+    queryKey: [
+      "manuscripts",
+      { sortOrder, page: meta?.page, limit: meta?.limit, search, status },
+    ],
+    queryFn: () =>
+      getAuthorManuscripts({
+        sortOrder,
+        page: meta?.page,
+        limit: meta?.limit,
+        search,
+        status,
+      }),
     staleTime: 120000,
   });
 
@@ -42,7 +52,8 @@ const useFetchAuthorManuscripts = () => {
     page: meta?.page,
     setPage: (page: number) => setMeta((prev) => ({ ...prev, page })),
     limit: meta?.limit,
-    setLimit: (limit: number) => setMeta((prev) => ({ ...prev, limit, page: 1 })), // Reset to page 1 when limit changes
+    setLimit: (limit: number) =>
+      setMeta((prev) => ({ ...prev, limit, page: 1 })), // Reset to page 1 when limit changes
     sortOrder,
     setSortOrder,
     search,

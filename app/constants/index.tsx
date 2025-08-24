@@ -5,7 +5,11 @@ export const teams = [
       "The BFC Executive Team is comprised of seasoned executives hailing from diverse asset management, entrepreneurship, and finance backgrounds.",
     members: [
       { name: "Dr. Umar Ali", role: "Editor-in-Chief", img: "/eric.jpg" },
-      { name: "Prof. Nasir Faruk", role: "Managing Editor", img: "http://slujst.slu.edu.ng/assets/2025-08-22/image/image-20250822-zz569d-WhatsApp_Image_2025-08-22_at_00.36.00.jpeg" },
+      {
+        name: "Prof. Nasir Faruk",
+        role: "Managing Editor",
+        img: "http://slujst.slu.edu.ng/assets/2025-08-22/image/image-20250822-zz569d-WhatsApp_Image_2025-08-22_at_00.36.00.jpeg",
+      },
       {
         name: "Dr. Salisu Garba",
         role: "Asst Managing Editor",
@@ -36,7 +40,7 @@ export const teams = [
         role: "Asst. Production Editor",
         img: "http://slujst.slu.edu.ng/assets/2025-08-22/image/image-20250822-xx3dvl-WhatsApp_Image_2025-08-22_at_00.32.59.jpeg",
       },
-      
+
       {
         name: "Ibrahim Muhammad",
         role: "Web Manager",

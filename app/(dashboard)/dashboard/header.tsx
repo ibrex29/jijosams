@@ -6,8 +6,6 @@ import { useTheme } from "@mui/material/styles";
 import Toolbar from "@mui/material/Toolbar";
 import React from "react";
 
-
-
 import { useResponsive } from "../hooks/use-responsive";
 import AvatarPopover from "./common/avatar-popover";
 import CaretPopover from "./common/caret-popover";

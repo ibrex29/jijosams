@@ -67,16 +67,22 @@ export default function Navbar() {
             />
           </Link>
           <div className="hidden lg:flex lg:space-x-2 xl:space-x-6">
-            <Link href="/" className="text-gray-700 font-semibold hover:text-primary">
+            <Link
+              href="/"
+              className="text-gray-700 font-semibold hover:text-primary"
+            >
               Home
             </Link>
             <Link
               href="/manuscripts"
               className="text-gray-700 font-semibold hover:text-primary"
             >
-              Manuscript
+              Manuscripts
             </Link>
-            <Link href="/about-us" className="text-gray-700 font-semibold hover:text-primary">
+            <Link
+              href="/about-us"
+              className="text-gray-700 font-semibold hover:text-primary"
+            >
               About Us
             </Link>
             <Link
@@ -139,12 +145,10 @@ export default function Navbar() {
 
           <div className="flex justify-center items-center space-x-6">
             <div className="hidden lg:flex justify-center items-center space-x-2">
-              <Button
-                className="w-24"
-                onClick={()=>router.push("/signup")}
-              >sign up</Button>
+              <Button className="w-24" onClick={() => router.push("/signup")}>
+                sign up
+              </Button>
               <Link
-                
                 href="/signin"
                 className="text-black px-4 py-2 rounded-lg bg-[#f1e7e7] font-bold hover:text-primary whitespace-nowrap"
               >
@@ -217,8 +221,10 @@ export default function Navbar() {
           {/* Mobile Auth Buttons */}
           <Button
             className="w-full  text-black max-w-xs"
-            onClick={()=>router.push("/signup")}
-          >Sign Up</Button>
+            onClick={() => router.push("/signup")}
+          >
+            Sign Up
+          </Button>
           <Link
             href="/login"
             className="text-black font-bold hover:text-primary"

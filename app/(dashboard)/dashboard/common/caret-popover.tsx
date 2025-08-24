@@ -13,13 +13,11 @@ import IconButton from "@mui/material/IconButton";
 import Popover from "@mui/material/Popover";
 import Typography from "@mui/material/Typography";
 import { useRouter } from "next/navigation";
-import { getSession, signOut } from "next-auth/react";  
+import { getSession, signOut } from "next-auth/react";
 import { MouseEvent, useEffect, useState } from "react";
 import Iconify from "@/app/components/@dashboard/components/@dashboard/iconify";
 import { baseUrl } from "@/constants/config";
 import { getUserDetails } from "@/utils/getUserDetails";
-
-
 
 const MENU_PERSONAL = [
   {
@@ -31,7 +29,10 @@ const MENU_PERSONAL = [
 
 export default function CaretPopover() {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const [userDetails, setUserDetails] = useState<{ email: string; role: string }>({
+  const [userDetails, setUserDetails] = useState<{
+    email: string;
+    role: string;
+  }>({
     email: "Email",
     role: "Role",
   });
@@ -66,20 +67,17 @@ export default function CaretPopover() {
         const response = await fetch(`${baseUrl}/v1/auth/logout`, {
           method: "POST",
           headers: {
-            "Accept": "*/*",
-            "Authorization": `Bearer ${session.token}`,
+            Accept: "*/*",
+            Authorization: `Bearer ${session.token}`,
           },
         });
-
-        console.log("Custom logout API response:", response);
-
         if (!response.ok) {
           console.error("Custom logout API failed.");
         }
       }
 
       // Now, log out using next-auth
-      await signOut({ redirect: false });  // Don't redirect automatically, we handle that manually
+      await signOut({ redirect: false }); // Don't redirect automatically, we handle that manually
 
       // Optionally, redirect to the login page after logout
       router.push("/signin");
@@ -87,7 +85,7 @@ export default function CaretPopover() {
       console.error("Error during logout:", error);
     } finally {
       setLoading(false);
-      setOpenDialog(false);  // Close the dialog after logout attempt
+      setOpenDialog(false); // Close the dialog after logout attempt
     }
   };
 
@@ -107,73 +105,73 @@ export default function CaretPopover() {
         <Iconify icon="eva:arrow-ios-downward-fill" width={24} />
       </IconButton>
 
-     <Popover
-  open={Boolean(anchorEl)}
-  anchorEl={anchorEl}
-  onClose={handleClose}
-  anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-  transformOrigin={{ vertical: "top", horizontal: "right" }}
-  PaperProps={{
-    sx: {
-      mt: 1,
-      minWidth: 220,
-      maxWidth: 360,
-      borderRadius: 2,
-      boxShadow: 3,
-    },
-  }}
->
-  {/* Profile Section */}
-  <Box sx={{ px: 2, py: 2, display: "flex", alignItems: "center" }}>
-    <Avatar src={logo} alt={userDetails.email} sx={{ width: 48, height: 48, mr: 1.5 }} />
-    <Box>
-      <Typography variant="subtitle2"  sx={{ maxWidth: 220 }} noWrap>
-        {userDetails.email}
-      </Typography>
-      <Typography variant="caption" color="text.secondary" noWrap>
-        {userDetails.role}
-      </Typography>
-    </Box>
-  </Box>
+      <Popover
+        open={Boolean(anchorEl)}
+        anchorEl={anchorEl}
+        onClose={handleClose}
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+        transformOrigin={{ vertical: "top", horizontal: "right" }}
+        PaperProps={{
+          sx: {
+            mt: 1,
+            minWidth: 220,
+            maxWidth: 360,
+            borderRadius: 2,
+            boxShadow: 3,
+          },
+        }}
+      >
+        {/* Profile Section */}
+        <Box sx={{ px: 2, py: 2, display: "flex", alignItems: "center" }}>
+          <Avatar
+            src={logo}
+            alt={userDetails.email}
+            sx={{ width: 48, height: 48, mr: 1.5 }}
+          />
+          <Box>
+            <Typography variant="subtitle2" sx={{ maxWidth: 220 }} noWrap>
+              {userDetails.email}
+            </Typography>
+            <Typography variant="caption" color="text.secondary" noWrap>
+              {userDetails.role}
+            </Typography>
+          </Box>
+        </Box>
 
-  <Divider />
+        <Divider />
 
-  {/* Menu Actions */}
-  <Box>
-    {MENU_PERSONAL.map((option) => (
-      <MenuItem key={option.label} onClick={handleClose}>
-        <ListItemIcon>
-          <Iconify icon={option.icon} width={20} />
-        </ListItemIcon>
-        <ListItemText>{option.label}</ListItemText>
-      </MenuItem>
-    ))}
+        {/* Menu Actions */}
+        <Box>
+          {MENU_PERSONAL.map((option) => (
+            <MenuItem key={option.label} onClick={handleClose}>
+              <ListItemIcon>
+                <Iconify icon={option.icon} width={20} />
+              </ListItemIcon>
+              <ListItemText>{option.label}</ListItemText>
+            </MenuItem>
+          ))}
 
-    <MenuItem onClick={() => setOpenDialog(true)} sx={{ color: "error.main" }}>
-      <ListItemIcon>
-        <LogoutTwoTone color="error" fontSize="small" />
-      </ListItemIcon>
-      <ListItemText>Logout</ListItemText>
-    </MenuItem>
-  </Box>
-</Popover>
-
+          <MenuItem
+            onClick={() => setOpenDialog(true)}
+            sx={{ color: "error.main" }}
+          >
+            <ListItemIcon>
+              <LogoutTwoTone color="error" fontSize="small" />
+            </ListItemIcon>
+            <ListItemText>Logout</ListItemText>
+          </MenuItem>
+        </Box>
+      </Popover>
 
       {/* Logout Confirmation Dialog */}
       <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
         <DialogTitle>Confirm Logout</DialogTitle>
-        <DialogContent>
-          Are you sure you want to log out?
-        </DialogContent>
+        <DialogContent>Are you sure you want to log out?</DialogContent>
         <DialogActions>
           <Button onClick={() => setOpenDialog(false)} color="primary">
             Cancel
           </Button>
-          <Button
-            onClick={handleLogout}
-            color="secondary"
-            disabled={loading}
-          >
+          <Button onClick={handleLogout} color="secondary" disabled={loading}>
             {loading ? "Logging out..." : "Logout"}
           </Button>
         </DialogActions>

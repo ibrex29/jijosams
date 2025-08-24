@@ -99,10 +99,10 @@ export default function ManuscriptTableView({ manuscripts }: Props) {
                       m.status === "Accepted"
                         ? "success"
                         : m.status === "Rejected"
-                        ? "error"
-                        : m.status === "Under Review"
-                        ? "warning"
-                        : "default"
+                          ? "error"
+                          : m.status === "Under Review"
+                            ? "warning"
+                            : "default"
                     }
                     sx={{ fontSize: "0.75rem" }}
                   />
@@ -141,7 +141,12 @@ export default function ManuscriptTableView({ manuscripts }: Props) {
       </Paper>
 
       {/* Review Dialog */}
-      <Dialog open={open} onClose={() => setOpen(false)} fullWidth maxWidth="md">
+      <Dialog
+        open={open}
+        onClose={() => setOpen(false)}
+        fullWidth
+        maxWidth="md"
+      >
         <DialogTitle>Review and Chat</DialogTitle>
         <DialogContent>
           {activeManuscript && <Chat manuscriptId={activeManuscript.id} />}

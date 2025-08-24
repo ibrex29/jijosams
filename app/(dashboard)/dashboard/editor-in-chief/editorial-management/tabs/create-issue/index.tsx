@@ -18,10 +18,15 @@ import {
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 
-import { createIssue, deleteIssue, editIssue, getVolumes } from "@/app/api/volume";
+import {
+  createIssue,
+  deleteIssue,
+  editIssue,
+  getVolumes,
+} from "@/app/api/volume";
 import { getIssues } from "@/app/api/volume";
 import useNotification from "@/hooks/useNotification";
-import { IssueProps,VolumeProps } from "@/types";
+import { IssueProps, VolumeProps } from "@/types";
 
 import IssueCard from "../../components/issue-card";
 
@@ -39,8 +44,7 @@ const CEIssueManagementTab = () => {
   const [selectedVolumeId, setSelectedVolumeId] = useState<string | "">("");
   const { notify } = useNotification();
 
-    const fetchVolumes = async () => {
-
+  const fetchVolumes = async () => {
     try {
       const data = await getVolumes();
       if (Array.isArray(data)) {
@@ -53,9 +57,9 @@ const CEIssueManagementTab = () => {
       console.error("Error fetching volumes:", error);
     }
   };
-    
-    const fetchIssues = async () => {
-                  setLoading(true);
+
+  const fetchIssues = async () => {
+    setLoading(true);
 
     try {
       const data = await getIssues();
@@ -67,20 +71,19 @@ const CEIssueManagementTab = () => {
       }
     } catch (error) {
       console.error("Error fetching volumes:", error);
-    }
-        finally {
+    } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-      fetchVolumes();
-      fetchIssues();
+    fetchVolumes();
+    fetchIssues();
   }, []);
 
   const handleDialogOpen = (
     type: "create" | "edit" | "delete",
-    issue: IssueProps | null = null
+    issue: IssueProps | null = null,
   ) => {
     setDialogType(type);
     setSelectedIssue(issue);
@@ -108,7 +111,7 @@ const CEIssueManagementTab = () => {
         console.error(response.message || "Failed to create the issue.");
       } else {
         notify("Issue successfully created", { mode: "success" });
-          fetchIssues();
+        fetchIssues();
       }
     } catch (error) {
       notify("Failed to create issue", { mode: "error" });
@@ -118,19 +121,19 @@ const CEIssueManagementTab = () => {
   };
 
   const handleEditIssue = async () => {
-      if (!selectedIssue) return;
-      const payload = {
-          name: issueName,
-          description: issueDescription,
-          volumeId: selectedVolumeId,
-      };
+    if (!selectedIssue) return;
+    const payload = {
+      name: issueName,
+      description: issueDescription,
+      volumeId: selectedVolumeId,
+    };
     try {
-      const response = await editIssue(selectedIssue.id, payload );
+      const response = await editIssue(selectedIssue.id, payload);
       if (response.statusCode) {
         console.error(response.message || "Failed to update the issue.");
       } else {
         notify("Issue successfully updated", { mode: "success" });
-          fetchIssues();
+        fetchIssues();
       }
     } catch (error) {
       notify("Failed to update issue", { mode: "error" });
@@ -138,9 +141,8 @@ const CEIssueManagementTab = () => {
       handleDialogClose();
     }
   };
-    
-    
-    const handleDeleteIssue = async () => {
+
+  const handleDeleteIssue = async () => {
     if (!selectedIssue) return;
     try {
       const response = await deleteIssue(selectedIssue.id);
@@ -160,7 +162,7 @@ const CEIssueManagementTab = () => {
   return (
     <main className="w-full my-4 md:my-10 flex justify-center bg-white items-center p-8">
       <div className="flex flex-col w-full">
-  <div className="flex w-full max-w-5xl justify-between gap-12">
+        <div className="flex w-full max-w-5xl justify-between gap-12">
           <div className="w-full mb-10 flex flex-col">
             {loading ? (
               <Box
@@ -197,7 +199,8 @@ const CEIssueManagementTab = () => {
               </Box>
             )}
           </div>
-        </div>        <Box display="flex" justifyContent="center" mt={10} alignItems="center">
+        </div>{" "}
+        <Box display="flex" justifyContent="center" mt={10} alignItems="center">
           <Button
             variant="contained"
             color="primary"
@@ -207,7 +210,6 @@ const CEIssueManagementTab = () => {
             Create Issue
           </Button>
         </Box>
-
         <Dialog open={open} onClose={handleDialogClose}>
           <DialogTitle
             sx={{
@@ -218,8 +220,8 @@ const CEIssueManagementTab = () => {
             {dialogType === "create"
               ? "Create Issue"
               : dialogType === "edit"
-              ? "Edit Issue"
-              : "Delete Issue"}
+                ? "Edit Issue"
+                : "Delete Issue"}
           </DialogTitle>
           {dialogType !== "delete" ? (
             <DialogContent>
@@ -273,14 +275,12 @@ const CEIssueManagementTab = () => {
               <Button onClick={handleEditIssue} color="primary">
                 Save
               </Button>
-                      )}
-                       {dialogType === "delete" && (
+            )}
+            {dialogType === "delete" && (
               <Button onClick={handleDeleteIssue} color="primary">
                 Delete
               </Button>
             )}
-                      
-                      
           </DialogActions>
         </Dialog>
       </div>

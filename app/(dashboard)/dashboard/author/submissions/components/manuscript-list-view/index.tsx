@@ -63,12 +63,12 @@ export default function ManuscriptListView({ manuscripts }: Props) {
               borderColor: "grey.200",
               borderRadius: 2,
               overflow: "hidden",
-                    transition: "0.3s",
-                    "&:hover": {
-                      boxShadow: "0 8px 24px rgba(0, 0, 0, 0.12)",
-                      borderColor: "primary.main",
-                    },
-                  }}
+              transition: "0.3s",
+              "&:hover": {
+                boxShadow: "0 8px 24px rgba(0, 0, 0, 0.12)",
+                borderColor: "primary.main",
+              },
+            }}
           >
             <ListItem
               alignItems="flex-start"
@@ -96,7 +96,7 @@ export default function ManuscriptListView({ manuscripts }: Props) {
 
               <ListItemText
                 primary={
-                  <Box display="flex" alignItems="center" gap={1} >
+                  <Box display="flex" alignItems="center" gap={1}>
                     <Typography fontWeight="bold">
                       {truncateText(m.title, 80)}
                     </Typography>
@@ -107,10 +107,10 @@ export default function ManuscriptListView({ manuscripts }: Props) {
                         m.status === "Accepted"
                           ? "success"
                           : m.status === "Rejected"
-                          ? "error"
-                          : m.status === "Under Review"
-                          ? "warning"
-                          : "default"
+                            ? "error"
+                            : m.status === "Under Review"
+                              ? "warning"
+                              : "default"
                       }
                       sx={{ fontSize: "0.75rem", height: 22 }}
                     />
@@ -144,7 +144,12 @@ export default function ManuscriptListView({ manuscripts }: Props) {
       </List>
 
       {/* Review Dialog */}
-      <Dialog open={open} onClose={() => setOpen(false)} fullWidth maxWidth="md">
+      <Dialog
+        open={open}
+        onClose={() => setOpen(false)}
+        fullWidth
+        maxWidth="md"
+      >
         <DialogTitle>Review and Chat</DialogTitle>
         <DialogContent>
           {activeManuscript && <Chat manuscriptId={activeManuscript.id} />}

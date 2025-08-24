@@ -21,7 +21,7 @@ const useStyles = makeStyles({
     width: "200px",
   },
   // Adding media query for responsiveness
-  '@media (max-width: 600px)': {
+  "@media (max-width: 600px)": {
     expanded: {
       width: "150px", // Reduced width for smaller screens
     },

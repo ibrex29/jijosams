@@ -2,6 +2,7 @@
 import React from "react";
 import { Boxes } from "../ui/bg-boxes";
 import { cn } from "@/app/lib/utils";
+import { Button } from "@mui/material";
 
 export function HeroSection() {
   return (
@@ -10,18 +11,56 @@ export function HeroSection() {
 
       <Boxes />
 
-      <h1
-        className={cn(
-          "md:text-6xl text-center text-4xl font-bold text-[#a96c04] relative z-20",
-        )}
-      >
-        Advancing Science & Technology <br />
-        through Research Excellence
-      </h1>
-      <p className="text-center text-xl text-bold mt-2 text-black relative z-20">
-        0pen-access journal publishing cutting-edge research in science and
-        technology.
-      </p>
+      {/* Content */}
+      <div className="relative z-20 max-w-4xl px-4 text-center">
+        <h1
+          className={cn(
+            "text-4xl md:text-5xl font-extrabold tracking-tight text-[#a96c04] drop-shadow-md"
+          )}
+        >
+          Advancing Science & Technology <br />
+          through Research Excellence
+        </h1>
+        <p className="mt-4 text-lg md:text-xl text-primary drop-shadow-md">
+          Open-access journal publishing cutting-edge research in science and
+          technology.
+        </p>
+
+        {/* CTA Buttons */}
+        <div className="mt-6 flex gap-4 justify-center">
+          <Button
+            variant="contained"
+            color="primary"
+            sx={{
+              px: 4,
+              py: 1.5,
+              borderRadius: "12px",
+              textTransform: "none",
+              fontSize: "1rem",
+              backgroundColor: "#a96c04",
+              "&:hover": { backgroundColor: "#8b5803" },
+            }}
+          >
+            Submit Your Paper
+          </Button>
+          <Button
+            variant="outlined"
+            color="primary"
+            sx={{
+              px: 4,
+              py: 1.5,
+              borderRadius: "12px",
+              textTransform: "none",
+              fontSize: "1rem",
+              borderColor: "#a96c04",
+              color: "#a96c04",
+              "&:hover": { backgroundColor: "#a96c0415", borderColor: "#a96c04" },
+            }}
+          >
+            Explore Journals
+          </Button>
+        </div>
+      </div>
     </div>
   );
 }

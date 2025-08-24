@@ -3,7 +3,6 @@ import PageLayout from "@/app/components/@dashboard/components/@dashboard/common
 import PageTabs from "@/app/components/@dashboard/components/@dashboard/common/page/tabs";
 import PageTitleBar from "@/app/components/@dashboard/components/@dashboard/common/page/title-bar/page";
 
-
 export const metadata = {
   title: "Submissions",
 };

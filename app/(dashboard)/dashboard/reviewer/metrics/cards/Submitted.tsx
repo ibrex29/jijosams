@@ -12,15 +12,11 @@ import theme from "@/config/theme";
 
 export interface Props {
   sx?: SxProps;
-  value?: string; 
-  loading?: boolean; 
+  value?: string;
+  loading?: boolean;
 }
 
-export function Submitted({
-  sx,
-  value,
-  loading,
-}: Props): React.JSX.Element {
+export function Submitted({ sx, value, loading }: Props): React.JSX.Element {
   return (
     <Card
       sx={{

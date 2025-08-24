@@ -11,7 +11,10 @@ export default function UsersPage() {
   return (
     <PageLayout>
       <PageTitleBar title="Editorial Management" />
-      <PageTabs pageName="Editorial Management" tabs={EditorInChiefEditorialManagementPageTab} />
+      <PageTabs
+        pageName="Editorial Management"
+        tabs={EditorInChiefEditorialManagementPageTab}
+      />
     </PageLayout>
   );
 }
