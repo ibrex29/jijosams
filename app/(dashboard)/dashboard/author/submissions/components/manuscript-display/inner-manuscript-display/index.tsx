@@ -37,7 +37,7 @@ const ManuscriptContent: React.FC<ManuscriptContentProps> = ({
     }
   }
 
-  if (manuscripts.length === 0) {
+  if (manuscripts?.length === 0) {
     return (
       <NoTicket
         alt="No Manuscripts"

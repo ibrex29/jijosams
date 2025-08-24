@@ -4,6 +4,7 @@ import dynamic from "next/dynamic";
 import React from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import { SubmitManuscriptProps } from "@/types";
+import { Button, Stack } from "@mui/material";
 
 const DocumentUpload = dynamic(
   () => import("@/app/components/document-upload"),
@@ -119,22 +120,36 @@ const FileUploadStep: React.FC<FileUploadStepProps> = ({
       />
 
       {/* Navigation */}
-      <div className="flex justify-between">
-        <button
-          type="button"
-          onClick={handleBack}
-          className="bg-gray-300 text-gray-700 px-6 py-3 rounded-lg hover:bg-gray-400 transition duration-300"
-        >
-          Back
-        </button>
-        <button
-          type="button"
-          onClick={validateAndSubmit}
-          className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition duration-300"
-        >
-          Next
-        </button>
-      </div>
+       <Stack direction="row" justifyContent="space-between" width="100%">
+    <Button
+      variant="contained"
+      onClick={handleBack}
+      sx={{
+        backgroundColor: "grey.300",
+        color: "grey.700",
+        px: 3,
+        py: 1.5,
+        borderRadius: 2,
+        "&:hover": { backgroundColor: "grey.400" },
+      }}
+    >
+      Back
+    </Button>
+
+    <Button
+      variant="contained"
+      color="primary"
+      onClick={validateAndSubmit}
+      sx={{
+        px: 3,
+        py: 1.5,
+        borderRadius: 2,
+        textTransform: "none", // keeps text normal instead of uppercase
+      }}
+    >
+      Next
+    </Button>
+  </Stack>
     </div>
   );
 };
