@@ -54,7 +54,8 @@ export const openReview = async (reviewId: string) => {
   }
 };
 
-export const getRecommendation = async () => fetchData(reviewer.getRecommendation);
+export const getRecommendation = async () =>
+  fetchData(reviewer.getRecommendation);
 
 export const getReviewStatus = async (manuscriptId: string) => {
   const bearerHeader = await getBearerHeader();

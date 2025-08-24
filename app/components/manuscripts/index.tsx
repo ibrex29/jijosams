@@ -3,7 +3,12 @@
 
 import dynamic from "next/dynamic";
 import React, { useState, useEffect } from "react";
-import { Controller, FormProvider, useForm, useFormContext } from "react-hook-form";
+import {
+  Controller,
+  FormProvider,
+  useForm,
+  useFormContext,
+} from "react-hook-form";
 import { useQuery } from "@tanstack/react-query";
 import {
   Box,
@@ -29,7 +34,13 @@ import { getVolume } from "@/app/api/(landing-page)/volume";
 import useNotification from "@/hooks/useNotification";
 
 const VolumeIssueSelectorInner: React.FC = () => {
-  const { control, setValue, getValues, watch, formState: { errors: formErrors } } = useFormContext();
+  const {
+    control,
+    setValue,
+    getValues,
+    watch,
+    formState: { errors: formErrors },
+  } = useFormContext();
   const [volumes, setVolumes] = useState<Volume[]>([]);
   const [issues, setIssues] = useState<Issue[]>([]);
   const [fetchError, setFetchError] = useState("");
@@ -49,8 +60,11 @@ const VolumeIssueSelectorInner: React.FC = () => {
         const response: Volume[] = await getVolume();
         setVolumes(response ?? []);
       } catch (error: unknown) {
-        const errorMessage = error instanceof Error ? error.message : "Unknown error";
-        setFetchError(`Failed to fetch volumes: ${errorMessage}. Please try again.`);
+        const errorMessage =
+          error instanceof Error ? error.message : "Unknown error";
+        setFetchError(
+          `Failed to fetch volumes: ${errorMessage}. Please try again.`,
+        );
         notify(`Failed to fetch volumes: ${errorMessage}`, { mode: "error" });
       } finally {
         setLoadingVolumes(false);
@@ -83,14 +97,19 @@ const VolumeIssueSelectorInner: React.FC = () => {
       const storedVolumeId = localStorage.getItem("selectedVolumeId");
       const storedIssueId = localStorage.getItem("selectedIssueId");
 
-      const volumeId = storedVolumeId && volumes.find((v) => v.id === storedVolumeId) ? storedVolumeId : volumes[0].id;
+      const volumeId =
+        storedVolumeId && volumes.find((v) => v.id === storedVolumeId)
+          ? storedVolumeId
+          : volumes[0].id;
       setValue("volume", volumeId);
 
       const selectedVolume = volumes.find((v) => v.id === volumeId);
       if (selectedVolume && selectedVolume.issues?.length) {
-        const issueId = storedIssueId && selectedVolume.issues.find((i) => i.id === storedIssueId)
-          ? storedIssueId
-          : selectedVolume.issues[0].id;
+        const issueId =
+          storedIssueId &&
+          selectedVolume.issues.find((i) => i.id === storedIssueId)
+            ? storedIssueId
+            : selectedVolume.issues[0].id;
         setValue("issue", issueId);
       }
     }
@@ -108,15 +127,35 @@ const VolumeIssueSelectorInner: React.FC = () => {
 
   // Fetch manuscripts
   const { data: manuscripts, isLoading: isLoadingManuscripts } = useQuery({
-    queryKey: ["manuscripts", watchedVolumeId, watchedIssueId, watchedPage, watchedQuery],
+    queryKey: [
+      "manuscripts",
+      watchedVolumeId,
+      watchedIssueId,
+      watchedPage,
+      watchedQuery,
+    ],
     queryFn: async () =>
-      getPublishedManuscript(undefined, watchedPage, 10, watchedQuery, watchedIssueId, watchedVolumeId),
+      getPublishedManuscript(
+        undefined,
+        watchedPage,
+        10,
+        watchedQuery,
+        watchedIssueId,
+        watchedVolumeId,
+      ),
     enabled: !!watchedVolumeId && !!watchedIssueId,
   });
 
   if (loadingVolumes) {
     return (
-      <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh" }}>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}
+      >
         <CircularProgress />
       </Box>
     );
@@ -124,7 +163,12 @@ const VolumeIssueSelectorInner: React.FC = () => {
 
   return (
     <Box sx={{ m: 4, width: "90%" }}>
-      <Stack direction={{ xs: "column", md: "row" }} spacing={2} alignItems="center" justifyContent="space-between">
+      <Stack
+        direction={{ xs: "column", md: "row" }}
+        spacing={2}
+        alignItems="center"
+        justifyContent="space-between"
+      >
         <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
           {/* Volume Selector */}
           <Controller
@@ -156,7 +200,11 @@ const VolumeIssueSelectorInner: React.FC = () => {
             render={({ field }) => (
               <FormControl sx={{ minWidth: 200 }} error={!!formErrors.issue}>
                 <InputLabel>Issue</InputLabel>
-                <Select {...field} label="Issue" disabled={!watchedVolumeId || !issues.length}>
+                <Select
+                  {...field}
+                  label="Issue"
+                  disabled={!watchedVolumeId || !issues.length}
+                >
                   {issues.length ? (
                     issues.map((issue) => (
                       <MenuItem key={issue.id} value={issue.id}>
@@ -190,7 +238,9 @@ const VolumeIssueSelectorInner: React.FC = () => {
               variant="outlined"
               sx={{ maxWidth: 400, width: "100%" }}
               InputProps={{
-                startAdornment: <SearchIcon sx={{ mr: 1, color: "text.secondary" }} />,
+                startAdornment: (
+                  <SearchIcon sx={{ mr: 1, color: "text.secondary" }} />
+                ),
               }}
               error={!!formErrors.query}
               helperText={(formErrors.query?.message as string) || ""}
@@ -201,7 +251,11 @@ const VolumeIssueSelectorInner: React.FC = () => {
 
       {/* Error Display */}
       {fetchError && (
-        <Typography variant="body2" color="error" sx={{ mt: 2, textAlign: "center" }}>
+        <Typography
+          variant="body2"
+          color="error"
+          sx={{ mt: 2, textAlign: "center" }}
+        >
           {fetchError}
         </Typography>
       )}
@@ -210,7 +264,9 @@ const VolumeIssueSelectorInner: React.FC = () => {
       {watchedVolumeId && watchedIssueId && (
         <Box sx={{ mt: 4, display: "flex", flexDirection: "column", gap: 2 }}>
           {isLoadingManuscripts ? (
-            [...Array(5)].map((_, index) => <ManuscriptCardSkeleton key={index} />)
+            [...Array(5)].map((_, index) => (
+              <ManuscriptCardSkeleton key={index} />
+            ))
           ) : manuscripts?.data?.length ? (
             manuscripts.data.map((manuscript: Manuscript) => (
               <ManuscriptCard key={manuscript.id} manuscript={manuscript} />
@@ -223,7 +279,12 @@ const VolumeIssueSelectorInner: React.FC = () => {
 
       {/* Pagination Controls */}
       {manuscripts && manuscripts.meta && (
-        <Stack direction="row" spacing={2} justifyContent="center" sx={{ mt: 3 }}>
+        <Stack
+          direction="row"
+          spacing={2}
+          justifyContent="center"
+          sx={{ mt: 3 }}
+        >
           <Button
             variant="outlined"
             onClick={() => setValue("page", Math.max(watchedPage - 1, 1))}

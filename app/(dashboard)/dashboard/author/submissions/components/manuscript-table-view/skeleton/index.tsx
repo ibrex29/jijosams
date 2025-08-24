@@ -1,4 +1,11 @@
-import { Table, TableBody, TableCell, TableHead, TableRow, Skeleton } from "@mui/material";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
+  Skeleton,
+} from "@mui/material";
 
 const TableSkeleton = () => (
   <Table>

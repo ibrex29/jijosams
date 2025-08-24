@@ -18,7 +18,7 @@ const ManuscriptSubHeader: React.FC<Props> = ({ title, subtitle }) => {
           my: 0,
           boxShadow: "none",
           borderTop: "1px  solid",
-          borderBottom : "1px  solid",
+          borderBottom: "1px  solid",
           borderColor: "grey.300",
         }}
       >

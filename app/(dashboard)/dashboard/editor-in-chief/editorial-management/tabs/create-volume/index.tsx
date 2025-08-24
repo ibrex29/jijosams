@@ -13,9 +13,14 @@ import {
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 
-import { createVolume, deleteVolume,editVolume  , getVolumes  } from "@/app/api/volume";
+import {
+  createVolume,
+  deleteVolume,
+  editVolume,
+  getVolumes,
+} from "@/app/api/volume";
 import useNotification from "@/hooks/useNotification";
-import {  VolumeProps } from "@/types";
+import { VolumeProps } from "@/types";
 
 import VolumeCard from "../../components/volume-card";
 
@@ -73,7 +78,6 @@ const CEVolumeManagementTab = () => {
     setOpen(true);
   };
 
-  
   const handleDialogClose = () => {
     setOpen(false);
     setVolumeName("");
@@ -82,7 +86,10 @@ const CEVolumeManagementTab = () => {
 
   const handleCreateVolume = async () => {
     try {
-      const response = await createVolume({ name: volumeName, description: volumeDescription });
+      const response = await createVolume({
+        name: volumeName,
+        description: volumeDescription,
+      });
       if (response.statusCode) {
         console.error(response.message || "Failed to create the volume.");
       } else {
@@ -99,12 +106,11 @@ const CEVolumeManagementTab = () => {
   const handleEditVolume = async () => {
     if (!selectedVolume) return;
     try {
- const response = await editVolume(selectedVolume.id, {
+      const response = await editVolume(selectedVolume.id, {
         name: volumeName,
         description: volumeDescription,
- });
-      if (response.statusCode)
-      {
+      });
+      if (response.statusCode) {
         console.error(response.message || "Failed to update the volume.");
       } else {
         notify("Volume successfully updated", { mode: "success" });
@@ -187,12 +193,17 @@ const CEVolumeManagementTab = () => {
         </Box>
 
         <Dialog open={open} onClose={handleDialogClose}>
-          <DialogTitle sx={{ fontSize: { xs: '1.2rem', sm: '1.2rem', md: '1.5rem' }, fontWeight: 'bold' }}>
+          <DialogTitle
+            sx={{
+              fontSize: { xs: "1.2rem", sm: "1.2rem", md: "1.5rem" },
+              fontWeight: "bold",
+            }}
+          >
             {dialogType === "create"
               ? "Create Volume"
               : dialogType === "edit"
-              ? "Edit Volume"
-              : "Delete Volume"}
+                ? "Edit Volume"
+                : "Delete Volume"}
           </DialogTitle>
           {dialogType !== "delete" ? (
             <DialogContent>

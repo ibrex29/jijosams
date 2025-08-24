@@ -1,8 +1,6 @@
-
 import "simplebar-react/dist/simplebar.min.css";
 import "slick-carousel/slick/slick.css";
 import "../assets/css/react-slick.css";
-
 
 import { ThemeProvider } from "@mui/material/styles";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
@@ -13,9 +11,6 @@ import { Provider as NotificationProvider } from "@/context/notification";
 import theme from "@/config/theme";
 import { AppProvider } from "@/context/state";
 import QueryClientProvider from "@/context/ReactQueryProvider";
-
-
-
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -29,8 +24,6 @@ export default function DashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
-  
-
   return (
     <AppProvider>
       <ThemeProvider theme={theme}>

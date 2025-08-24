@@ -47,7 +47,7 @@ export function AwaitingReview({
                 <Typography variant="h4">{value} </Typography> // Actual value
               )}
             </Stack>
-           <Avatar
+            <Avatar
               sx={{
                 backgroundColor: theme.palette.success.main,
                 height: "40px",

@@ -12,15 +12,11 @@ import theme from "@/config/theme";
 
 export interface Props {
   sx?: SxProps;
-  value?: string; 
-  loading?: boolean; 
+  value?: string;
+  loading?: boolean;
 }
 
-export function Accepted({
-  sx,
-  value,
-  loading,
-}: Props): React.JSX.Element {
+export function Accepted({ sx, value, loading }: Props): React.JSX.Element {
   return (
     <Card
       sx={{
@@ -47,7 +43,7 @@ export function Accepted({
                 <Typography variant="h4">{value}</Typography> // Actual value
               )}
             </Stack>
-          <Avatar
+            <Avatar
               sx={{
                 backgroundColor: theme.palette.success.main,
                 height: "40px",

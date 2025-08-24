@@ -9,7 +9,6 @@ import {
 } from "@mui/material";
 import React from "react";
 
-
 interface SectionCardProps {
   name: string;
   onDelete: () => void;

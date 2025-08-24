@@ -1,7 +1,7 @@
 import Avatar from "@mui/material/Avatar";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
-import Skeleton from "@mui/material/Skeleton"; 
+import Skeleton from "@mui/material/Skeleton";
 import Stack from "@mui/material/Stack";
 import { SxProps } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
@@ -13,14 +13,10 @@ import theme from "@/config/theme";
 export interface Props {
   sx?: SxProps;
   value?: string;
-  loading?: boolean; 
+  loading?: boolean;
 }
 
-export function Assigned({
-  sx,
-  value,
-  loading,
-}: Props): React.JSX.Element {
+export function Assigned({ sx, value, loading }: Props): React.JSX.Element {
   return (
     <Card
       sx={{
@@ -42,12 +38,12 @@ export function Assigned({
                 Assigned
               </Typography>
               {loading ? (
-                <Skeleton variant="text" width="60%" height={40} /> 
+                <Skeleton variant="text" width="60%" height={40} />
               ) : (
-                <Typography variant="h4">{value} </Typography> 
+                <Typography variant="h4">{value} </Typography>
               )}
             </Stack>
-           <Avatar
+            <Avatar
               sx={{
                 backgroundColor: theme.palette.success.main,
                 height: "40px",

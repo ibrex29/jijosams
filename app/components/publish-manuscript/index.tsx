@@ -3,16 +3,32 @@
 
 import dynamic from "next/dynamic";
 import React, { useState, useEffect } from "react";
-import { Controller, FormProvider, useForm, useFormContext } from "react-hook-form";
+import {
+  Controller,
+  FormProvider,
+  useForm,
+  useFormContext,
+} from "react-hook-form";
 import { getVolume } from "@/app/api/(landing-page)/volume";
 import { publishManuscript } from "@/app/api/manuscript";
 import useNotification from "@/hooks/useNotification";
 import { Volume, Issue } from "@/types";
 
-const DocumentUpload = dynamic(() => import("@/app/components/document-upload"), { ssr: false });
+const DocumentUpload = dynamic(
+  () => import("@/app/components/document-upload"),
+  { ssr: false },
+);
 
 const PublishManuscriptInner: React.FC = () => {
-  const { control, setValue, getValues, setError, reset, watch, formState: { errors: formErrors } } = useFormContext();
+  const {
+    control,
+    setValue,
+    getValues,
+    setError,
+    reset,
+    watch,
+    formState: { errors: formErrors },
+  } = useFormContext();
   const [volumes, setVolumes] = useState<Volume[]>([]);
   const [issues, setIssues] = useState<Issue[]>([]);
   const [fetchError, setFetchError] = useState("");
@@ -27,8 +43,11 @@ const PublishManuscriptInner: React.FC = () => {
         const response: Volume[] = await getVolume();
         setVolumes(response ?? []);
       } catch (error: unknown) {
-        const errorMessage = error instanceof Error ? error.message : "Unknown error";
-        setFetchError(`Failed to fetch volumes: ${errorMessage}. Please try again.`);
+        const errorMessage =
+          error instanceof Error ? error.message : "Unknown error";
+        setFetchError(
+          `Failed to fetch volumes: ${errorMessage}. Please try again.`,
+        );
         notify(`Failed to fetch volumes: ${errorMessage}`, { mode: "error" });
       } finally {
         setLoading(false);
@@ -61,7 +80,8 @@ const PublishManuscriptInner: React.FC = () => {
     const newErrors: { [key: string]: string } = {};
 
     if (!values.manuscriptLink) {
-      newErrors.manuscriptLink = "Please upload the manuscript file before proceeding.";
+      newErrors.manuscriptLink =
+        "Please upload the manuscript file before proceeding.";
     }
     if (!values.title) {
       newErrors.title = "Title is required.";
@@ -102,8 +122,11 @@ const PublishManuscriptInner: React.FC = () => {
       reset();
       setSubmitError("");
     } catch (error: unknown) {
-      const errorMessage = error instanceof Error ? error.message : "Unknown error";
-      setSubmitError(`Failed to submit publication: ${errorMessage}. Please try again.`);
+      const errorMessage =
+        error instanceof Error ? error.message : "Unknown error";
+      setSubmitError(
+        `Failed to submit publication: ${errorMessage}. Please try again.`,
+      );
     }
   };
 
@@ -118,21 +141,29 @@ const PublishManuscriptInner: React.FC = () => {
   return (
     <div className="min-h-screen flex items-center justify-center py-10">
       <div className="bg-white rounded-2xl shadow-xl p-8 w-full max-w-5xl">
-        <p className="mb-4 italic">Please fill out this form to publish your manuscript.</p>
+        <p className="mb-4 italic">
+          Please fill out this form to publish your manuscript.
+        </p>
         <form className="space-y-6">
           <Controller
             name="title"
             control={control}
             render={({ field }) => (
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Title *</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Title *
+                </label>
                 <input
                   {...field}
                   type="text"
-                  className={`w-full p-3 border ${formErrors.title ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                  className={`w-full p-3 border ${formErrors.title ? "border-red-500" : "border-gray-300"} rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500`}
                   placeholder="Enter manuscript title"
                 />
-                {formErrors.title && <p className="text-red-500 text-sm mt-1">{formErrors.title.message as string}</p>}
+                {formErrors.title && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {formErrors.title.message as string}
+                  </p>
+                )}
               </div>
             )}
           />
@@ -141,14 +172,20 @@ const PublishManuscriptInner: React.FC = () => {
             control={control}
             render={({ field }) => (
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Abstract *</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Abstract *
+                </label>
                 <textarea
                   {...field}
-                  className={`w-full p-3 border ${formErrors.abstract ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                  className={`w-full p-3 border ${formErrors.abstract ? "border-red-500" : "border-gray-300"} rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500`}
                   rows={5}
                   placeholder="Enter abstract"
                 />
-                {formErrors.abstract && <p className="text-red-500 text-sm mt-1">{formErrors.abstract.message as string}</p>}
+                {formErrors.abstract && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {formErrors.abstract.message as string}
+                  </p>
+                )}
               </div>
             )}
           />
@@ -157,14 +194,20 @@ const PublishManuscriptInner: React.FC = () => {
             control={control}
             render={({ field }) => (
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Authors (comma-separated) *</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Authors (comma-separated) *
+                </label>
                 <input
                   {...field}
                   type="text"
-                  className={`w-full p-3 border ${formErrors.authors ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                  className={`w-full p-3 border ${formErrors.authors ? "border-red-500" : "border-gray-300"} rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500`}
                   placeholder="Enter authors, e.g., John Doe, Jane Smith"
                 />
-                {formErrors.authors && <p className="text-red-500 text-sm mt-1">{formErrors.authors.message as string}</p>}
+                {formErrors.authors && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {formErrors.authors.message as string}
+                  </p>
+                )}
               </div>
             )}
           />
@@ -173,14 +216,20 @@ const PublishManuscriptInner: React.FC = () => {
             control={control}
             render={({ field }) => (
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Keywords</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Keywords
+                </label>
                 <input
                   {...field}
                   type="text"
-                  className={`w-full p-3 border ${formErrors.keywords ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                  className={`w-full p-3 border ${formErrors.keywords ? "border-red-500" : "border-gray-300"} rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500`}
                   placeholder="Enter keywords"
                 />
-                {formErrors.keywords && <p className="text-red-500 text-sm mt-1">{formErrors.keywords.message as string}</p>}
+                {formErrors.keywords && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {formErrors.keywords.message as string}
+                  </p>
+                )}
               </div>
             )}
           />
@@ -189,14 +238,20 @@ const PublishManuscriptInner: React.FC = () => {
             control={control}
             render={({ field }) => (
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">DOI</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  DOI
+                </label>
                 <input
                   {...field}
                   type="text"
-                  className={`w-full p-3 border ${formErrors.doi ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                  className={`w-full p-3 border ${formErrors.doi ? "border-red-500" : "border-gray-300"} rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500`}
                   placeholder="Enter DOI"
                 />
-                {formErrors.doi && <p className="text-red-500 text-sm mt-1">{formErrors.doi.message as string}</p>}
+                {formErrors.doi && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {formErrors.doi.message as string}
+                  </p>
+                )}
               </div>
             )}
           />
@@ -205,19 +260,27 @@ const PublishManuscriptInner: React.FC = () => {
             control={control}
             render={({ field }) => (
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Volume *</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Volume *
+                </label>
                 <select
                   {...field}
-                  className={`w-full p-3 border ${formErrors.volume ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                  className={`w-full p-3 border ${formErrors.volume ? "border-red-500" : "border-gray-300"} rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500`}
                 >
-                  <option value="" disabled>Select a volume</option>
+                  <option value="" disabled>
+                    Select a volume
+                  </option>
                   {volumes.map((volume) => (
                     <option key={volume.id} value={volume.id}>
                       {volume.name}
                     </option>
                   ))}
                 </select>
-                {formErrors.volume && <p className="text-red-500 text-sm mt-1">{formErrors.volume.message as string}</p>}
+                {formErrors.volume && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {formErrors.volume.message as string}
+                  </p>
+                )}
               </div>
             )}
           />
@@ -226,10 +289,12 @@ const PublishManuscriptInner: React.FC = () => {
             control={control}
             render={({ field }) => (
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Issue *</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Issue *
+                </label>
                 <select
                   {...field}
-                  className={`w-full p-3 border ${formErrors.issue ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                  className={`w-full p-3 border ${formErrors.issue ? "border-red-500" : "border-gray-300"} rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500`}
                   disabled={!getValues("volume") || !issues.length}
                 >
                   {issues.length ? (
@@ -239,10 +304,16 @@ const PublishManuscriptInner: React.FC = () => {
                       </option>
                     ))
                   ) : (
-                    <option value="" disabled>No issues available</option>
+                    <option value="" disabled>
+                      No issues available
+                    </option>
                   )}
                 </select>
-                {formErrors.issue && <p className="text-red-500 text-sm mt-1">{formErrors.issue.message as string}</p>}
+                {formErrors.issue && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {formErrors.issue.message as string}
+                  </p>
+                )}
               </div>
             )}
           />
@@ -251,19 +322,29 @@ const PublishManuscriptInner: React.FC = () => {
             control={control}
             render={({ field }) => (
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Manuscript File *</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Manuscript File *
+                </label>
                 <DocumentUpload
                   fieldName="manuscriptLink"
                   label="Manuscript File"
                   onUpload={(url) => setValue("manuscriptLink", url)}
                   error={formErrors.manuscriptLink?.message as string}
                 />
-                {formErrors.manuscriptLink && <p className="text-red-500 text-sm mt-1">{formErrors.manuscriptLink.message as string}</p>}
+                {formErrors.manuscriptLink && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {formErrors.manuscriptLink.message as string}
+                  </p>
+                )}
               </div>
             )}
           />
-          {fetchError && <p className="text-red-500 text-center">{fetchError}</p>}
-          {submitError && <p className="text-red-500 text-center">{submitError}</p>}
+          {fetchError && (
+            <p className="text-red-500 text-center">{fetchError}</p>
+          )}
+          {submitError && (
+            <p className="text-red-500 text-center">{submitError}</p>
+          )}
           <div className="flex justify-end">
             <button
               type="button"

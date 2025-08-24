@@ -1,4 +1,4 @@
-import MoreVertIcon from "@mui/icons-material/MoreVert"; 
+import MoreVertIcon from "@mui/icons-material/MoreVert";
 import {
   Avatar,
   Box,
@@ -12,7 +12,12 @@ import {
 } from "@mui/material";
 import { useEffect, useState } from "react";
 
-import { closeReview, createReviewerReply, getReplies, openReview } from "@/app/api/reviewer";
+import {
+  closeReview,
+  createReviewerReply,
+  getReplies,
+  openReview,
+} from "@/app/api/reviewer";
 import { Review } from "@/types";
 import { formatDate } from "@/utils";
 
@@ -33,7 +38,7 @@ const Chat: React.FC<ChatProps> = ({ manuscriptId }) => {
   const isMenuOpen = Boolean(menuAnchorEl);
 
   // State for review status (open/close)
-  const [isReviewClose, setIsReviewClose] = useState<boolean>(false); 
+  const [isReviewClose, setIsReviewClose] = useState<boolean>(false);
 
   // Fetch review data
   useEffect(() => {
@@ -46,8 +51,7 @@ const Chat: React.FC<ChatProps> = ({ manuscriptId }) => {
           // Use the 'isClosed' value to set the state
           setIsReviewClose(data[0].isClosed); // If 'isClosed' is true, the review is not open
           console.log("isClosed:", data[0].isClosed);
-            console.log("isClosed:", data[0].id);
-
+          console.log("isClosed:", data[0].id);
         } else {
           console.warn("No review data found");
         }

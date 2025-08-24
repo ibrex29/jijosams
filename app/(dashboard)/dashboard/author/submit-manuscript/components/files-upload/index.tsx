@@ -8,7 +8,7 @@ import { Button, Stack } from "@mui/material";
 
 const DocumentUpload = dynamic(
   () => import("@/app/components/document-upload"),
-  { ssr: false }
+  { ssr: false },
 );
 
 interface FileUploadStepProps {
@@ -120,36 +120,36 @@ const FileUploadStep: React.FC<FileUploadStepProps> = ({
       />
 
       {/* Navigation */}
-       <Stack direction="row" justifyContent="space-between" width="100%">
-    <Button
-      variant="contained"
-      onClick={handleBack}
-      sx={{
-        backgroundColor: "grey.300",
-        color: "grey.700",
-        px: 3,
-        py: 1.5,
-        borderRadius: 2,
-        "&:hover": { backgroundColor: "grey.400" },
-      }}
-    >
-      Back
-    </Button>
+      <Stack direction="row" justifyContent="space-between" width="100%">
+        <Button
+          variant="contained"
+          onClick={handleBack}
+          sx={{
+            backgroundColor: "grey.300",
+            color: "grey.700",
+            px: 3,
+            py: 1.5,
+            borderRadius: 2,
+            "&:hover": { backgroundColor: "grey.400" },
+          }}
+        >
+          Back
+        </Button>
 
-    <Button
-      variant="contained"
-      color="primary"
-      onClick={validateAndSubmit}
-      sx={{
-        px: 3,
-        py: 1.5,
-        borderRadius: 2,
-        textTransform: "none", // keeps text normal instead of uppercase
-      }}
-    >
-      Next
-    </Button>
-  </Stack>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={validateAndSubmit}
+          sx={{
+            px: 3,
+            py: 1.5,
+            borderRadius: 2,
+            textTransform: "none", // keeps text normal instead of uppercase
+          }}
+        >
+          Next
+        </Button>
+      </Stack>
     </div>
   );
 };

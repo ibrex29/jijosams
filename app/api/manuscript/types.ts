@@ -8,7 +8,6 @@ export interface FetchManuscriptsParams {
   status?: string;
 }
 
-
 export interface FetchManuscriptsResponse {
   data: ManuscriptProps[];
   meta: {

@@ -45,10 +45,16 @@ export const submitManuscript = async (payload: any) => {
   return response;
 };
 
-
-
-export const getAuthorManuscripts = async (params: FetchManuscriptsParams = {}): Promise<FetchManuscriptsResponse> => {
-  const { sortOrder = "asc", page = 1, limit = 10, search = "", status = "" } = params;
+export const getAuthorManuscripts = async (
+  params: FetchManuscriptsParams = {},
+): Promise<FetchManuscriptsResponse> => {
+  const {
+    sortOrder = "asc",
+    page = 1,
+    limit = 10,
+    search = "",
+    status = "",
+  } = params;
   const bearerHeader = await getBearerHeader();
 
   const queryParams = new URLSearchParams({
@@ -59,12 +65,16 @@ export const getAuthorManuscripts = async (params: FetchManuscriptsParams = {}):
     ...(status && { status }),
   });
 
-  const response = await request("GET", `${api.AuthorManuscripts}?${queryParams.toString()}`, {
-    headers: {
-      "Content-Type": "application/json",
-      ...bearerHeader.headers,
+  const response = await request(
+    "GET",
+    `${api.AuthorManuscripts}?${queryParams.toString()}`,
+    {
+      headers: {
+        "Content-Type": "application/json",
+        ...bearerHeader.headers,
+      },
     },
-  });
+  );
 
   return response as FetchManuscriptsResponse;
 };
@@ -106,7 +116,6 @@ export const getREManuscript = async () => {
 
   return response;
 };
-
 
 export const publishManuscript = async (payload: any) => {
   const bearerHeader = await getBearerHeader();

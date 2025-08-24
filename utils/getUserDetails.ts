@@ -9,7 +9,7 @@ export const getUserDetails = async () => {
       return {
         name: session.user.name || "User",
         email: session.user.email || "Email",
-        role : session.user.role || "Role"
+        role: session.user.role || "Role",
       };
     }
   } catch (error) {

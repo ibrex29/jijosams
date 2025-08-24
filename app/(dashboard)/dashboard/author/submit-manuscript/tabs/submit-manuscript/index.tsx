@@ -100,58 +100,59 @@ const MultiStepForm: React.FC = () => {
         title="Submit Manuscript"
         subtitle="Submit your manuscript for review"
       />
-      <Paper sx={{backgroundColor: "white",
+      <Paper
+        sx={{
+          backgroundColor: "white",
           py: 1,
           mx: "-30px",
           px: "30px",
           my: 0,
-        boxShadow: "none",
-      }} >
-      <FormProvider {...methods}>
-        <Box sx={{ width: "100%" , height: "100%", mt: 8 }}>
-          {" "}
-          {/* Added margin-top (mt) */}
-          <Stepper activeStep={activeStep} sx={{ mb: 3 }}>
-            {steps.map((label) => (
-              <Step key={label}>
-                <StepLabel>{label}</StepLabel>
-              </Step>
-            ))}
-          </Stepper>
-          {activeStep === steps.length ? (
-            <Box sx={{ textAlign: "center", mt: 4 }}>
-              <Typography variant="h6" sx={{ mb: 2 }}>
-                Your submission is complete!
-              </Typography>
-              <Typography variant="body1" sx={{ mb: 3 }}>
-                Thank you for submitting your manuscript. We have received your
-                information and will get back to you soon.
-              </Typography>
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={() => setActiveStep(0)}
+          boxShadow: "none",
+        }}
+      >
+        <FormProvider {...methods}>
+          <Box sx={{ width: "100%", height: "100%", mt: 8 }}>
+            {" "}
+            {/* Added margin-top (mt) */}
+            <Stepper activeStep={activeStep} sx={{ mb: 3 }}>
+              {steps.map((label) => (
+                <Step key={label}>
+                  <StepLabel>{label}</StepLabel>
+                </Step>
+              ))}
+            </Stepper>
+            {activeStep === steps.length ? (
+              <Box sx={{ textAlign: "center", mt: 4 }}>
+                <Typography variant="h6" sx={{ mb: 2 }}>
+                  Your submission is complete!
+                </Typography>
+                <Typography variant="body1" sx={{ mb: 3 }}>
+                  Thank you for submitting your manuscript. We have received
+                  your information and will get back to you soon.
+                </Typography>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={() => setActiveStep(0)}
+                >
+                  Submit Another Manuscript
+                </Button>
+              </Box>
+            ) : (
+              <Box
+                sx={{
+                  p: 4,
+                  borderRadius: 2,
+                  boxShadow: 3,
+                  backgroundColor: "background.paper",
+                }}
               >
-                Submit Another Manuscript
-              </Button>
-            </Box>
-          ) : (
-           <Box
-  sx={{
-    p: 4,
-    borderRadius: 2,
-    boxShadow: 3,
-    backgroundColor: "background.paper",
-  }}
->
-  {getStepContent(activeStep)}
-</Box>
-
-          )}
-        </Box>
-      </FormProvider>
+                {getStepContent(activeStep)}
+              </Box>
+            )}
+          </Box>
+        </FormProvider>
       </Paper>
-      
     </>
   );
 };

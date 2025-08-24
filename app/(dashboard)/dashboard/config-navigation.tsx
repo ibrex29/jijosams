@@ -3,8 +3,7 @@ import DescriptionIcon from "@mui/icons-material/Description";
 import HomeIcon from "@mui/icons-material/Home";
 import PeopleIcon from "@mui/icons-material/People";
 import SettingsIcon from "@mui/icons-material/Settings";
-import PublishIcon from '@mui/icons-material/Publish';
-
+import PublishIcon from "@mui/icons-material/Publish";
 
 // ----------------------------------------------------------------------
 
@@ -62,7 +61,7 @@ export const editorInChiefNavConfig = [
     path: `${basePath.editor_in_chief}/submissions`,
     icon: icon(ArticleIcon),
   },
-   {
+  {
     title: "Publish Manuscript",
     path: `${basePath.editor_in_chief}/publish-manuscript`,
     icon: icon(PublishIcon),
@@ -118,7 +117,7 @@ export const sectionEditorNavConfig = [
     path: `${basePath.section_editor}/submissions`,
     icon: icon(ArticleIcon),
   },
-   {
+  {
     title: "Publish Manuscript",
     path: `${basePath.section_editor}/publish-manuscript`,
     icon: icon(PublishIcon),

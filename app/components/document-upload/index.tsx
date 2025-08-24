@@ -10,7 +10,10 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material";
-import { CheckCircle as CheckCircleIcon, Upload as UploadIcon } from "@phosphor-icons/react";
+import {
+  CheckCircle as CheckCircleIcon,
+  Upload as UploadIcon,
+} from "@phosphor-icons/react";
 import React, { useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 
@@ -50,7 +53,6 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({
 
     try {
       const response = await fetch(`${baseUrl}/v1/upload`, {
-        
         method: "POST",
         headers: {
           accept: "*/*",
@@ -62,8 +64,8 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({
         throw new Error(`Upload failed with status ${response.status}`);
       }
 
-        const result = await response.json();
-      const fileUrl = result.fileUrl; 
+      const result = await response.json();
+      const fileUrl = result.fileUrl;
       onUpload(fileUrl);
       console.log(`File uploaded successfully: ${fileUrl}`);
       setUploadedFileName(sanitizedFileName);
@@ -118,12 +120,20 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({
           aria-describedby={`${fieldName}-upload-status`}
         />
         {uploading ? (
-          <Stack direction={isSmallScreen ? "column" : "row"} alignItems="center" spacing={2}>
+          <Stack
+            direction={isSmallScreen ? "column" : "row"}
+            alignItems="center"
+            spacing={2}
+          >
             <CircularProgress size={24} />
             <Typography variant="body2">Uploading...</Typography>
           </Stack>
         ) : uploadedFileName ? (
-          <Stack direction={isSmallScreen ? "column" : "row"} alignItems="center" spacing={2}>
+          <Stack
+            direction={isSmallScreen ? "column" : "row"}
+            alignItems="center"
+            spacing={2}
+          >
             <CheckCircleIcon size={48} color="success" />
             <Typography variant="subtitle2">{uploadedFileName}</Typography>
           </Stack>
