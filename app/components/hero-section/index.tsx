@@ -3,8 +3,10 @@ import React from "react";
 import { Boxes } from "../ui/bg-boxes";
 import { cn } from "@/app/lib/utils";
 import { Button } from "@mui/material";
+import { useRouter } from "next/navigation";
 
 export function HeroSection() {
+  const router = useRouter();
   return (
     <div className="h-[560px] relative w-full  overflow-hidden bg-white flex flex-col items-center justify-center rounded-lg">
       <div className="absolute inset-0 w-full h-full bg-white z-20 [mask-image:radial-gradient(transparent,white)] pointer-events-none" />
@@ -29,6 +31,7 @@ export function HeroSection() {
         {/* CTA Buttons */}
         <div className="mt-6 flex gap-4 justify-center">
           <Button
+            onClick={() => router.push("/signin")}
             variant="contained"
             color="primary"
             sx={{
@@ -44,6 +47,7 @@ export function HeroSection() {
             Submit Your Paper
           </Button>
           <Button
+            onClick={() => router.push("/manuscripts")}
             variant="outlined"
             color="primary"
             sx={{

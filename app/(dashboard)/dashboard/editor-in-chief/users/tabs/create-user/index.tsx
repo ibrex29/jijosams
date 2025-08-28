@@ -27,6 +27,15 @@ type FormValues = {
   sectionId?: string;
 };
 
+
+enum CreateUserRole {
+  Author = "author",
+  Reviewer = "reviewer",
+  ManagingEditor = "Managing-Editor",
+  SectionEditor = "Section-Editor",
+  EditorInChief = "Editor-in-Chief",
+}
+
 const RegisterUser = () => {
   const {
     control,
@@ -62,9 +71,9 @@ const RegisterUser = () => {
   }, []);
 
   const onSubmit = async (data: FormValues) => {
-    console.log("Form Data:", data);
     try {
       const response = await createUser(data);
+      console.log(response);
       if (response.statusCode) {
         console.error(response.message || "Failed to create the user.");
         notify("Failed to create User", { mode: "error" });
@@ -90,7 +99,7 @@ const RegisterUser = () => {
           name="roleName"
           control={control}
           rules={{ required: "Role is required" }}
-          defaultValue={UserRole.ManagingEditor}
+          defaultValue={CreateUserRole.ManagingEditor}
           render={({ field }) => (
             <Grid container spacing={2}>
               {[
@@ -131,8 +140,8 @@ const RegisterUser = () => {
       </Box>
 
       {/* Section Dropdown - Only show if role is Reviewer or Section Editor */}
-      {(selectedRole === UserRole.Reviewer ||
-        selectedRole === UserRole.SectionEditor) && (
+      {(selectedRole === CreateUserRole.Reviewer ||
+        selectedRole === CreateUserRole.SectionEditor) && (
         <Controller
           name="sectionId"
           control={control}
