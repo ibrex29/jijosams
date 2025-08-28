@@ -2,6 +2,7 @@
  * Api detail
  */
 
+
 export const baseUrl =
   process.env.NEXT_PUBLIC_BACKEND_API_URL ?? "https://slujst.slu.edu.ng";
 
@@ -20,6 +21,7 @@ export const api = {
   assignManuscriptSection: `${baseUrl}/v1/manuscripts/assign-section`,
   authorMetrics: `${baseUrl}/v1/author/status-counts`,
   reviewerMetrics: `${baseUrl}/v1/analytics/reviewer/manuscripts-count`,
+  getRoles: `${baseUrl}/v1/roles-permissions`, 
 };
 
 export const SectionEditor = {
@@ -43,6 +45,8 @@ export const author = {
 export const User = {
   createUser: `${baseUrl}/v1/user`,
   createAuthor: `${baseUrl}/v1/author/author`,
+  getPaginatedUsers: `${baseUrl}/v1/user/paginated-users`,
+  updateRoleOrSection: `${baseUrl}/v1/user`
 };
 
 export const volume = {

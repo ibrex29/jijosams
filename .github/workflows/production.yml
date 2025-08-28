@@ -1,0 +1,73 @@
+name: Prod CI/CD
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      # 1. Checkout the repository
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      # 2. Setup Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+
+      # 3. Cache Yarn dependencies
+      - name: Cache Yarn
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.yarn/cache
+            node_modules
+          key: ${{ runner.os }}-yarn-${{ hashFiles('yarn.lock') }}
+
+      # 4. Ensure dayjs is installed
+      - name: Ensure dayjs
+        run: |
+          if ! grep -q '"dayjs"' package.json; then
+            yarn add dayjs
+          fi
+
+      # 5. Install dependencies
+      - name: Install Dependencies
+        run: yarn install --frozen-lockfile
+
+      # 6. Build Next.js project
+      - name: Build
+        run: yarn build
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build   # <-- This job waits until build succeeds
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+
+      - name: Deploy to Server
+        uses: appleboy/ssh-action@v0.1.7
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          port: ${{ secrets.SERVER_PORT }}
+          script: |
+            cd /var/www/slujst-frontend
+            git pull origin main
+            yarn install --frozen-lockfile
+            yarn build
+            pm2 reload slujst-frontend --update-env -- start -p 3100
