@@ -7,7 +7,7 @@ export type DictOf<T> = Record<string, T>;
 export enum UserRole {
   Author = "author",
   Reviewer = "reviewer",
-  ManagingEditor = "Managing-Editor",
+  ManagingEditor = "managing-editor",
   SectionEditor = "section-editor",
   EditorInChief = "editor-in-chief",
 }

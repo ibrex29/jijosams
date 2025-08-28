@@ -21,7 +21,7 @@ export const getPublishedManuscript = async (
   search?: string,
   issueId?: string,
   volumeId?: string,
-  isActive: boolean = true,
+  isActive?: boolean,
   status?: string,
   jobTitle?: string,
 ): Promise<PublishedManuscriptResponse> => {
