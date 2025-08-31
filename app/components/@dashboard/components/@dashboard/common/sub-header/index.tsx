@@ -2,8 +2,6 @@ import { Box, Grid, Paper } from "@mui/material";
 import React from "react";
 
 interface Props {
-  // itemCount: number | undefined;
-  // itemCountLabel?: string;
   actionButton?: React.ReactNode;
   pagination: React.ReactNode;
   searchBar: React.ReactNode;
@@ -12,8 +10,7 @@ interface Props {
 }
 
 const SubHeader: React.FC<Props> = ({
-  // itemCount,
-  // itemCountLabel,
+
   actionButton,
   pagination,
   searchBar,

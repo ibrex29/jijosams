@@ -108,7 +108,7 @@ export const createReview = async (payload: any) => {
 export const createReviewerReply = async (payload: any) => {
   const bearerHeader = await getBearerHeader();
 
-  const response = await request("POST", `${reviewer.createReply}`, {
+  const response = await request("POST", `${reviewer.createReplyReviewer}`, {
     headers: {
       "Content-Type": "application/json",
       ...bearerHeader.headers,
@@ -163,56 +163,6 @@ export const getReplies = async (manuscriptId: string) => {
 };
 
 
-
-
-// export const closeReview = async (reviewId: string) => {
-//   const bearerHeader = await getBearerHeader();
-
-//   const response = await request(
-//     "PATCH",
-//     `http://localhost:5000/api/v1/review/${reviewId}/close`,
-//     {
-//       headers: {
-//         "Content-Type": "application/json",
-//         ...bearerHeader.headers,
-//       },
-//     },
-//   );
-
-//   const responseBody = await response.text(); // Get raw response text
-//   console.log("Response body (closeReview):", responseBody);
-
-//   try {
-//     return JSON.parse(responseBody); // Parse JSON only if it's valid
-//   } catch (error) {
-//     throw new Error("Invalid JSON response");
-//   }
-// };
-
-// export const openReview = async (reviewId: string) => {
-//   const bearerHeader = await getBearerHeader();
-
-//   const response = await request(
-//     "PATCH",
-//     `${reviewer.closeOpenReview}/${reviewId}/open`,
-//     {
-//       headers: {
-//         "Content-Type": "application/json",
-//         ...bearerHeader.headers,
-//       },
-//     },
-//   );
-
-//   const responseBody = await response.text();
-//   console.log("Response body (openReview):", responseBody);
-
-//   try {
-//     return JSON.parse(responseBody);
-//   } catch (error) {
-//     throw new Error("Invalid JSON response");
-//   }
-// };
-
 export const acceptManuscript = async (payload: any) => {
   const bearerHeader = await getBearerHeader();
 
@@ -227,42 +177,3 @@ export const acceptManuscript = async (payload: any) => {
   return response;
 };
 
-// export const getReviewer = async () => {
-//   const session = await getServerSession(authOptions);
-
-//   const response = request('GET', `${SectionEditor.getAllReviewer}`, {
-//     headers: {
-//       'Content-Type': 'application/json',
-//       Authorization: `Bearer ${session?.token}`,
-//     },
-//   });
-
-//   return response;
-// };
-
-// export const createSection = async (name: string) => {
-//   const session = await getServerSession(authOptions);
-
-//   const response = request('POST', `${api.createSection}`, {
-//     headers: {
-//       'Content-Type': 'application/json',
-//       Authorization: `Bearer ${session?.token}`,
-//     },
-//     data: { name },
-//   });
-//       console.log(response);
-
-//   return response;
-// };
-
-// export const editSection = async ( id : string , name: any ) => {
-//   const session = await getServerSession(authOptions);
-
-//   return request('PATCH', `${api.editSection}/${id}`, {
-//     headers: {
-//       'Content-Type': 'application/json',
-//       Authorization: `Bearer ${session?.token}`,
-//     },
-//     data: { name },
-//   });
-// };

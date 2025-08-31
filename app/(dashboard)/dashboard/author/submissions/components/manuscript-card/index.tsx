@@ -95,7 +95,8 @@ export default function AuthorManuscriptCard({
               sx={{
                 borderRadius: "6px",
                 fontWeight: 600,
-                fontSize: "12px",
+                fontSize: "10px",
+                padding: "2px 4px",
               }}
             />
           </Box>
@@ -107,7 +108,7 @@ export default function AuthorManuscriptCard({
               flexDirection="row"
               alignItems="flex-start"
               gap={2}
-              mt={2}
+              mt={4}
             >
               <Avatar
                 sx={{
@@ -224,7 +225,7 @@ export default function AuthorManuscriptCard({
                   fontWeight: 600,
                 }}
               >
-                Review
+                View Review
               </Button>
             </Box>
           </CardContent>

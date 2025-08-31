@@ -6,6 +6,12 @@ import { request } from "@/utils/request";
 
 import { getBearerHeader } from "../../call-methods";
 
+export interface AssignManuscriptReviewerPayload {
+  manuscriptId: string;
+  reviewerIds: string[];
+  reviewDueDate: string;
+}
+
 export const assignManuscriptSection = async (payload: any) => {
   const bearerHeader = await getBearerHeader();
 
@@ -19,11 +25,13 @@ export const assignManuscriptSection = async (payload: any) => {
   return response;
 };
 
-export const assignManuscriptReviewer = async (payload: any) => {
+
+
+export const assignManuscriptReviewer = async (payload: AssignManuscriptReviewerPayload) => {
   const bearerHeader = await getBearerHeader();
 
   const response = await request(
-    "PATCH",
+    "POST",
     `${SectionEditor.assignManuscriptReviewer}`,
     {
       headers: {

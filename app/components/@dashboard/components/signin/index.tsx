@@ -19,7 +19,7 @@ const SigninMain: FC = () => {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        bgcolor: "grey", // Fallback color while the image loads
+        bgcolor: "grey", 
       }}
     >
       <Container maxWidth="sm">

@@ -52,7 +52,6 @@ export default function ReviewerManuscriptCard({
     status,
     createdAt,
     Document,
-    reviewerId,
     reviewDueDate,
   } = manuscript;
 
@@ -229,7 +228,7 @@ export default function ReviewerManuscriptCard({
                 >
                   Submitted: {fDate(new Date(createdAt))}
                 </Typography>
-                {reviewerId && (
+                {reviewDueDate && (
                   <Box mt={1}>
                     <Typography
                       sx={{ color: "grey.800", fontSize: "14px" }}

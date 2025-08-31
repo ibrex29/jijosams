@@ -76,11 +76,10 @@ export default function CaretPopover() {
         }
       }
 
-      // Now, log out using next-auth
-      await signOut({ redirect: false }); // Don't redirect automatically, we handle that manually
+      await signOut({ redirect: true }); 
 
-      // Optionally, redirect to the login page after logout
-      router.push("/signin");
+      window.location.href = "/signin";
+     
     } catch (error) {
       console.error("Error during logout:", error);
     } finally {

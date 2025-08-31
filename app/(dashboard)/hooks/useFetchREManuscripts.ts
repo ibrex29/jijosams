@@ -2,12 +2,12 @@ import { useQuery } from "@tanstack/react-query";
 import React from "react";
 
 import { getREManuscript } from "@/app/api/manuscript";
-import { ManuscriptProps } from "@/types"; // Ensure this is the correct type
+import { ManuscriptProps } from "@/types"; 
 
 const useFetchManuscripts = () => {
   const [manuscripts, setManuscripts] = React.useState<ManuscriptProps[]>([]);
 
-  const { data, isFetching, refetch } = useQuery({
+  const { data, isFetching, refetch } = useQuery<ManuscriptProps[]>({
     queryKey: ["manuscripts"],
     queryFn: getREManuscript,
     staleTime: 120000,
@@ -15,8 +15,8 @@ const useFetchManuscripts = () => {
 
   React.useEffect(() => {
     if (data) {
-      setManuscripts(data.Manuscript);
-      console.log("Fetched manuscripts:", data.Manuscript);
+      setManuscripts(data);
+      console.log("Fetched manuscripts:", data);
     }
   }, [isFetching, data]);
 

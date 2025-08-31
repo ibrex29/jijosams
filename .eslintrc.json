@@ -1,19 +1,10 @@
 {
     "extends": [
       "next/core-web-vitals",
-      //"plugin:@typescript-eslint/recommended-type-checked",
       "prettier"
     ],
     "plugins": ["@typescript-eslint", "simple-import-sort", "unused-imports", "@tanstack/query"],
     "ignorePatterns": ["static_forms/**"],
-    /** Enable type-checking later when it is safe to */
-    /**
-    "parser": "@typescript-eslint/parser",
-    "parserOptions": {
-      "project": true,
-      "tsconfigRootDir": "."
-    },
-    */
     "root": true,
      "overrides": [
     {

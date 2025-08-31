@@ -24,7 +24,7 @@ export const api = {
 
 export const SectionEditor = {
   getAllReviewer: `${baseUrl}/v1/manuscripts/reviewers-for-section-editor`,
-  assignManuscriptReviewer: `${baseUrl}/v1/manuscripts/assign-reviewer`,
+  assignManuscriptReviewer: `${baseUrl}/v1/manuscripts/assign-reviewers`,
 };
 
 export const reviewer = {
@@ -32,18 +32,24 @@ export const reviewer = {
   createReview: `${baseUrl}/v1/review/create-review`,
   getReplies: `${baseUrl}/v1/reply/manuscript`,
   acceptManuscriptUrl: `${baseUrl}/v1/review/review`,
-  createReply: `${baseUrl}/v1/reply/reviewer-reply`,
+  createReply: `${baseUrl}/v1/reply/reply`,
+  createReplyReviewer: `${baseUrl}/v1/reply/reviewer`,
+
   closeOpenReview: `${baseUrl}/v1/review`,
 };
 
 export const author = {
-  createReply: `${baseUrl}/v1/reply/author-reply`,
+  createReply: `${baseUrl}/v1/reply/author`,
 };
 
 export const User = {
   createUser: `${baseUrl}/v1/user`,
   createAuthor: `${baseUrl}/v1/author/author`,
 };
+
+export const Role = {
+  getAllRoles: `${baseUrl}/v1/roles-permissions/roles`,
+}
 
 export const volume = {
   Volume: `${baseUrl}/v1/volumes`,

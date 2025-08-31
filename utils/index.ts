@@ -1,4 +1,3 @@
-// utils/dateUtils.ts
 import dayjs from "dayjs";
 
 export function formatDate(dateString: string): string {

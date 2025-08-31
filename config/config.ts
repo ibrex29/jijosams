@@ -1,53 +1,40 @@
-export const metadata = {
-  title: {
-    default: "Startup Nigeria",
-    template: "%s | Startup Nigeria",
-  },
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Sule Lamido University - Journal of Science and Technology",
   description:
-    "The Nigeria Startup Portal (NSP) - Your gateway to registering and managing your startup. Simplify the registration process and access resources for startup entrepreneurs with NSP.",
-  applicationName: "",
-  //   referrer: "origin-when-cross-origin",
+    "A peer-reviewed journal publishing cutting-edge research in science and technology from Sule Lamido University.",
   keywords: [
-    "Nigeria Startup Portal",
-    "NSP",
-    "Startup Registration",
-    "Startup Management",
-    "Business Registration",
-    "Entrepreneurship",
-    "Startup Resources",
-    "Registration Portal",
-    "Business Startups",
-    "New Ventures",
-    "Startup Support",
-    "Business Development",
-    "Entrepreneurial Services",
-    "Small Business Registration",
-    "Startup Ecosystem",
-    "Entrepreneurial Ventures",
+    "Sule Lamido University",
+    "Journal",
+    "Science",
+    "Technology",
+    "Research",
+    "Publications",
   ],
-  //   robots: {
-  //     index: false,
-  //     follow: true,
-  //     nocache: true,
-  //     googleBot: {
-  //       index: true,
-  //       follow: false,
-  //       noimageindex: true,
-  //       "max-video-preview": -1,
-  //       "max-image-preview": "large",
-  //       "max-snippet": -1,
-  //     },
-  //   },
-  icons: {
-    icon: "/icon.png",
-    shortcut: "/shortcut-icon.png",
-    apple: "/apple-icon.png",
-    other: {
-      rel: "apple-touch-icon-precomposed",
-      url: "/apple-touch-icon-precomposed.png",
-    },
+  authors: [{ name: "Sule Lamido University", url: "https://your-domain.com" }],
+  openGraph: {
+    title: "Sule Lamido University - Journal of Science and Technology",
+    description:
+      "Explore research papers and scientific advancements at Sule Lamido University.",
+    url: "https://your-domain.com",
+    siteName: "SLU Journal of Science and Technology",
+    type: "website",
+    images: [
+      {
+        url: "https://your-domain.com/images/og-image.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Sule Lamido University Journal",
+      },
+    ],
   },
-  //   openGraph
-  // manifest
-  // twitter
+  twitter: {
+    card: "summary_large_image",
+    site: "@your_twitter_handle",
+    title: "Sule Lamido University - Journal of Science and Technology",
+    description:
+      "Peer-reviewed scientific research from Sule Lamido University.",
+    images: ["https://your-domain.com/images/twitter-card.jpg"],
+  },
 };

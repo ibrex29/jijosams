@@ -24,9 +24,6 @@ import { Controller, useForm } from "react-hook-form";
 import { rolesMap } from "@/types";
 import StyledButton from "../../button";
 
-// import StyledButton from "@/app/components/button";
-// import { rolesMap } from "@/app/types";
-
 const SigninForm: FC = () => {
   const router = useRouter();
 
@@ -75,7 +72,7 @@ const SigninForm: FC = () => {
         justifyContent: "center",
       }}
     >
-      <Container component="main" maxWidth="xs">
+      <Container component="main" maxWidth="xl">
         {isError && (
           <Alert sx={{ mb: 5 }} variant="filled" severity="error">
             Invalid login credentials!
@@ -189,7 +186,7 @@ const SigninForm: FC = () => {
                   <Link href="/forgot-password" style={{ color: "#007a27" }}>
                     <Typography
                       component="p"
-                      variant="subtitle1"
+                      variant="body2"
                       sx={{ mt: 1, color: "#007A28" }}
                     >
                       Forgot Password?
@@ -207,6 +204,17 @@ const SigninForm: FC = () => {
                   {isLoading ? "Logging in..." : "Login"}
                 </StyledButton>
               </Grid>
+              {/* Add Signup Link */}
+            <Grid container justifyContent="center" sx={{ mt: 2 }}>
+              <Grid item>
+                <Typography variant="body2">
+                  Don&apos;t have an account?{" "}
+                  <Link href="/signup" style={{ color: "#007A28", fontWeight: 600 }}>
+                    Sign up
+                  </Link>
+                </Typography>
+              </Grid>
+            </Grid>
             </Grid>
           </form>
         </Box>

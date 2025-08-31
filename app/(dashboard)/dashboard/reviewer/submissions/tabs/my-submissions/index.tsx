@@ -8,6 +8,8 @@ const REManuscriptTab: React.FC = () => {
   const { manuscripts, isFetching, availableManuscripts } =
     useFetchREManuscripts();
 
+  console.log(manuscripts, "RE manuscripts");
+
   return (
     <ManuscriptsDisplay
       manuscripts={manuscripts}

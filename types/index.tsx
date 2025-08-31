@@ -44,6 +44,29 @@ export type ComponentProps = {
   [key: string]: any;
 };
 
+export interface AuthorProps {
+  id: string;
+  userId: string;
+  affiliation: string;
+  expertiseArea: string;
+  higestQualification: string | null;
+  reviewInterest: boolean;
+}
+
+export interface ReviewerProps {
+  id: string;
+  manuscriptId: string;
+  reviewerId: string;
+  assignedAt: string;
+  dueDate: string;
+  reviewer: {
+    id: string;
+    userId: string;
+    expertiseArea: string;
+    higestQualification: string | null;
+    sectionId: string;
+  };
+}
 export interface ManuscriptProps {
   id: string;
   title: string;
@@ -52,19 +75,23 @@ export interface ManuscriptProps {
   authorName: string;
   coAuthor: string;
   status: string;
+  rejectionReason?: string | null;
   authorId: string;
   createdAt: string;
-  createdBy: string;
+  createdByUserId: string;
+  updatedByUserId: string | null;
   suggestedReviewer: string;
   updatedAt: string;
-  updatedBy: string;
   isPublished: boolean;
-  assignmentDate: string;
-  reviewDueDate: string;
-  reviewerId: string | null;
-  sectionId: string | null;
-  Document: DocumentProps[];
+  assigmentDate?: string; 
+  reviewDueDate?: string | null;
+  sectionId: string;
+  Author?: AuthorProps;
   Section: SectionProps | null;
+  Document?: DocumentProps[];
+  ActionLog: any[];
+  Review: any[];
+  Reviewers: ReviewerProps[];
 }
 
 export interface Reviewer {
@@ -139,9 +166,10 @@ export interface Reviewer {
   user: UserType;
 }
 
-interface Reply {
+export interface Reply {
   id: string;
   reviewId: string;
+  isAuthor: boolean;
   authorId: string;
   subject: string;
   contents: string;

@@ -9,9 +9,24 @@ import { request } from "@/utils/request";
 import { authOptions } from "../auth/[...nextauth]/options";
 import { fetchData } from "../call-methods";
 
+
+export type GetReviewerType = {
+  id: string;
+  userId: string;
+  expertiseArea: string;
+  sectionId: string;
+  user: {
+    id: string;
+    email: string;
+    firstName: string;
+    lastName: string;
+  };
+};
+
+
 export const getSection = async () => fetchData(api.getSection);
 
-export const getReviewer = async () => {
+export const getReviewer = async (): Promise<GetReviewerType[]> => {
   const session = await getServerSession(authOptions);
 
   const response = request("GET", `${SectionEditor.getAllReviewer}`, {
@@ -21,7 +36,7 @@ export const getReviewer = async () => {
     },
   });
 
-  return response;
+  return response as Promise<GetReviewerType[]>;
 };
 
 export const createSection = async (name: string) => {

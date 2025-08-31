@@ -24,8 +24,6 @@ const MyManuscriptTab: React.FC = () => {
     hasPreviousPage,
     hasNextPage,
   } = useFetchAuthorManuscripts();
-  console.log("Manuscripts:", manuscripts);
-
   return (
     <ManuscriptsDisplay
       manuscripts={manuscripts}

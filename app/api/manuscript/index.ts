@@ -133,7 +133,7 @@ export const getSEManuscript = async (): Promise<ManuscriptProps[]> => {
   return response as Promise<ManuscriptProps[]>;
 };
 
-export const getREManuscript = async () => {
+export const getREManuscript = async () : Promise<ManuscriptProps[]> => {
   const bearerHeader = await getBearerHeader();
 
   const response = await request("GET", api.REManuscript, {
@@ -147,7 +147,7 @@ export const getREManuscript = async () => {
   { 
     logout();
   }
-  return response;
+  return response as Promise<ManuscriptProps[]>;
 };
 
 export const publishManuscript = async (payload: any) => {
