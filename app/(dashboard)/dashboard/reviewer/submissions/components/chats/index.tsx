@@ -12,13 +12,19 @@ import {
   MenuItem,
   TextField,
   Typography,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem as SelectMenuItem,
 } from "@mui/material";
 import PersonIcon from "@mui/icons-material/Person";
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import useNotification from "@/hooks/useNotification";
 
 import {
   closeReview,
+  createReview,
   createReviewerReply,
   getReplies,
   openReview,
@@ -35,8 +41,12 @@ const Chat: React.FC<ChatProps> = ({ manuscriptId }) => {
   const [contents, setContents] = useState("");
   const [uploadFiles, setUploadFiles] = useState<string | null>(null);
   const [menuAnchorEl, setMenuAnchorEl] = useState<null | HTMLElement>(null);
+  const [showCreateReviewForm, setShowCreateReviewForm] = useState(false);
+  const [newReviewComments, setNewReviewComments] = useState("");
+  const [newReviewRecommendation, setNewReviewRecommendation] = useState("");
   const isMenuOpen = Boolean(menuAnchorEl);
   const queryClient = useQueryClient();
+  const { notify } = useNotification();
 
   // Fetch review data with TanStack Query
   const { data: reviewData, isLoading, error } = useQuery({
@@ -44,7 +54,7 @@ const Chat: React.FC<ChatProps> = ({ manuscriptId }) => {
     queryFn: () => getReplies(manuscriptId).then((data) => (data && Array.isArray(data) && data.length > 0 ? data[0] : null)),
   });
 
-  // Mutations for reply, open, and close review
+  // Mutations for reply, open, close, and create review
   const replyMutation = useMutation({
     mutationFn: createReviewerReply,
     onSuccess: () => {
@@ -52,9 +62,11 @@ const Chat: React.FC<ChatProps> = ({ manuscriptId }) => {
       setContents("");
       setUploadFiles(null);
       queryClient.invalidateQueries({ queryKey: ["review", manuscriptId] });
+      notify("Reply submitted successfully");
     },
     onError: (error) => {
       console.error("Error submitting reply:", error);
+      notify("Failed to submit reply");
     },
   });
 
@@ -62,9 +74,11 @@ const Chat: React.FC<ChatProps> = ({ manuscriptId }) => {
     mutationFn: closeReview,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["review", manuscriptId] });
+      notify("Review closed successfully");
     },
     onError: (error) => {
       console.error("Error closing review:", error);
+      notify("Failed to close review");
     },
   });
 
@@ -72,9 +86,26 @@ const Chat: React.FC<ChatProps> = ({ manuscriptId }) => {
     mutationFn: openReview,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["review", manuscriptId] });
+      notify("Review opened successfully");
     },
     onError: (error) => {
       console.error("Error opening review:", error);
+      notify("Failed to open review");
+    },
+  });
+
+  const createReviewMutation = useMutation({
+    mutationFn: createReview,
+    onSuccess: () => {
+      setNewReviewComments("");
+      setNewReviewRecommendation("");
+      setShowCreateReviewForm(false);
+      queryClient.invalidateQueries({ queryKey: ["review", manuscriptId] });
+      notify("Review created successfully");
+    },
+    onError: (error) => {
+      console.error("Error creating review:", error);
+      notify("Failed to create review");
     },
   });
 
@@ -114,6 +145,19 @@ const Chat: React.FC<ChatProps> = ({ manuscriptId }) => {
     handleMenuClose();
   };
 
+  // Handle "Create Review" action
+  const handleCreateReviewSubmit = () => {
+    if (!newReviewComments || !newReviewRecommendation) {
+      notify("Comments and recommendation are required");
+      return;
+    }
+    createReviewMutation.mutate({
+      manuscriptId,
+      comments: newReviewComments,
+      recommendation: newReviewRecommendation,
+    });
+  };
+
   if (isLoading) {
     return (
       <Card sx={{ p: 2 }}>
@@ -138,9 +182,68 @@ const Chat: React.FC<ChatProps> = ({ manuscriptId }) => {
 
   if (!reviewData) {
     return (
-      <Typography sx={{ p: 2 }}>
-        No chats available. Create a review to start a conversation.
-      </Typography>
+      <Card sx={{ p: 2 }}>
+        <Typography sx={{ mb: 2 }}>
+          No chats available. Create a review to start a conversation.
+        </Typography>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => setShowCreateReviewForm(true)}
+        >
+          Create Review
+        </Button>
+        {showCreateReviewForm && (
+          <Box sx={{ mt: 2 }}>
+            <FormControl fullWidth sx={{ mb: 2 }}>
+              <InputLabel>Recommendation</InputLabel>
+              <Select
+                value={newReviewRecommendation}
+                onChange={(e) => setNewReviewRecommendation(e.target.value)}
+                label="Recommendation"
+                size="small"
+                disabled={createReviewMutation.isPending}
+              >
+                <SelectMenuItem value="MINOR_REVISIONS">Minor Revisions</SelectMenuItem>
+                <SelectMenuItem value="MAJOR_REVISIONS">Major Revisions</SelectMenuItem>
+                <SelectMenuItem value="ACCEPT">Accept</SelectMenuItem>
+                <SelectMenuItem value="REJECT">Reject</SelectMenuItem>
+              </Select>
+            </FormControl>
+            <TextField
+              label="Comments"
+              variant="outlined"
+              multiline
+              rows={4}
+              fullWidth
+              value={newReviewComments}
+              onChange={(e) => setNewReviewComments(e.target.value)}
+              sx={{ mb: 2 }}
+              disabled={createReviewMutation.isPending}
+              error={!!createReviewMutation.error}
+              helperText={createReviewMutation.error ? "Failed to create review" : ""}
+            />
+            <Box sx={{ display: "flex", justifyContent: "flex-end", gap: 1 }}>
+              <Button
+                variant="outlined"
+                size="small"
+                onClick={() => setShowCreateReviewForm(false)}
+                disabled={createReviewMutation.isPending}
+              >
+                Cancel
+              </Button>
+              <Button
+                variant="contained"
+                size="small"
+                onClick={handleCreateReviewSubmit}
+                disabled={createReviewMutation.isPending || !newReviewComments || !newReviewRecommendation}
+              >
+                {createReviewMutation.isPending ? "Creating..." : "Submit Review"}
+              </Button>
+            </Box>
+          </Box>
+        )}
+      </Card>
     );
   }
 

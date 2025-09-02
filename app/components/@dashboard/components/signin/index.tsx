@@ -19,7 +19,7 @@ const SigninMain: FC = () => {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        bgcolor: "grey", 
+        bgcolor: "grey",
       }}
     >
       <Container maxWidth="sm">

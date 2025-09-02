@@ -25,9 +25,9 @@ export const assignManuscriptSection = async (payload: any) => {
   return response;
 };
 
-
-
-export const assignManuscriptReviewer = async (payload: AssignManuscriptReviewerPayload) => {
+export const assignManuscriptReviewer = async (
+  payload: AssignManuscriptReviewerPayload,
+) => {
   const bearerHeader = await getBearerHeader();
 
   const response = await request(

@@ -30,6 +30,7 @@ export const SectionEditor = {
 export const reviewer = {
   getRecommendation: `${baseUrl}/v1/review/recommendations`,
   createReview: `${baseUrl}/v1/review/create-review`,
+    getRepliesAuthor: `${baseUrl}/v1/reply`,
   getReplies: `${baseUrl}/v1/reply/manuscript`,
   acceptManuscriptUrl: `${baseUrl}/v1/review/review`,
   createReply: `${baseUrl}/v1/reply/reply`,
@@ -49,7 +50,7 @@ export const User = {
 
 export const Role = {
   getAllRoles: `${baseUrl}/v1/roles-permissions/roles`,
-}
+};
 
 export const volume = {
   Volume: `${baseUrl}/v1/volumes`,

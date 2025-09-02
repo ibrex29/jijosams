@@ -73,11 +73,13 @@ const RegisterUser = () => {
     try {
       const response = await createUser(data);
       if (response.statusCode) {
-        notify(`${response.message}! Failed to create User!`, { mode: "error" });
+        notify(`${response.message}! Failed to create User!`, {
+          mode: "error",
+        });
       } else {
         notify("User successfully created", { mode: "success" });
         reset();
-        setStep(1); 
+        setStep(1);
       }
     } catch (error) {
       notify("Failed to create User!", { mode: "error" });
@@ -85,7 +87,10 @@ const RegisterUser = () => {
   };
 
   return (
-    <Paper elevation={3} sx={{ p: 4, mt:8 , borderRadius: 3, maxWidth: 800, mx: "auto" }}>
+    <Paper
+      elevation={3}
+      sx={{ p: 4, mt: 8, borderRadius: 3, maxWidth: 800, mx: "auto" }}
+    >
       <Typography variant="h5" fontWeight={600} gutterBottom>
         Register New User
       </Typography>
@@ -101,21 +106,21 @@ const RegisterUser = () => {
             value={selectedRole}
             onChange={(_, value) => {
               if (value) {
-                setValue("roleName", value); 
-                setStep(2); 
+                setValue("roleName", value);
+                setStep(2);
               }
             }}
             fullWidth
             sx={{
-                flexWrap: "wrap",
-                gap: 1,
-                mb: 2,
-                "& .MuiToggleButtonGroup-grouped": {
-                  margin: 0,
-                  border: "1px solid",
-                  borderColor: "divider",
-                  borderRadius: "8px !important", 
-                },
+              flexWrap: "wrap",
+              gap: 1,
+              mb: 2,
+              "& .MuiToggleButtonGroup-grouped": {
+                margin: 0,
+                border: "1px solid",
+                borderColor: "divider",
+                borderRadius: "8px !important",
+              },
             }}
           >
             {roles.map((role) => (
@@ -159,7 +164,7 @@ const RegisterUser = () => {
               textAlign: "center",
             }}
           >
-            <Typography variant="subtitle1" fontSize={16}  fontWeight={600}>
+            <Typography variant="subtitle1" fontSize={16} fontWeight={600}>
               Role: {selectedRole?.replace(/-/g, " ")}
             </Typography>
             <Button size="small" onClick={() => setStep(1)}>
@@ -169,7 +174,8 @@ const RegisterUser = () => {
 
           <Stack spacing={2}>
             {/* Section Dropdown */}
-            {(selectedRole === "reviewer" || selectedRole === "Section-Editor") && (
+            {(selectedRole === "reviewer" ||
+              selectedRole === "Section-Editor") && (
               <Controller
                 name="sectionId"
                 control={control}

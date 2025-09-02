@@ -5,8 +5,10 @@ import {
   Card,
   CardActionArea,
   CardContent,
+  Chip,
   Divider,
   Stack,
+  Tooltip,
   Typography,
 } from "@mui/material";
 
@@ -41,42 +43,44 @@ export default function CEManuscriptCard({
     Section,
   } = manuscript;
 
-  const manuscriptLink = Document[0]?.manuscriptLink || "";
-  const otherDocsLink = Document[0]?.otherDocsLink || "";
+  const manuscriptLink =
+    Document && Document[0]?.manuscriptLink ? Document[0].manuscriptLink : "";
+  const otherDocsLink =
+    Document && Document[0]?.otherDocsLink ? Document[0].otherDocsLink : "";
 
   return (
     <Card
       sx={{
         maxWidth: { xs: "100%", md: 700 },
-        height: { xs: 600, md: 390 },
-        borderRadius: "12px",
+        height: { xs: "fit", md: 390 },
+        borderRadius: "16px",
         position: "relative",
-        boxShadow: "0 4px 16px rgba(0, 0, 0, 0.1)",
-        border: selected ? "2px solid" : "1px solid",
-        borderColor: selected ? "primary.main" : "grey.300",
+        boxShadow: selected
+          ? "0 6px 20px rgba(0, 0, 0, 0.15)"
+          : "0 4px 12px rgba(0, 0, 0, 0.08)",
+        border: "1px solid",
+        borderColor: selected ? "primary.main" : "grey.200",
+        transition: "0.3s",
+        "&:hover": {
+          boxShadow: "0 8px 24px rgba(0, 0, 0, 0.12)",
+          borderColor: "primary.main",
+        },
         m: 2,
       }}
     >
       <CardActionArea>
-        <Box sx={{ position: "absolute", top: 8, right: 3 }}>
-          <Typography
-            variant="caption"
+        <Box sx={{ position: "absolute", top: 8, right: 12 }}>
+          <Chip
+            label={status}
+            color="primary"
+            size="small"
             sx={{
-              backgroundColor:
-                status === "SUBMITTED"
-                  ? "primary.main" // or another color like 'primary.light'
-                  : status === "UNDER_REVIEW"
-                    ? "info.main"
-                    : status === "PUBLISHED"
-                      ? "success.main"
-                      : "primary.main", // fallback color
-              color: "white",
-              padding: "8px 12px",
-              borderRadius: "8px",
+              borderRadius: "12px",
+              fontWeight: 600,
+              fontSize: "10px",
+              padding: "2px 4px",
             }}
-          >
-            {status}
-          </Typography>
+          />
         </Box>
         <CardContent>
           <Box display="flex" flexDirection="row" height={250} gap={2} mt={2}>
@@ -84,35 +88,53 @@ export default function CEManuscriptCard({
               {getInitials(authorName.toUpperCase())}
             </Avatar>
             <Stack direction="column" mt={1} width="100%">
+              {/* Title */}
+              <Tooltip title={title} placement="top">
+                <Typography
+                  variant="h6"
+                  sx={{
+                    fontWeight: 700,
+                    fontSize: { xs: "15px", md: "17px" },
+                    color: "grey.900",
+                    lineHeight: 1.4,
+                  }}
+                >
+                  {truncateText(title, 120)}
+                </Typography>
+              </Tooltip>
+              <Tooltip title={keywords} placement="top">
+                <Typography
+                  sx={{
+                    color: "grey.600",
+                    fontSize: "14px",
+                  }}
+                  gutterBottom
+                >
+                  Keywords: {truncateText(keywords, 80)}
+                </Typography>
+              </Tooltip>
               <Typography
                 sx={{
-                  fontWeight: "bolder",
-                  fontSize: "18px",
-                  color: "grey.900",
-                  height: "80px",
+                  color: "grey.800",
+                  fontSize: "14px",
+                  textTransform: "capitalize",
                 }}
-                gutterBottom
-              >
-                {truncateText(title, 150)}
-              </Typography>
-              <Typography
-                sx={{ color: "grey.600", fontSize: "14px" }}
-                gutterBottom
-              >
-                Keywords: {truncateText(keywords, 150)}
-              </Typography>
-              <Typography
-                sx={{ color: "grey.800", fontSize: "14px" }}
                 gutterBottom
               >
                 Author: {authorName}
               </Typography>
-              <Typography
-                sx={{ color: "grey.600", fontSize: "14px" }}
-                gutterBottom
-              >
-                Co-Authors: {truncateText(coAuthor, 50)}
-              </Typography>
+              <Tooltip title={coAuthor} placement="top">
+                <Typography
+                  sx={{
+                    color: "grey.600",
+                    fontSize: "14px",
+                    textTransform: "capitalize",
+                  }}
+                  gutterBottom
+                >
+                  Co-Authors: {truncateText(coAuthor, 50)}
+                </Typography>
+              </Tooltip>
               <Typography
                 sx={{
                   display: "flex",

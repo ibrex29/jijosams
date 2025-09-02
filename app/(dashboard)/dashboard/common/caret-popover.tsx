@@ -76,10 +76,9 @@ export default function CaretPopover() {
         }
       }
 
-      await signOut({ redirect: true }); 
+      await signOut({ redirect: true });
 
       window.location.href = "/signin";
-     
     } catch (error) {
       console.error("Error during logout:", error);
     } finally {

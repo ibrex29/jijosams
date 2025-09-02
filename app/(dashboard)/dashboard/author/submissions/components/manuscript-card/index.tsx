@@ -69,7 +69,7 @@ export default function AuthorManuscriptCard({
         onClick={onClick}
         sx={{
           maxWidth: { xs: "100%", md: 700 },
-          minHeight: { xs: 300, md: 260 },
+          height: { xs: "fit", md: 370 },
           borderRadius: "16px",
           position: "relative",
           boxShadow: selected
@@ -93,7 +93,7 @@ export default function AuthorManuscriptCard({
               color="primary"
               size="small"
               sx={{
-                borderRadius: "6px",
+                borderRadius: "12px",
                 fontWeight: 600,
                 fontSize: "10px",
                 padding: "2px 4px",

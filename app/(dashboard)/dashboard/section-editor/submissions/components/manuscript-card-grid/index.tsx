@@ -28,12 +28,13 @@ export default function ManuscriptCardGrid({ manuscripts, refetch }: Props) {
   const handleAssignReviewer = async (
     reviewerId: string,
     manuscriptId: string,
-    reviewDueDate: string
+    reviewDueDate: string,
   ) => {
-    try
-    {
-      console.log(`Assigning reviewer: ${reviewerId} to manuscript: ${manuscriptId} with due date: ${reviewDueDate}`);
-       const response = await assignManuscriptReviewer({
+    try {
+      console.log(
+        `Assigning reviewer: ${reviewerId} to manuscript: ${manuscriptId} with due date: ${reviewDueDate}`,
+      );
+      const response = await assignManuscriptReviewer({
         manuscriptId,
         reviewerIds: [reviewerId],
         reviewDueDate,

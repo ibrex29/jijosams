@@ -259,7 +259,9 @@ const SignupForm: FC = () => {
                             <IconButton
                               onClick={handleClickShowPassword}
                               onMouseDown={handleMouseDownPassword}
-                              aria-label={showPassword ? "Hide password" : "Show password"}
+                              aria-label={
+                                showPassword ? "Hide password" : "Show password"
+                              }
                             >
                               {showPassword ? (
                                 <VisibilityOff />

@@ -141,6 +141,27 @@ export const createAuthorReply = async (payload: any) => {
   return response;
 };
 
+export const getRepliesAuthor = async (manuscriptId: string) => {
+  const bearerHeader = await getBearerHeader();
+
+  const response = await request(
+    "GET",
+    `${reviewer.getRepliesAuthor}/manuscript-author/${manuscriptId}`,
+    {
+      headers: {
+        "Content-Type": "application/json",
+        ...bearerHeader.headers,
+      },
+    },
+  );
+
+  if (response && response.statusCode === 401) {
+    logout();
+  }
+
+  return response;
+};
+
 export const getReplies = async (manuscriptId: string) => {
   const bearerHeader = await getBearerHeader();
 
@@ -162,7 +183,6 @@ export const getReplies = async (manuscriptId: string) => {
   return response;
 };
 
-
 export const acceptManuscript = async (payload: any) => {
   const bearerHeader = await getBearerHeader();
 
@@ -176,4 +196,3 @@ export const acceptManuscript = async (payload: any) => {
 
   return response;
 };
-

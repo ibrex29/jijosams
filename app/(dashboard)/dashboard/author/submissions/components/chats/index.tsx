@@ -16,7 +16,7 @@ import PersonIcon from "@mui/icons-material/Person";
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-import { createAuthorReply, getReplies } from "@/app/api/reviewer";
+import { createAuthorReply, getRepliesAuthor } from "@/app/api/reviewer";
 import { Reply } from "@/types";
 import { formatDate } from "@/utils";
 
@@ -31,13 +31,19 @@ const AuthorChat: React.FC<ChatProps> = ({ manuscriptId }) => {
   const [uploadFiles, setUploadFiles] = useState<string | null>(null);
   const queryClient = useQueryClient();
 
-  const { data: reviews, isLoading, error } = useQuery({
+  const {
+    data: reviews,
+    isLoading,
+    error,
+  } = useQuery({
     queryKey: ["reviews", manuscriptId],
     queryFn: () =>
-      getReplies(manuscriptId).then((data) =>
-        data && Array.isArray(data) ? data : []
+      getRepliesAuthor(manuscriptId).then((data) =>
+        data && Array.isArray(data) ? data : [],
       ),
   });
+
+  console.log("Fetched reviews:", reviews);
 
   const replyMutation = useMutation({
     mutationFn: createAuthorReply,
@@ -77,7 +83,9 @@ const AuthorChat: React.FC<ChatProps> = ({ manuscriptId }) => {
         <Button
           size="small"
           onClick={() =>
-            queryClient.invalidateQueries({ queryKey: ["reviews", manuscriptId] })
+            queryClient.invalidateQueries({
+              queryKey: ["reviews", manuscriptId],
+            })
           }
         >
           Retry
@@ -99,40 +107,44 @@ const AuthorChat: React.FC<ChatProps> = ({ manuscriptId }) => {
   return (
     <Card sx={{ maxHeight: 600, display: "flex", flexDirection: "column" }}>
       {/* Reviewer Tabs */}
-     <Tabs
-  value={activeTab}
-  onChange={(_, newValue) => setActiveTab(newValue)}
-  variant="scrollable"
-  scrollButtons="auto"
-  sx={{
-    borderBottom: 1,
-    borderColor: "divider",
-    "& .MuiTabs-indicator": {
-      height: 2,
-      bottom: 0,
-    },
-  }}
->
-  {reviews.map((r, index) => (
-    <Tab
-      key={index}
-      label={`Reviewer ${index + 1}`}
-      icon={<RateReviewIcon fontSize="small" />}
-      iconPosition="start"
-      sx={{
-        minHeight: 50,
-        py: 0.5,       
-        "& .MuiTab-wrapper": {
-          gap: "4px", 
-        },
-      }}
-    />
-  ))}
-</Tabs>
-
+      <Tabs
+        value={activeTab}
+        onChange={(_, newValue) => setActiveTab(newValue)}
+        variant="scrollable"
+        scrollButtons="auto"
+        sx={{
+          borderBottom: 1,
+          borderColor: "divider",
+          "& .MuiTabs-indicator": {
+            height: 2,
+            bottom: 0,
+          },
+        }}
+      >
+        {reviews.map((r, index) => (
+          <Tab
+            key={index}
+            label={`Reviewer ${index + 1}`}
+            icon={<RateReviewIcon fontSize="small" />}
+            iconPosition="start"
+            sx={{
+              minHeight: 50,
+              py: 0.5,
+              "& .MuiTab-wrapper": {
+                gap: "4px",
+              },
+            }}
+          />
+        ))}
+      </Tabs>
 
       <CardContent
-        sx={{ flex: 1, overflowY: "auto", display: "flex", flexDirection: "column" }}
+        sx={{
+          flex: 1,
+          overflowY: "auto",
+          display: "flex",
+          flexDirection: "column",
+        }}
       >
         {/* Active review */}
         <Box sx={{ mb: 3, p: 2, bgcolor: "grey.50", borderRadius: 2 }}>
@@ -218,56 +230,55 @@ const AuthorChat: React.FC<ChatProps> = ({ manuscriptId }) => {
 
       {/* Reply form (sticky bottom) */}
       {!reviewData.isClosed && (
-     <Box
-  sx={{
-    borderTop: 1,
-    borderColor: "divider",
-    p: 1.5,
-    bgcolor: "background.paper",
-  }}
->
-  <Box sx={{ display: "flex", gap: 1, mb: 1.5 }}>
-    <TextField
-      label="Subject"
-      variant="outlined"
-      value={subject}
-      onChange={(e) => setSubject(e.target.value)}
-      size="small"
-      fullWidth
-    />
-    <TextField
-      label="Attachment URL"
-      variant="outlined"
-      value={uploadFiles || ""}
-      onChange={(e) => setUploadFiles(e.target.value)}
-      size="small"
-      sx={{ minWidth: 200 }}
-    />
-  </Box>
+        <Box
+          sx={{
+            borderTop: 1,
+            borderColor: "divider",
+            p: 1.5,
+            bgcolor: "background.paper",
+          }}
+        >
+          <Box sx={{ display: "flex", gap: 1, mb: 1.5 }}>
+            <TextField
+              label="Subject"
+              variant="outlined"
+              value={subject}
+              onChange={(e) => setSubject(e.target.value)}
+              size="small"
+              fullWidth
+            />
+            <TextField
+              label="Attachment URL"
+              variant="outlined"
+              value={uploadFiles || ""}
+              onChange={(e) => setUploadFiles(e.target.value)}
+              size="small"
+              sx={{ minWidth: 200 }}
+            />
+          </Box>
 
-  <TextField
-    label="Reply"
-    variant="outlined"
-    multiline
-    rows={3}
-    fullWidth
-    value={contents}
-    onChange={(e) => setContents(e.target.value)}
-    sx={{ mb: 1.5 }}
-  />
+          <TextField
+            label="Reply"
+            variant="outlined"
+            multiline
+            rows={3}
+            fullWidth
+            value={contents}
+            onChange={(e) => setContents(e.target.value)}
+            sx={{ mb: 1.5 }}
+          />
 
-  <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
-    <Button
-      variant="contained"
-      size="small"
-      onClick={handleReplySubmit}
-      disabled={replyMutation.isPending || !subject || !contents}
-    >
-      {replyMutation.isPending ? "Submitting..." : "Send Reply"}
-    </Button>
-  </Box>
-</Box>
-
+          <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+            <Button
+              variant="contained"
+              size="small"
+              onClick={handleReplySubmit}
+              disabled={replyMutation.isPending || !subject || !contents}
+            >
+              {replyMutation.isPending ? "Submitting..." : "Send Reply"}
+            </Button>
+          </Box>
+        </Box>
       )}
     </Card>
   );

@@ -76,7 +76,7 @@ export default function ManuscriptCard({ manuscript }: ManuscriptCardProps) {
               {manuscript.DOI}
             </a>
           </span>
-          
+
           <span className="text-blue-600 mt-2 md:mt-0">
             Downloads: {manuscript.downloadTimes}
           </span>

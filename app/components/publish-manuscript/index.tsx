@@ -35,8 +35,7 @@ const PublishManuscriptInner: React.FC = () => {
   const [submitError, setSubmitError] = useState("");
   const [loading, setLoading] = useState(true);
   const { notify } = useNotification();
-    const [isSubmitting, setIsSubmitting] = useState(false);
-
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     const fetchVolumes = async () => {
@@ -77,18 +76,16 @@ const PublishManuscriptInner: React.FC = () => {
     }
   }, [watchedVolumeId, volumes, setValue]);
 
-    const cleanAuthorsInput = (value: string) => {
-    return (
-      value
-        .replace(/[^a-zA-Z\s,-]/g, '') // Remove all characters except letters, spaces, commas, and hyphens
-        .replace(/\s*,\s*/g, ', ') // Normalize spacing around commas
-        .replace(/\s+/g, ' ') // Replace multiple spaces with single space
-        .trim()
-    );
+  const cleanAuthorsInput = (value: string) => {
+    return value
+      .replace(/[^a-zA-Z\s,-]/g, "") // Remove all characters except letters, spaces, commas, and hyphens
+      .replace(/\s*,\s*/g, ", ") // Normalize spacing around commas
+      .replace(/\s+/g, " ") // Replace multiple spaces with single space
+      .trim();
   };
 
   const validateAndSubmit = async () => {
-        if (isSubmitting) return; // Prevent multiple submissions
+    if (isSubmitting) return; // Prevent multiple submissions
 
     setIsSubmitting(true);
     const values = getValues();
@@ -119,10 +116,18 @@ const PublishManuscriptInner: React.FC = () => {
     if (!values.issue) {
       newErrors.issue = "Issue is required.";
     }
-    if (!values.startPage || isNaN(Number(values.startPage)) || Number(values.startPage) <= 0) {
+    if (
+      !values.startPage ||
+      isNaN(Number(values.startPage)) ||
+      Number(values.startPage) <= 0
+    ) {
       newErrors.startPage = "Please enter a valid start page number.";
     }
-    if (!values.endPage || isNaN(Number(values.endPage)) || Number(values.endPage) <= 0) {
+    if (
+      !values.endPage ||
+      isNaN(Number(values.endPage)) ||
+      Number(values.endPage) <= 0
+    ) {
       newErrors.endPage = "Please enter a valid end page number.";
     }
     if (
@@ -130,7 +135,8 @@ const PublishManuscriptInner: React.FC = () => {
       values.endPage &&
       Number(values.startPage) > Number(values.endPage)
     ) {
-      newErrors.endPage = "End page must be greater than or equal to start page.";
+      newErrors.endPage =
+        "End page must be greater than or equal to start page.";
     }
 
     if (Object.keys(newErrors).length > 0) {
@@ -151,7 +157,7 @@ const PublishManuscriptInner: React.FC = () => {
       formattedManuscript: values.manuscriptLink,
     };
 
-     try {
+    try {
       await publishManuscript(publicationData);
       notify("Manuscript Published Successfully", { mode: "success" });
       reset();
@@ -179,7 +185,8 @@ const PublishManuscriptInner: React.FC = () => {
     <div className="min-h-screen flex items-center justify-center py-10">
       <div className="bg-white rounded-2xl shadow-xl p-8 w-full max-w-5xl">
         <p className="mb-4 italic">
-          Please fill out this form to publish your manuscript. All fields are required.
+          Please fill out this form to publish your manuscript. All fields are
+          required.
         </p>
         <form className="space-y-6">
           <Controller
@@ -205,48 +212,48 @@ const PublishManuscriptInner: React.FC = () => {
             )}
           />
           <Controller
-  name="abstract"
-  control={control}
-  render={({ field }) => (
-    <div>
-      <label className="block text-sm font-medium text-gray-700 mb-1">
-        Abstract *
-      </label>
-      <textarea
-        {...field}
-        className={`w-full p-3 border ${
-          formErrors.abstract ? "border-red-500" : "border-gray-300"
-        } rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-justify`}
-        rows={6}
-        placeholder="Paste or type abstract here..."
-        onPaste={(e) => {
-          e.preventDefault();
-          let pasted = e.clipboardData.getData("text");
+            name="abstract"
+            control={control}
+            render={({ field }) => (
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Abstract *
+                </label>
+                <textarea
+                  {...field}
+                  className={`w-full p-3 border ${
+                    formErrors.abstract ? "border-red-500" : "border-gray-300"
+                  } rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-justify`}
+                  rows={6}
+                  placeholder="Paste or type abstract here..."
+                  onPaste={(e) => {
+                    e.preventDefault();
+                    let pasted = e.clipboardData.getData("text");
 
-          // 1. Remove multiple spaces/newlines
-          pasted = pasted
-            .replace(/\s+/g, " ")
-            .replace(/\n\s*\n/g, "\n")
-            .trim();
+                    // 1. Remove multiple spaces/newlines
+                    pasted = pasted
+                      .replace(/\s+/g, " ")
+                      .replace(/\n\s*\n/g, "\n")
+                      .trim();
 
-          // 2. Capitalize first letter of sentences (optional)
-          pasted = pasted.replace(/(^\s*\w|[.!?]\s*\w)/g, (c) =>
-            c.toUpperCase()
-          );
+                    // 2. Capitalize first letter of sentences (optional)
+                    pasted = pasted.replace(/(^\s*\w|[.!?]\s*\w)/g, (c) =>
+                      c.toUpperCase(),
+                    );
 
-          field.onChange(pasted); // update form state
-        }}
-      />
-      {formErrors.abstract && (
-        <p className="text-red-500 text-sm mt-1">
-          {formErrors.abstract.message as string}
-        </p>
-      )}
-    </div>
-  )}
-/>
+                    field.onChange(pasted); // update form state
+                  }}
+                />
+                {formErrors.abstract && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {formErrors.abstract.message as string}
+                  </p>
+                )}
+              </div>
+            )}
+          />
 
-           <Controller
+          <Controller
             name="authors"
             control={control}
             render={({ field }) => (

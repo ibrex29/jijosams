@@ -83,7 +83,7 @@ export interface ManuscriptProps {
   suggestedReviewer: string;
   updatedAt: string;
   isPublished: boolean;
-  assigmentDate?: string; 
+  assigmentDate?: string;
   reviewDueDate?: string | null;
   sectionId: string;
   Author?: AuthorProps;
@@ -276,7 +276,7 @@ export interface RecentManuscript {
   createdAt: string;
   DOI?: string;
   isActive: boolean;
-  pageRange?: string
+  pageRange?: string;
   Issue?: {
     Volume?: {
       name: string;

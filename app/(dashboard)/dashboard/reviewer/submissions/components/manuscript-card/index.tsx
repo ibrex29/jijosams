@@ -5,6 +5,7 @@ import {
   Card,
   CardActionArea,
   CardContent,
+  Chip,
   Dialog,
   DialogActions,
   DialogContent,
@@ -24,7 +25,6 @@ import {
   acceptManuscript,
   createReview,
   getRecommendation,
-  getReviewStatus,
 } from "@/app/api/reviewer";
 import useNotification from "@/hooks/useNotification";
 import { ManuscriptProps } from "@/types";
@@ -55,8 +55,10 @@ export default function ReviewerManuscriptCard({
     reviewDueDate,
   } = manuscript;
 
-  const manuscriptLink = Document[0]?.manuscriptLink || "";
-  const otherDocsLink = Document[0]?.otherDocsLink || "";
+  const manuscriptLink =
+    Document && Document[0]?.manuscriptLink ? Document[0].manuscriptLink : "";
+  const otherDocsLink =
+    Document && Document[0]?.otherDocsLink ? Document[0].otherDocsLink : "";
 
   const [open, setOpen] = useState(false);
   const [comments, setComments] = useState("");
@@ -86,20 +88,9 @@ export default function ReviewerManuscriptCard({
   }, []);
 
   const handleReviewClick = async () => {
-    try {
-      // Call `getReviewStatus` with the manuscript ID
-      const response = await getReviewStatus(manuscript.id);
-      console.log("Review status response:", response);
+    setHasReview(true);
 
-      // Update the state with the review status
-      setHasReview(response.hasReview);
-
-      // Open the modal
-      setOpen(true);
-    } catch (error) {
-      console.error("Error fetching review status:", error);
-      notify("Failed to fetch review status");
-    }
+    setOpen(true);
   };
   const handleClose = () => setOpen(false);
 
@@ -127,7 +118,7 @@ export default function ReviewerManuscriptCard({
     try {
       await acceptManuscript(payload);
       notify("Manuscript accepted successfully");
-      setOpen(false); // Close dialog on success
+      setOpen(false);
     } catch (error) {
       notify("Failed to accept manuscript");
       console.error("Error accepting manuscript:", error);
@@ -138,37 +129,37 @@ export default function ReviewerManuscriptCard({
     <>
       <Card
         sx={{
-          maxWidth: { xs: "100%", nmd: 700 },
+          maxWidth: { xs: "100%", md: 700 },
           height: { xs: "fit", md: 370 },
-          borderRadius: "12px",
+          borderRadius: "16px",
           position: "relative",
-          boxShadow: "0 4px 16px rgba(0, 0, 0, 0.1)",
-          border: selected ? "2px solid" : "1px solid",
-          borderColor: selected ? "primary.main" : "grey.300",
+          boxShadow: selected
+            ? "0 6px 20px rgba(0, 0, 0, 0.15)"
+            : "0 4px 12px rgba(0, 0, 0, 0.08)",
+          border: "1px solid",
+          borderColor: selected ? "primary.main" : "grey.200",
+          transition: "0.3s",
+          "&:hover": {
+            boxShadow: "0 8px 24px rgba(0, 0, 0, 0.12)",
+            borderColor: "primary.main",
+          },
           m: 2,
         }}
         onClick={onClick}
       >
         <CardActionArea>
-          <Box sx={{ position: "absolute", top: 8, right: 3 }}>
-            <Typography
-              variant="caption"
+          <Box sx={{ position: "absolute", top: 8, right: 12 }}>
+            <Chip
+              label={status}
+              color="primary"
+              size="small"
               sx={{
-                backgroundColor:
-                  status === "SUBMITTED"
-                    ? "primary.main"
-                    : status === "UNDER_REVIEW"
-                      ? "info.main"
-                      : status === "PUBLISHED"
-                        ? "success.main"
-                        : "primary.main",
-                color: "white",
-                padding: "8px 12px",
-                borderRadius: "8px",
+                borderRadius: "12px",
+                fontWeight: 600,
+                fontSize: "10px",
+                padding: "2px 4px",
               }}
-            >
-              {status}
-            </Typography>
+            />
           </Box>
           <CardContent>
             <Box display="flex" flexDirection="row" height={250} gap={2} mt={2}>
@@ -185,7 +176,7 @@ export default function ReviewerManuscriptCard({
                   }}
                   gutterBottom
                 >
-                  {truncateText(title, 150)}
+                  {truncateText(title, 110)}
                 </Typography>
                 <Typography
                   sx={{

@@ -9,7 +9,6 @@ import { request } from "@/utils/request";
 import { authOptions } from "../auth/[...nextauth]/options";
 import { fetchData } from "../call-methods";
 
-
 export type GetReviewerType = {
   id: string;
   userId: string;
@@ -22,7 +21,6 @@ export type GetReviewerType = {
     lastName: string;
   };
 };
-
 
 export const getSection = async () => fetchData(api.getSection);
 

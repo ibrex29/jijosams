@@ -17,7 +17,7 @@ export function HeroSection() {
       <div className="relative z-20 max-w-4xl px-4 text-center">
         <h1
           className={cn(
-            "text-4xl md:text-5xl font-extrabold tracking-tight text-[#a96c04] drop-shadow-md"
+            "text-4xl md:text-5xl font-extrabold tracking-tight text-[#a96c04] drop-shadow-md",
           )}
         >
           Advancing Science & Technology <br />
@@ -58,7 +58,10 @@ export function HeroSection() {
               fontSize: "1rem",
               borderColor: "#a96c04",
               color: "#a96c04",
-              "&:hover": { backgroundColor: "#a96c0415", borderColor: "#a96c04" },
+              "&:hover": {
+                backgroundColor: "#a96c0415",
+                borderColor: "#a96c04",
+              },
             }}
           >
             Explore Journals

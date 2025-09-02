@@ -76,7 +76,6 @@ interface GetUsersParams {
   sortField?: string;
 }
 
-
 export const createUser = async (payload: any) => {
   const session = await getServerSession(authOptions);
 
@@ -104,8 +103,6 @@ export const createAuthor = async (payload: any) => {
 
   return response;
 };
-
-
 
 export const getUsers = async ({
   roleId,
@@ -138,7 +135,7 @@ export const getUsers = async ({
         Accept: "*/*",
         Authorization: `Bearer ${session?.token}`,
       },
-    }
+    },
   );
 
   if (!response.ok) {

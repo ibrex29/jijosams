@@ -1,7 +1,6 @@
 import { Role } from "@/constants/config";
 import { fetchData } from "../call-methods";
 
-
 export interface Role {
   id: string;
   createdAt: string;
@@ -12,6 +11,5 @@ export interface Role {
   createdBy: string;
   updatedBy: string;
 }
-
 
 export const getRoles = async () => fetchData(Role.getAllRoles);

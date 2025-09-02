@@ -31,7 +31,7 @@ interface ReviewerModalProps {
   onAssign: (
     reviewerId: string,
     manuscriptId: string,
-    reviewDueDate: string
+    reviewDueDate: string,
   ) => void;
 }
 
@@ -46,13 +46,19 @@ export default function ReviewerModal({
   const [search, setSearch] = useState("");
 
   // Fetch roles to get reviewer role ID
-  const { data: roles, isLoading: rolesLoading, isError: rolesError } = useQuery<Role[]>({
+  const {
+    data: roles,
+    isLoading: rolesLoading,
+    isError: rolesError,
+  } = useQuery<Role[]>({
     queryKey: ["roles"],
     queryFn: getRoles,
     enabled: open,
   });
 
-  const reviewerRoleId = roles?.find((role) => role.roleName.toLowerCase() === "reviewer")?.id;
+  const reviewerRoleId = roles?.find(
+    (role) => role.roleName.toLowerCase() === "reviewer",
+  )?.id;
 
   // Fetch reviewers
   const {
@@ -68,11 +74,10 @@ export default function ReviewerModal({
         // sectionId: "dbee4cc2-7b13-4993-a8b2-07a686368aae",
         search,
       }),
-    enabled: open && !!reviewerRoleId 
+    enabled: open && !!reviewerRoleId,
   });
 
-
-  const handleAssign = (reviewerId: string ) => {
+  const handleAssign = (reviewerId: string) => {
     const reviewDueDate = dueDates[reviewerId];
     if (reviewDueDate) {
       onAssign(reviewerId, manuscript.id, reviewDueDate.toISOString());
@@ -89,16 +94,15 @@ export default function ReviewerModal({
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(event.target.value);
-    setPage(1); 
+    setPage(1);
   };
 
   const handlePageChange = (
-  event: React.ChangeEvent<unknown>,
-  newPage: number
-) => {
-  setPage(newPage);
-};
-
+    event: React.ChangeEvent<unknown>,
+    newPage: number,
+  ) => {
+    setPage(newPage);
+  };
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -163,7 +167,7 @@ export default function ReviewerModal({
             <Typography color="error" textAlign="center">
               Reviewer role not found.
             </Typography>
-          )  : reviewers && reviewers.meta.itemCount > 0 ? (
+          ) : reviewers && reviewers.meta.itemCount > 0 ? (
             <>
               <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
                 {reviewers.data.map((reviewer) => {
@@ -172,71 +176,80 @@ export default function ReviewerModal({
                     <Card
                       key={reviewer?.Reviewer?.id}
                       sx={{
-                      borderRadius: 2,
-                      border: "1px solid #eee",
-                      boxShadow: 1,
-                      p: 2,
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "space-between",
-                    }}
-                  >
-                    <CardContent
-                      sx={{
-                        flex: 1,
+                        borderRadius: 2,
+                        border: "1px solid #eee",
+                        boxShadow: 1,
+                        p: 2,
                         display: "flex",
-                        flexDirection: "column",
-                        gap: 1,
-                        p: 0,
-                        "&:last-child": { pb: 0 },
+                        alignItems: "center",
+                        justifyContent: "space-between",
                       }}
                     >
-                      <Tooltip title="Reviewer Email">
-                        <Typography variant="subtitle1" fontWeight="bold" noWrap>
-                          {reviewer.email}
-                        </Typography>
-                      </Tooltip>
-                      <DatePicker
-                        label="Due Date"
-                        value={dueDates[reviewer.Reviewer.id] || dayjs().add(7, "day")}
-                        onChange={(date) => handleDateChange(reviewer.Reviewer!.id, date)}
-                        slotProps={{
-                          textField: {
-                            size: "small",
-                            fullWidth: false,
-                            sx: {
-                              "& .MuiInputBase-input": {
-                                fontSize: "0.8rem",
-                                padding: "6px 8px",
-                              },
-                              "& .MuiInputLabel-root": {
-                                fontSize: "0.75rem",
+                      <CardContent
+                        sx={{
+                          flex: 1,
+                          display: "flex",
+                          flexDirection: "column",
+                          gap: 1,
+                          p: 0,
+                          "&:last-child": { pb: 0 },
+                        }}
+                      >
+                        <Tooltip title="Reviewer Email">
+                          <Typography
+                            variant="subtitle1"
+                            fontWeight="bold"
+                            noWrap
+                          >
+                            {reviewer.email}
+                          </Typography>
+                        </Tooltip>
+                        <DatePicker
+                          label="Due Date"
+                          value={
+                            dueDates[reviewer.Reviewer.id] ||
+                            dayjs().add(7, "day")
+                          }
+                          onChange={(date) =>
+                            handleDateChange(reviewer.Reviewer!.id, date)
+                          }
+                          slotProps={{
+                            textField: {
+                              size: "small",
+                              fullWidth: false,
+                              sx: {
+                                "& .MuiInputBase-input": {
+                                  fontSize: "0.8rem",
+                                  padding: "6px 8px",
+                                },
+                                "& .MuiInputLabel-root": {
+                                  fontSize: "0.75rem",
+                                },
                               },
                             },
-                          },
+                          }}
+                          sx={{ width: 200 }}
+                        />
+                      </CardContent>
+                      <Button
+                        variant="contained"
+                        sx={{
+                          fontSize: 10,
+                          ml: 2,
+                          mt: 4,
+                          whiteSpace: "nowrap",
                         }}
-                        sx={{ width: 200 }}
-                      />
-                    </CardContent>
-                    <Button
-                      variant="contained"
-                      sx={{
-                        fontSize: 10,
-                        ml: 2,
-                        mt: 4,
-                        whiteSpace: "nowrap",
-                      }}
-                      onClick={() => handleAssign(reviewer.Reviewer!.id)}
-                    >
-                      Assign
-                    </Button>
-                      </Card>
-                    );
-                  })}
-            </Box>
-            {/* Pagination */}
-            <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
-              <Pagination
+                        onClick={() => handleAssign(reviewer.Reviewer!.id)}
+                      >
+                        Assign
+                      </Button>
+                    </Card>
+                  );
+                })}
+              </Box>
+              {/* Pagination */}
+              <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
+                <Pagination
                   count={reviewers.meta.pageCount}
                   page={reviewers.meta.page}
                   onChange={handlePageChange}

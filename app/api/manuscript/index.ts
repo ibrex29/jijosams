@@ -17,8 +17,7 @@ export const getAuthorMetrics = async () => {
     },
   });
 
-  if (response && response.statusCode === 401)
-  { 
+  if (response && response.statusCode === 401) {
     logout();
   }
 
@@ -34,8 +33,7 @@ export const getReviewerMetrics = async () => {
       ...bearerHeader.headers,
     },
   });
-  if (response && response.statusCode === 401)
-  { 
+  if (response && response.statusCode === 401) {
     logout();
   }
 
@@ -52,8 +50,7 @@ export const submitManuscript = async (payload: any) => {
     },
     data: payload,
   });
-  if (response && response.statusCode === 401)
-  { 
+  if (response && response.statusCode === 401) {
     logout();
   }
   return response;
@@ -90,13 +87,11 @@ export const getAuthorManuscripts = async (
     },
   );
 
-  if (response && response.statusCode === 401)
-  { 
+  if (response && response.statusCode === 401) {
     logout();
   }
-    return response as FetchManuscriptsResponse;
-  }
-
+  return response as FetchManuscriptsResponse;
+};
 
 export const getAllManuscripts = async (): Promise<ManuscriptProps[]> => {
   const bearerHeader = await getBearerHeader();
@@ -108,8 +103,7 @@ export const getAllManuscripts = async (): Promise<ManuscriptProps[]> => {
     },
   });
 
-  if (response && response.statusCode === 401)
-  { 
+  if (response && response.statusCode === 401) {
     logout();
   }
   return response as Promise<ManuscriptProps[]>;
@@ -125,15 +119,14 @@ export const getSEManuscript = async (): Promise<ManuscriptProps[]> => {
     },
   });
 
-  if (response && response.statusCode === 401)
-  { 
+  if (response && response.statusCode === 401) {
     logout();
-  };
+  }
 
   return response as Promise<ManuscriptProps[]>;
 };
 
-export const getREManuscript = async () : Promise<ManuscriptProps[]> => {
+export const getREManuscript = async (): Promise<ManuscriptProps[]> => {
   const bearerHeader = await getBearerHeader();
 
   const response = await request("GET", api.REManuscript, {
@@ -143,8 +136,7 @@ export const getREManuscript = async () : Promise<ManuscriptProps[]> => {
     },
   });
 
-  if (response && response.statusCode === 401)
-  { 
+  if (response && response.statusCode === 401) {
     logout();
   }
   return response as Promise<ManuscriptProps[]>;
@@ -160,8 +152,7 @@ export const publishManuscript = async (payload: any) => {
     data: payload,
   });
 
-  if (response && response.statusCode === 401) 
-  { 
+  if (response && response.statusCode === 401) {
     logout();
   }
   return response;

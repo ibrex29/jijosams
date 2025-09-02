@@ -205,16 +205,19 @@ const SigninForm: FC = () => {
                 </StyledButton>
               </Grid>
               {/* Add Signup Link */}
-            <Grid container justifyContent="center" sx={{ mt: 2 }}>
-              <Grid item>
-                <Typography variant="body2">
-                  Don&apos;t have an account?{" "}
-                  <Link href="/signup" style={{ color: "#007A28", fontWeight: 600 }}>
-                    Sign up
-                  </Link>
-                </Typography>
+              <Grid container justifyContent="center" sx={{ mt: 2 }}>
+                <Grid item>
+                  <Typography variant="body2">
+                    Don&apos;t have an account?{" "}
+                    <Link
+                      href="/signup"
+                      style={{ color: "#007A28", fontWeight: 600 }}
+                    >
+                      Sign up
+                    </Link>
+                  </Typography>
+                </Grid>
               </Grid>
-            </Grid>
             </Grid>
           </form>
         </Box>

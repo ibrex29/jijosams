@@ -10,7 +10,6 @@ interface Props {
 }
 
 const SubHeader: React.FC<Props> = ({
-
   actionButton,
   pagination,
   searchBar,
