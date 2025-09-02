@@ -8,7 +8,7 @@ const faqs = [
   {
     question: "How can I submit my research to SLUJST?",
     answer:
-      "You can submit your research through our online submission portal or email it to submissions@slujst.com.",
+      "You can submit your research through our online submission portal",
   },
   {
     question: "What types of research does SLUJST accept?",
@@ -24,11 +24,6 @@ const faqs = [
     question: "What is the peer review process for SLUJST?",
     answer:
       "All submissions undergo a double-blind peer review process to ensure quality and originality.",
-  },
-  {
-    question: "Are there any submission fees for SLUJST?",
-    answer:
-      "No, SLUJST does not charge any fees for submitting or publishing research papers.",
   },
   {
     question: "How long does it take to review a submission?",
@@ -56,7 +51,7 @@ export default function FAQ() {
           href="mailto:support@example.com"
           className="text-primary-600 underline"
         >
-          support@example.com
+          ame_jst@slu.edu.ng
         </a>
         .
       </p>

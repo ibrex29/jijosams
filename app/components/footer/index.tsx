@@ -98,8 +98,11 @@ const Footer = () => {
       {/* Bottom Section */}
       <div className="flex flex-col md:flex-row justify-between items-center mt-8 border-t pt-4 text-gray-600 text-sm">
         <p>© 2024 SLUJST. All Rights Reserved.</p>
-
-        {/* TODO Add Social Mediasd Icons */}
+        <div className="flex flex-row space-x-4">
+          <p>Online ISSN: <span className="font-semibold">2736-0903</span></p>
+          <p>Print ISSN: <span className="font-semibold">2736-089X</span></p>
+        </div>
+        {/* TODO Add Social Media Icons */}
         {/* <div className="flex space-x-4">
         </div> */}
       </div>
