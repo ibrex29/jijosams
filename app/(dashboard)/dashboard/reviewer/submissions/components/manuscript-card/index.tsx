@@ -11,32 +11,31 @@ import {
   DialogContent,
   DialogTitle,
   Divider,
-  FormControl,
-  InputLabel,
+  IconButton,
+  Menu,
   MenuItem,
-  Select,
   Stack,
   TextField,
   Typography,
 } from "@mui/material";
-import { useEffect, useState } from "react";
-
-import {
-  acceptManuscript,
-  createReview,
-  getRecommendation,
-} from "@/app/api/reviewer";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+import {  useState } from "react";
+import { makeRecommendationReviewer } from "@/app/api/reviewer";
 import useNotification from "@/hooks/useNotification";
 import { ManuscriptProps } from "@/types";
 import { formatDate, getInitials, truncateText } from "@/utils";
 import { fDate } from "@/utils/format-time";
-
 import Chat from "../chats";
 
 interface Props {
   manuscript: ManuscriptProps;
   onClick: () => void;
   selected: boolean;
+}
+
+interface MakeRecommendationPayload {
+  recommendation: "ACCEPT" | "REJECT";
+  remark?: string;
 }
 
 export default function ReviewerManuscriptCard({
@@ -61,67 +60,54 @@ export default function ReviewerManuscriptCard({
     Document && Document[0]?.otherDocsLink ? Document[0].otherDocsLink : "";
 
   const [open, setOpen] = useState(false);
-  const [comments, setComments] = useState("");
-  const [recommendation, setRecommendation] = useState<string[]>([]);
-  const [selectedRecommendation, setSelectedRecommendation] =
-    useState<string>("");
-  const [hasReview, setHasReview] = useState<boolean>(false);
+  const [menuAnchorEl, setMenuAnchorEl] = useState<null | HTMLElement>(null);
+  const [recommendationDialogOpen, setRecommendationDialogOpen] = useState(false);
+  const [recommendationRemark, setRecommendationRemark] = useState<string>("");
+  const [selectedAction, setSelectedAction] = useState<"ACCEPT" | "REJECT" | "">("");
   const { notify } = useNotification();
 
-  const fetchSections = async () => {
-    try {
-      const data = await getRecommendation();
-      if (Array.isArray(data)) {
-        setRecommendation(data);
-      } else {
-        console.error("Expected an array but got:", data);
-        setRecommendation([]);
-      }
-    } catch (error) {
-      console.error("Error fetching sections:", error);
-    } finally {
-    }
+  const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+    setMenuAnchorEl(event.currentTarget);
   };
 
-  useEffect(() => {
-    fetchSections();
-  }, []);
+  const handleMenuClose = () => {
+    setMenuAnchorEl(null);
+  };
 
-  const handleReviewClick = async () => {
-    setHasReview(true);
-
+  const handleReviewClick = () => {
     setOpen(true);
   };
+
   const handleClose = () => setOpen(false);
 
-  const handleSubmit = async () => {
-    const payload = {
-      manuscriptId: manuscript.id,
-      comments,
-      recommendation: selectedRecommendation,
-    };
-    try {
-      await createReview(payload);
-      notify("Review submitted successfully");
-      setOpen(false); // Close dialog on success
-    } catch (error) {
-      notify("Failed to submit review");
-      console.error("Failed to submit review", error);
-    }
+  const handleRecommendationDialogOpen = (action: "ACCEPT" | "REJECT") => {
+    setSelectedAction(action);
+    setRecommendationDialogOpen(true);
+    setMenuAnchorEl(null);
   };
 
-  const handleAcceptManuscript = async () => {
-    const payload = {
-      manuscriptId: manuscript.id,
-      status: "ACCEPTED",
+  const handleRecommendationDialogClose = () => {
+    setRecommendationDialogOpen(false);
+    setRecommendationRemark("");
+    setSelectedAction("");
+  };
+
+  const handleRecommendation = async () => {
+    if (!selectedAction) return;
+
+    const payload: MakeRecommendationPayload = {
+      recommendation: selectedAction,
+      remark: recommendationRemark || undefined,
     };
     try {
-      await acceptManuscript(payload);
-      notify("Manuscript accepted successfully");
-      setOpen(false);
+      await makeRecommendationReviewer(manuscript.id, payload);
+      notify(`Manuscript ${selectedAction.toLowerCase()} successfully`);
+      setRecommendationDialogOpen(false);
+      setRecommendationRemark("");
+      setSelectedAction("");
     } catch (error) {
-      notify("Failed to accept manuscript");
-      console.error("Error accepting manuscript:", error);
+      notify(`Failed to ${selectedAction.toLowerCase()} manuscript`);
+      console.error(`Error ${selectedAction.toLowerCase()} manuscript:`, error);
     }
   };
 
@@ -160,7 +146,24 @@ export default function ReviewerManuscriptCard({
                 padding: "2px 4px",
               }}
             />
+            {status !== "ACCEPT" && status !== "REJECT" && (
+              <IconButton onClick={handleMenuOpen}>
+                <MoreVertIcon />
+              </IconButton>
+            )}
           </Box>
+          <Menu
+            anchorEl={menuAnchorEl}
+            open={Boolean(menuAnchorEl)}
+            onClose={handleMenuClose}
+          >
+            <MenuItem onClick={() => handleRecommendationDialogOpen("ACCEPT")}>
+              Accept
+            </MenuItem>
+            <MenuItem onClick={() => handleRecommendationDialogOpen("REJECT")}>
+              Reject
+            </MenuItem>
+          </Menu>
           <CardContent>
             <Box display="flex" flexDirection="row" height={250} gap={2} mt={2}>
               <Avatar sx={{ width: 60, height: 60, bgcolor: "primary.main" }}>
@@ -225,7 +228,7 @@ export default function ReviewerManuscriptCard({
                       sx={{ color: "grey.800", fontSize: "14px" }}
                       gutterBottom
                     >
-                      Review Due Date : {formatDate(reviewDueDate)}
+                      Review Due Date: {formatDate(reviewDueDate)}
                     </Typography>
                   </Box>
                 )}
@@ -273,34 +276,17 @@ export default function ReviewerManuscriptCard({
                 </Typography>
               )}
               <Box display="flex" justifyContent="flex-end">
-                <Box display="flex" justifyContent="space-between" gap={1}>
-                  <Button
-                    variant="contained"
-                    sx={{
-                      borderRadius: "50px",
-                      textTransform: "none",
-                      // padding: "2px",
-                      "&:hover": { boxShadow: "none" },
-                    }}
-                    onClick={handleReviewClick}
-                  >
-                    Review
-                  </Button>
-                  {status !== "ACCEPTED" && (
-                    <Button
-                      onClick={handleAcceptManuscript}
-                      variant="outlined"
-                      sx={{
-                        // padding: "2px",
-                        textTransform: "none",
-
-                        borderRadius: "50px",
-                      }}
-                    >
-                      Accept
-                    </Button>
-                  )}
-                </Box>
+                <Button
+                  variant="contained"
+                  sx={{
+                    borderRadius: "50px",
+                    textTransform: "none",
+                    "&:hover": { boxShadow: "none" },
+                  }}
+                  onClick={handleReviewClick}
+                >
+                  Review
+                </Button>
               </Box>
             </Box>
           </CardContent>
@@ -312,46 +298,53 @@ export default function ReviewerManuscriptCard({
         <DialogTitle>Review and Chat</DialogTitle>
         <DialogContent>
           <Chat manuscriptId={manuscript.id} />
-
-          {!hasReview && (
-            <>
-              <TextField
-                label="Comments"
-                multiline
-                rows={4}
-                value={comments}
-                onChange={(e) => setComments(e.target.value)}
-                fullWidth
-                sx={{ my: 2 }}
-              />
-              <FormControl fullWidth sx={{ my: 2 }}>
-                <InputLabel>Recommendation</InputLabel>
-                <Select
-                  value={selectedRecommendation}
-                  onChange={(e) => setSelectedRecommendation(e.target.value)}
-                  label="Recommendation"
-                >
-                  {recommendation.map((option) => (
-                    <MenuItem key={option} value={option}>
-                      {option}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </>
-          )}
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} color="secondary">
             Cancel
           </Button>
-          {!hasReview && (
-            <>
-              <Button onClick={handleSubmit} variant="contained">
-                Submit
-              </Button>
-            </>
-          )}
+        </DialogActions>
+      </Dialog>
+
+      {/* Recommendation Dialog */}
+      <Dialog
+        open={recommendationDialogOpen}
+        onClose={handleRecommendationDialogClose}
+        fullWidth
+        maxWidth="sm"
+      >
+        <DialogTitle>
+          {selectedAction
+            ? `${selectedAction.charAt(0) + selectedAction.slice(1).toLowerCase()} Manuscript`
+            : "Make Recommendation"}
+        </DialogTitle>
+        <DialogContent>
+          <Typography sx={{ mb: 2 }}>
+            {selectedAction === "REJECT"
+              ? "Are you sure you want to reject this manuscript? Please provide a remark (optional)."
+              : `Please provide a remark for ${selectedAction.toLowerCase()} (optional).`}
+          </Typography>
+          <TextField
+            label="Remark (Optional)"
+            multiline
+            rows={4}
+            value={recommendationRemark}
+            onChange={(e) => setRecommendationRemark(e.target.value)}
+            fullWidth
+            sx={{ my: 2 }}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleRecommendationDialogClose} color="secondary">
+            Cancel
+          </Button>
+          <Button
+            onClick={handleRecommendation}
+            variant="contained"
+            color={selectedAction === "REJECT" ? "error" : "primary"}
+          >
+            {selectedAction ? selectedAction.charAt(0) + selectedAction.slice(1).toLowerCase() : "Submit"}
+          </Button>
         </DialogActions>
       </Dialog>
     </>
