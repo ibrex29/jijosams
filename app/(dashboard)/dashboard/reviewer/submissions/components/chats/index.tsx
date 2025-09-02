@@ -54,6 +54,8 @@ const Chat: React.FC<ChatProps> = ({ manuscriptId }) => {
     queryFn: () => getReplies(manuscriptId).then((data) => (data && Array.isArray(data) && data.length > 0 ? data[0] : null)),
   });
 
+  console.log(reviewData);
+
   // Mutations for reply, open, close, and create review
   const replyMutation = useMutation({
     mutationFn: createReviewerReply,
@@ -283,14 +285,14 @@ const Chat: React.FC<ChatProps> = ({ manuscriptId }) => {
           <Box
             key={reply.id}
             display="flex"
-            justifyContent={reply.isauthor ? "flex-end" : "flex-start"}
+            justifyContent={reply.isAuthor ? "flex-end" : "flex-start"}
             mb={2}
           >
             <Box
               sx={{
                 maxWidth: "75%",
-                bgcolor: reply.isauthor ? "primary.main" : "grey.200",
-                color: reply.isauthor ? "white" : "text.primary",
+                bgcolor: reply.isAuthor ? "primary.main" : "grey.200",
+                color: reply.isAuthor ? "white" : "text.primary",
                 borderRadius: 2,
                 p: 2,
               }}
@@ -301,13 +303,13 @@ const Chat: React.FC<ChatProps> = ({ manuscriptId }) => {
                     width: 28,
                     height: 28,
                     mr: 1,
-                    bgcolor: reply.isauthor ? "primary.dark" : "grey.500",
+                    bgcolor: reply.isAuthor ? "primary.dark" : "grey.500",
                   }}
                 >
-                  {reply.isauthor ? <PersonIcon /> : "R"}
+                  {reply.isAuthor ? <PersonIcon /> : "R"}
                 </Avatar>
                 <Typography variant="caption">
-                  {reply.isauthor ? "Author" : "Reviewer"} •{" "}
+                  {reply.isAuthor ? "Author" : "Reviewer"} •{" "}
                   {formatDate(reply.createdAt)}
                 </Typography>
               </Box>
