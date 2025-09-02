@@ -1,4 +1,6 @@
-import MoreVertIcon from "@mui/icons-material/MoreVert";
+/* eslint-disable @typescript-eslint/no-unused-vars */
+"use client";
+
 import {
   Avatar,
   Box,
@@ -17,11 +19,12 @@ import {
   Select,
   MenuItem as SelectMenuItem,
 } from "@mui/material";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
 import PersonIcon from "@mui/icons-material/Person";
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { Controller, useForm } from "react-hook-form";
 import useNotification from "@/hooks/useNotification";
-
 import {
   closeReview,
   createReview,
@@ -31,15 +34,19 @@ import {
 } from "@/app/api/reviewer";
 import { Reply } from "@/types";
 import { formatDate } from "@/utils";
+import DocumentUpload from "@/app/components/document-upload";
 
 interface ChatProps {
   manuscriptId: string;
 }
 
+interface ReplyFormData {
+  subject: string;
+  contents: string;
+  uploadFiles: string | null;
+}
+
 const Chat: React.FC<ChatProps> = ({ manuscriptId }) => {
-  const [subject, setSubject] = useState("");
-  const [contents, setContents] = useState("");
-  const [uploadFiles, setUploadFiles] = useState<string | null>(null);
   const [menuAnchorEl, setMenuAnchorEl] = useState<null | HTMLElement>(null);
   const [showCreateReviewForm, setShowCreateReviewForm] = useState(false);
   const [newReviewComments, setNewReviewComments] = useState("");
@@ -47,6 +54,13 @@ const Chat: React.FC<ChatProps> = ({ manuscriptId }) => {
   const isMenuOpen = Boolean(menuAnchorEl);
   const queryClient = useQueryClient();
   const { notify } = useNotification();
+  const { control, handleSubmit, setValue, reset, formState: { errors } } = useForm<ReplyFormData>({
+    defaultValues: {
+      subject: "",
+      contents: "",
+      uploadFiles: null,
+    },
+  });
 
   // Fetch review data with TanStack Query
   const { data: reviewData, isLoading, error } = useQuery({
@@ -60,9 +74,7 @@ const Chat: React.FC<ChatProps> = ({ manuscriptId }) => {
   const replyMutation = useMutation({
     mutationFn: createReviewerReply,
     onSuccess: () => {
-      setSubject("");
-      setContents("");
-      setUploadFiles(null);
+      reset();
       queryClient.invalidateQueries({ queryKey: ["review", manuscriptId] });
       notify("Reply submitted successfully");
     },
@@ -120,14 +132,14 @@ const Chat: React.FC<ChatProps> = ({ manuscriptId }) => {
   };
 
   // Handle Reply Submission
-  const handleReplySubmit = () => {
+  const onSubmit = (data: ReplyFormData) => {
     if (!reviewData) return;
 
     replyMutation.mutate({
       reviewId: reviewData.id,
-      subject,
-      contents,
-      uploadFiles,
+      subject: data.subject,
+      contents: data.contents,
+      uploadFiles: data.uploadFiles,
     });
   };
 
@@ -361,48 +373,75 @@ const Chat: React.FC<ChatProps> = ({ manuscriptId }) => {
             bgcolor: "background.paper",
           }}
         >
-          <Box sx={{ display: "flex", gap: 1, mb: 1.5 }}>
-            <TextField
-              label="Subject"
-              variant="outlined"
-              value={subject}
-              onChange={(e) => setSubject(e.target.value)}
-              size="small"
-              fullWidth
-              disabled={replyMutation.isPending}
-              error={!!replyMutation.error}
-              helperText={replyMutation.error ? "Failed to submit reply" : ""}
+          <Box component="form" onSubmit={handleSubmit(onSubmit)} sx={{ display: "flex", flexDirection: "column", gap: 1.5 }}>
+            <Controller
+              name="subject"
+              control={control}
+              rules={{ required: "Subject is required" }}
+              render={({ field, fieldState: { error } }) => (
+                <TextField
+                  {...field}
+                  label="Subject"
+                  variant="outlined"
+                  size="small"
+                  fullWidth
+                  error={!!error}
+                  helperText={error?.message}
+                  disabled={replyMutation.isPending}
+                />
+              )}
             />
-            <TextField
-              label="Attachment URL"
-              variant="outlined"
-              value={uploadFiles || ""}
-              onChange={(e) => setUploadFiles(e.target.value)}
-              size="small"
-              sx={{ minWidth: 200 }}
-              disabled={replyMutation.isPending}
+
+            {/* Document upload */}
+            <Controller
+              name="uploadFiles"
+              control={control}
+              render={({ fieldState: { error } }) => (
+                <div>
+                 
+                  <DocumentUpload
+                    fieldName="uploadFiles"
+                    label="Attachment"
+                    accept=".doc,.docx,.pdf,.txt,.odt,.rtf,.jpg,.jpeg,.png"
+                    onUpload={(url) =>
+                      setValue("uploadFiles", url, { shouldValidate: true })
+                    }
+                    error={error?.message}
+                    height="50px" 
+                  />
+                </div>
+              )}
             />
-          </Box>
-          <TextField
-            label="Reply"
-            variant="outlined"
-            multiline
-            rows={3}
-            fullWidth
-            value={contents}
-            onChange={(e) => setContents(e.target.value)}
-            sx={{ mb: 1.5 }}
-            disabled={replyMutation.isPending}
-          />
-          <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
-            <Button
-              variant="contained"
-              size="small"
-              onClick={handleReplySubmit}
-              disabled={replyMutation.isPending || !subject || !contents}
-            >
-              {replyMutation.isPending ? "Submitting..." : "Send Reply"}
-            </Button>
+
+            <Controller
+              name="contents"
+              control={control}
+              rules={{ required: "Reply is required" }}
+              render={({ field, fieldState: { error } }) => (
+                <TextField
+                  {...field}
+                  label="Reply"
+                  variant="outlined"
+                  multiline
+                  rows={3}
+                  fullWidth
+                  error={!!error}
+                  helperText={error?.message}
+                  disabled={replyMutation.isPending}
+                />
+              )}
+            />
+
+            <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+              <Button
+                type="submit"
+                variant="contained"
+                size="small"
+                disabled={replyMutation.isPending}
+              >
+                {replyMutation.isPending ? "Submitting..." : "Send Reply"}
+              </Button>
+            </Box>
           </Box>
         </Box>
       )}

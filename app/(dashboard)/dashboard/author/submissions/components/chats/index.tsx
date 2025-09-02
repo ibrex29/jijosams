@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+"use client";
+
 import {
   Avatar,
   Box,
@@ -15,21 +18,32 @@ import RateReviewIcon from "@mui/icons-material/RateReview";
 import PersonIcon from "@mui/icons-material/Person";
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-
+import { Controller, useForm } from "react-hook-form";
 import { createAuthorReply, getRepliesAuthor } from "@/app/api/reviewer";
 import { Reply } from "@/types";
 import { formatDate } from "@/utils";
+import DocumentUpload from "@/app/components/document-upload";
 
 interface ChatProps {
   manuscriptId: string;
 }
 
+interface ReplyFormData {
+  subject: string;
+  contents: string;
+  uploadFiles: string | null;
+}
+
 const AuthorChat: React.FC<ChatProps> = ({ manuscriptId }) => {
   const [activeTab, setActiveTab] = useState(0);
-  const [subject, setSubject] = useState("");
-  const [contents, setContents] = useState("");
-  const [uploadFiles, setUploadFiles] = useState<string | null>(null);
   const queryClient = useQueryClient();
+  const { control, handleSubmit, setValue, reset, formState: { errors } } = useForm<ReplyFormData>({
+    defaultValues: {
+      subject: "",
+      contents: "",
+      uploadFiles: null,
+    },
+  });
 
   const {
     data: reviews,
@@ -48,22 +62,20 @@ const AuthorChat: React.FC<ChatProps> = ({ manuscriptId }) => {
   const replyMutation = useMutation({
     mutationFn: createAuthorReply,
     onSuccess: () => {
-      setSubject("");
-      setContents("");
-      setUploadFiles(null);
+      reset();
       queryClient.invalidateQueries({ queryKey: ["reviews", manuscriptId] });
     },
   });
 
-  const handleReplySubmit = () => {
+  const onSubmit = (data: ReplyFormData) => {
     const reviewData = reviews?.[activeTab];
     if (!reviewData) return;
 
     replyMutation.mutate({
       reviewId: reviewData.id,
-      subject,
-      contents,
-      uploadFiles,
+      subject: data.subject,
+      contents: data.contents,
+      uploadFiles: data.uploadFiles,
     });
   };
 
@@ -238,45 +250,71 @@ const AuthorChat: React.FC<ChatProps> = ({ manuscriptId }) => {
             bgcolor: "background.paper",
           }}
         >
-          <Box sx={{ display: "flex", gap: 1, mb: 1.5 }}>
-            <TextField
-              label="Subject"
-              variant="outlined"
-              value={subject}
-              onChange={(e) => setSubject(e.target.value)}
-              size="small"
-              fullWidth
+          <Box component="form" onSubmit={handleSubmit(onSubmit)} sx={{ display: "flex", flexDirection: "column", gap: 1.5 }}>
+            <Controller
+              name="subject"
+              control={control}
+              render={({ field, fieldState: { error } }) => (
+                <TextField
+                  {...field}
+                  label="Subject"
+                  variant="outlined"
+                  size="small"
+                  fullWidth
+                  error={!!error}
+                  helperText={error?.message}
+                />
+              )}
             />
-            <TextField
-              label="Attachment URL"
-              variant="outlined"
-              value={uploadFiles || ""}
-              onChange={(e) => setUploadFiles(e.target.value)}
-              size="small"
-              sx={{ minWidth: 200 }}
+
+            {/* Document upload */}
+            <Controller
+              name="uploadFiles"
+              control={control}
+              render={({ fieldState: { error } }) => (
+                <div>
+                  <DocumentUpload
+                    height="50px"
+                    fieldName="uploadFiles"
+                    label="Attachment"
+                    accept=".doc,.docx,.pdf,.txt,.odt,.rtf,.jpg,.jpeg,.png"
+                    onUpload={(url) =>
+                      setValue("uploadFiles", url, { shouldValidate: true })
+                    }
+                    error={error?.message}
+                  />
+                </div>
+              )}
             />
-          </Box>
 
-          <TextField
-            label="Reply"
-            variant="outlined"
-            multiline
-            rows={3}
-            fullWidth
-            value={contents}
-            onChange={(e) => setContents(e.target.value)}
-            sx={{ mb: 1.5 }}
-          />
+            <Controller
+              name="contents"
+              control={control}
+              rules={{ required: "Reply is required" }}
+              render={({ field, fieldState: { error } }) => (
+                <TextField
+                  {...field}
+                  label="Reply"
+                  variant="outlined"
+                  multiline
+                  rows={3}
+                  fullWidth
+                  error={!!error}
+                  helperText={error?.message}
+                />
+              )}
+            />
 
-          <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
-            <Button
-              variant="contained"
-              size="small"
-              onClick={handleReplySubmit}
-              disabled={replyMutation.isPending || !subject || !contents}
-            >
-              {replyMutation.isPending ? "Submitting..." : "Send Reply"}
-            </Button>
+            <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+              <Button
+                type="submit"
+                variant="contained"
+                size="small"
+                disabled={replyMutation.isPending}
+              >
+                {replyMutation.isPending ? "Submitting..." : "Send Reply"}
+              </Button>
+            </Box>
           </Box>
         </Box>
       )}

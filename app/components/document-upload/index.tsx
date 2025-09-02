@@ -23,6 +23,7 @@ interface DocumentUploadProps {
   accept?: string;
   onUpload: (url: string) => void;
   error?: string;
+  height?: string; 
 }
 
 const DocumentUpload: React.FC<DocumentUploadProps> = ({
@@ -31,6 +32,7 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({
   accept = ".doc,.docx,.pdf,.txt,.odt,.rtf,.jpg,.jpeg,.png",
   onUpload,
   error,
+  height = "150px", 
 }) => {
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
@@ -83,20 +85,20 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({
   };
 
   return (
-    <Box sx={{ mb: 3 }}>
-      <Typography variant="h6" sx={{ mb: 2 }}>
+    <Box sx={{ mb: 1.5 }}>
+      <Typography variant="subtitle2" sx={{ mb: 1 }}>
         {label}
       </Typography>
       <Box
         sx={{
-          border: `2px dashed ${theme.palette.divider}`,
-          borderRadius: "8px",
-          padding: "40px",
+          border: `1px dashed ${theme.palette.divider}`,
+          borderRadius: "6px",
+          padding: "16px",
           textAlign: "center",
           position: "relative",
           cursor: "pointer",
           width: "100%",
-          height: "150px",
+          height: height, // Use height prop
           display: "flex",
           flexDirection: "column",
           justifyContent: "center",
@@ -123,24 +125,24 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({
           <Stack
             direction={isSmallScreen ? "column" : "row"}
             alignItems="center"
-            spacing={2}
+            spacing={1}
           >
-            <CircularProgress size={24} />
-            <Typography variant="body2">Uploading...</Typography>
+            <CircularProgress size={20} />
+            <Typography variant="caption">Uploading...</Typography>
           </Stack>
         ) : uploadedFileName ? (
           <Stack
             direction={isSmallScreen ? "column" : "row"}
             alignItems="center"
-            spacing={2}
+            spacing={1}
           >
-            <CheckCircleIcon size={48} color="success" />
-            <Typography variant="subtitle2">{uploadedFileName}</Typography>
+            <CheckCircleIcon size={32} color="success" />
+            <Typography variant="caption">{uploadedFileName}</Typography>
           </Stack>
         ) : (
           <>
-            <UploadIcon size={48} />
-            <Typography variant="subtitle2" sx={{ mt: 1 }}>
+            <UploadIcon size={32} />
+            <Typography variant="caption" sx={{ mt: 0.5 }}>
               Upload {label}
             </Typography>
           </>
@@ -148,9 +150,9 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({
         {error && (
           <Typography
             id={`${fieldName}-upload-status`}
-            variant="body2"
+            variant="caption"
             color="error"
-            sx={{ mt: 1 }}
+            sx={{ mt: 0.5 }}
           >
             {error}
           </Typography>
