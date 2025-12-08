@@ -2,10 +2,12 @@ import { Box, Grid } from "@mui/material";
 import { useState } from "react";
 
 import SectionModal from "@/app/(dashboard)/dashboard/managing-editor/sections/components/section-dialog";
-import { assignManuscriptSection } from "@/app/api/manuscript/assign-manuscript";
+import { assignManuscriptReviewer, assignManuscriptSection } from "@/app/api/manuscript/assign-manuscript";
 import { ManuscriptProps } from "@/types";
 
 import CEManuscriptCard from "../manuscript-card";
+import useNotification from "@/hooks/useNotification";
+import ReviewerModal from "@/app/(dashboard)/dashboard/section-editor/submissions/components/reviewer-dialog";
 
 interface Props {
   manuscripts: ManuscriptProps[];
@@ -16,6 +18,10 @@ export default function ManuscriptCardGrid({ manuscripts, refetch }: Props) {
   const [selectedManuscript, setSelectedManuscript] =
     useState<ManuscriptProps | null>(null);
   const [openSectionModal, setOpenSectionModal] = useState(false);
+    const [openReviewModal, setOpenReviewModal] = useState(false);
+  
+    const { notify } = useNotification();
+  
 
   const handleSectionClick = (manuscript: ManuscriptProps) => {
     setSelectedManuscript(manuscript);
@@ -42,6 +48,37 @@ export default function ManuscriptCardGrid({ manuscripts, refetch }: Props) {
     }
   };
 
+   const handleReviewClick = (manuscript: ManuscriptProps) => {
+    setSelectedManuscript(manuscript);
+    setOpenReviewModal(true);
+  };
+
+
+  const handleAssignReviewer = async (
+      reviewerId: string,
+      manuscriptId: string,
+      reviewDueDate: string,
+    ) => {
+      try {
+        console.log(
+          `Assigning reviewer: ${reviewerId} to manuscript: ${manuscriptId} with due date: ${reviewDueDate}`,
+        );
+        const response = await assignManuscriptReviewer({
+          manuscriptId,
+          reviewerIds: [reviewerId],
+          reviewDueDate,
+        });
+        console.log(response);
+  
+        notify("Reviewer assigned successfully ");
+        refetch();
+        setOpenReviewModal(false);
+      } catch (error) {
+        console.error(`Error assigning reviewer:`, error);
+        notify("Failed to assign reviewer ");
+      }
+    };
+
   return (
     <Box sx={{ display: "block" }}>
       <Grid container spacing={2} direction="row">
@@ -49,7 +86,7 @@ export default function ManuscriptCardGrid({ manuscripts, refetch }: Props) {
           <Grid item xs={12} md={6} lg={6} key={manuscript.id}>
             <CEManuscriptCard
               manuscript={manuscript}
-              onReviewClick={() => console.log("Review click", manuscript)}
+              onReviewClick={() => handleReviewClick(manuscript)}
               onSectionClick={() => handleSectionClick(manuscript)}
               selected={selectedManuscript?.id === manuscript.id}
             />
@@ -65,6 +102,15 @@ export default function ManuscriptCardGrid({ manuscripts, refetch }: Props) {
           onAssign={handleAssignSection}
         />
       )}
+
+      {selectedManuscript && (
+              <ReviewerModal
+                manuscript={selectedManuscript}
+                open={openReviewModal}
+                onClose={() => setOpenReviewModal(false)}
+                onAssign={handleAssignReviewer}
+              />
+            )}
     </Box>
   );
 }
