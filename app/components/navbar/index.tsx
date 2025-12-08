@@ -16,22 +16,23 @@ export default function Navbar() {
   const router = useRouter();
 
   // Mutation for fetching search results
-  const {
-    mutate,
-    data: searchResults,
-    status,
-  } = useMutation({
-    mutationFn: globalSearch,
-    onSuccess: (response) => {
-      console.log("Search results:", response);
-      if (response?.data?.length > 0) {
-        setIsModalOpen(true);
-      }
-    },
-    onError: (error) => {
-      console.error("Error fetching search results:", error);
-    },
-  });
+ const {
+  mutate,
+  data: searchResults,
+  status,
+} = useMutation({
+  mutationFn: (search: string) => globalSearch(search),
+  onSuccess: (response) => {
+    console.log("Search results:", response);
+    if (response?.data?.length > 0) {
+      setIsModalOpen(true);
+    }
+  },
+  onError: (error) => {
+    console.error("Error fetching search results:", error);
+  },
+});
+
 
   // Handle search input change
   const handleSearch = (search: string) => {
