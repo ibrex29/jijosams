@@ -3,7 +3,7 @@
 
 import { getServerSession } from "next-auth";
 
-import { baseUrl, User } from "@/constants/config";
+import { User } from "@/constants/config";
 import { request } from "@/utils/request";
 
 import { authOptions } from "../auth/[...nextauth]/options";
@@ -76,6 +76,27 @@ interface GetUsersParams {
   sortField?: string;
 }
 
+export type UpdateUserRoleOrSectionPayload = {
+  roleId?: string;
+  sectionId?: string | null;
+  replaceRoles?: boolean;
+};
+
+export type UpdateUserProfilePayload = {
+  title?: string | null;
+  firstName?: string | null;
+  lastName?: string | null;
+  email?: string;
+  password?: string;
+  affiliation?: string | null;
+  expertiseArea?: string | null;
+  phoneNumber?: string | null;
+  higestQualification?: string | null;
+  reviewInterest?: boolean;
+  reviewerExpertiseArea?: string | null;
+  reviewerHighestQualification?: string | null;
+};
+
 export const createUser = async (payload: any) => {
   const session = await getServerSession(authOptions);
 
@@ -127,7 +148,7 @@ export const getUsers = async ({
   });
 
   const response = await fetch(
-    `${baseUrl}/v1/user/paginated-users?${queryParams.toString()}`,
+    `${User.paginatedUsers}?${queryParams.toString()}`,
     {
       method: "GET",
       headers: {
@@ -144,4 +165,51 @@ export const getUsers = async ({
 
   const data = await response.json();
   return data as PaginatedUsersResponse;
+};
+
+export const getUserById = async (id: string): Promise<User> => {
+  const session = await getServerSession(authOptions);
+
+  const response = await fetch(`${User.getUser(id)}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "*/*",
+      Authorization: `Bearer ${session?.token}`,
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error(`Failed to fetch user: ${response.statusText}`);
+  }
+
+  return (await response.json()) as User;
+};
+
+export const updateUserRoleOrSection = async (
+  id: string,
+  payload: UpdateUserRoleOrSectionPayload,
+) => {
+  const session = await getServerSession(authOptions);
+
+  return request("PATCH", `${User.updateRoleOrSection(id)}`, {
+    headers: {
+      Authorization: `Bearer ${session?.token}`,
+    },
+    data: payload,
+  });
+};
+
+export const updateUserProfile = async (
+  id: string,
+  payload: UpdateUserProfilePayload,
+) => {
+  const session = await getServerSession(authOptions);
+
+  return request("PATCH", `${User.updateProfile(id)}`, {
+    headers: {
+      Authorization: `Bearer ${session?.token}`,
+    },
+    data: payload,
+  });
 };

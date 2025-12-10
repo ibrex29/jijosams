@@ -16,6 +16,7 @@ import {
   basePath,
   editorInChiefNavConfig,
   managingEditorNavConfig,
+  productionEditorNavConfig,
   reviewerNavConfig,
   sectionEditorNavConfig,
 } from "./config-navigation";
@@ -43,6 +44,9 @@ export default function Nav({ openNav, onCloseNav }: NavProps) {
   switch (true) {
     case pathname?.includes(basePath.managing_editor):
       navConfig = managingEditorNavConfig;
+      break;
+    case pathname?.includes(basePath.production_editor):
+      navConfig = productionEditorNavConfig;
       break;
     case pathname?.includes(basePath.reviewer):
       navConfig = reviewerNavConfig;

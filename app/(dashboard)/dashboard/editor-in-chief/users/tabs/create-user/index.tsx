@@ -23,6 +23,10 @@ import { getRoles } from "@/app/api/role";
 
 type FormValues = {
   title: string;
+  firstName: string;
+  lastName: string;
+  affiliation: string;
+  phoneNumber: string;
   email: string;
   password: string;
   roleName: string;
@@ -35,7 +39,7 @@ interface Role {
   description: string;
 }
 
-const RegisterUser = () => {
+const RegisterUserForm = () => {
   const {
     control,
     handleSubmit,
@@ -44,11 +48,16 @@ const RegisterUser = () => {
     setValue,
     formState: { errors },
   } = useForm<FormValues>();
-
   const [roles, setRoles] = useState<Role[]>([]);
   const [sections, setSections] = useState<{ id: string; name: string }[]>([]);
   const { notify } = useNotification();
   const selectedRole = watch("roleName");
+  const normalizedRole = selectedRole?.toLowerCase();
+  const isReviewer = normalizedRole === "reviewer";
+  const requiresSectionSelection =
+    isReviewer || normalizedRole === "section-editor";
+  const reviewerRequired = (fieldLabel: string) =>
+    isReviewer ? `${fieldLabel} is required for reviewers` : undefined;
   const titleOptions = ["Mr", "Mrs", "Prof", "Dr", "Miss"];
   const [showPassword, setShowPassword] = useState(false);
 
@@ -174,8 +183,7 @@ const RegisterUser = () => {
 
           <Stack spacing={2}>
             {/* Section Dropdown */}
-            {(selectedRole === "reviewer" ||
-              selectedRole === "Section-Editor") && (
+            {requiresSectionSelection && (
               <Controller
                 name="sectionId"
                 control={control}
@@ -221,6 +229,74 @@ const RegisterUser = () => {
                     </MenuItem>
                   ))}
                 </TextField>
+              )}
+            />
+
+            {/* First Name */}
+            <Controller
+              name="firstName"
+              control={control}
+              rules={{ required: reviewerRequired("First name") }}
+              defaultValue=""
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  label="First Name"
+                  fullWidth
+                  error={!!errors.firstName}
+                  helperText={errors.firstName?.message}
+                />
+              )}
+            />
+
+            {/* Last Name */}
+            <Controller
+              name="lastName"
+              control={control}
+              rules={{ required: reviewerRequired("Last name") }}
+              defaultValue=""
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  label="Last Name"
+                  fullWidth
+                  error={!!errors.lastName}
+                  helperText={errors.lastName?.message}
+                />
+              )}
+            />
+
+            {/* Affiliation */}
+            <Controller
+              name="affiliation"
+              control={control}
+              rules={{ required: reviewerRequired("Affiliation") }}
+              defaultValue=""
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  label="Affiliation"
+                  fullWidth
+                  error={!!errors.affiliation}
+                  helperText={errors.affiliation?.message}
+                />
+              )}
+            />
+
+            {/* Phone Number */}
+            <Controller
+              name="phoneNumber"
+              control={control}
+              rules={{ required: reviewerRequired("Phone number") }}
+              defaultValue=""
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  label="Phone Number"
+                  fullWidth
+                  error={!!errors.phoneNumber}
+                  helperText={errors.phoneNumber?.message}
+                />
               )}
             />
 
@@ -288,4 +364,4 @@ const RegisterUser = () => {
   );
 };
 
-export default RegisterUser;
+export default RegisterUserForm;

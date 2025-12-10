@@ -22,6 +22,11 @@ export const api = {
   reviewerMetrics: `${baseUrl}/v1/analytics/reviewer/manuscripts-count`,
 };
 
+export const publication = {
+  publishedManuscripts: `${baseUrl}/v1/publication/published-manuscript`,
+  update: (id: string) => `${baseUrl}/v1/publication/${id}`,
+};
+
 export const SectionEditor = {
   getAllReviewer: `${baseUrl}/v1/manuscripts/reviewers-for-section-editor`,
   assignManuscriptReviewer: `${baseUrl}/v1/manuscripts/assign-reviewers`,
@@ -46,6 +51,10 @@ export const author = {
 export const User = {
   createUser: `${baseUrl}/v1/user`,
   createAuthor: `${baseUrl}/v1/author/author`,
+  paginatedUsers: `${baseUrl}/v1/user/paginated-users`,
+  getUser: (id: string) => `${baseUrl}/v1/user/${id}`,
+  updateRoleOrSection: (id: string) => `${baseUrl}/v1/user/${id}/role-or-section`,
+  updateProfile: (id: string) => `${baseUrl}/v1/user/${id}/profile`,
 };
 
 export const Role = {

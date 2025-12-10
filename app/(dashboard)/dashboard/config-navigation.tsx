@@ -17,6 +17,7 @@ export const basePath = {
   managing_editor: "/dashboard/managing-editor",
   section_editor: "/dashboard/section-editor",
   editor_in_chief: "/dashboard/editor-in-chief",
+  production_editor: "/dashboard/production-editor",
 };
 
 export const authorNavConfig = [
@@ -47,6 +48,19 @@ export const reviewerNavConfig = [
     title: "Manuscript",
     path: `${basePath.reviewer}/submissions`,
     icon: icon(ArticleIcon),
+  },
+];
+
+export const productionEditorNavConfig = [
+  {
+    title: "Home",
+    path: `${basePath.production_editor}`,
+    icon: icon(HomeIcon),
+  },
+  {
+    title: "Users",
+    path: `${basePath.production_editor}/users`,
+    icon: icon(PeopleIcon),
   },
 ];
 
@@ -104,6 +118,11 @@ export const managingEditorNavConfig = [
     path: `${basePath.managing_editor}/publish-manuscript`,
     icon: icon(PublishIcon),
   },
+  {
+    title: "Users",
+    path: `${basePath.managing_editor}/users`,
+    icon: icon(PeopleIcon),
+  },
 ];
 
 export const sectionEditorNavConfig = [
@@ -121,5 +140,10 @@ export const sectionEditorNavConfig = [
     title: "Publish Manuscript",
     path: `${basePath.section_editor}/publish-manuscript`,
     icon: icon(PublishIcon),
+  },
+  {
+    title: "Users",
+    path: `${basePath.section_editor}/users`,
+    icon: icon(PeopleIcon),
   },
 ];

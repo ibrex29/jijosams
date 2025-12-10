@@ -5,6 +5,9 @@ import CEVolumeManagementTab from "@/app/(dashboard)/dashboard/editor-in-chief/e
 import CESectionManagementTab from "@/app/(dashboard)/dashboard/editor-in-chief/sections/tabs/sections";
 import CEManuscriptTab from "@/app/(dashboard)/dashboard/editor-in-chief/submissions/tabs/all-submissions";
 import CreateUsers from "@/app/(dashboard)/dashboard/editor-in-chief/users/tabs/create-user";
+import ManageUsersTab from "@/app/(dashboard)/dashboard/editor-in-chief/users/tabs/manage-users";
+import PublishManuscriptTab from "@/app/(dashboard)/dashboard/editor-in-chief/publish-manuscript/tabs/publish";
+import ManagePublicationsTab from "@/app/(dashboard)/dashboard/editor-in-chief/publish-manuscript/tabs/manage-publications";
 import SectionManagementTab from "@/app/(dashboard)/dashboard/managing-editor/sections/tabs/sections";
 import AllManuscriptTab from "@/app/(dashboard)/dashboard/managing-editor/submissions/tabs/all-submissions";
 import REManuscriptTab from "@/app/(dashboard)/dashboard/reviewer/submissions/tabs/my-submissions";
@@ -26,8 +29,23 @@ export const EditorInChiefSectionsPageTab = [
 
 export const EditorInChiefUsersPageTab = [
   {
-    title: "Users",
+    title: "Create User",
     component: CreateUsers,
+  },
+  {
+    title: "Users",
+    component: ManageUsersTab,
+  },
+];
+
+export const EditorInChiefPublishPageTab = [
+  {
+    title: "Publish Manuscript",
+    component: PublishManuscriptTab,
+  },
+  {
+    title: "Manage Publications",
+    component: ManagePublicationsTab,
   },
 ];
 
