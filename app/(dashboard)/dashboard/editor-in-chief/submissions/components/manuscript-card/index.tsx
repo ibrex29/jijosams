@@ -21,6 +21,7 @@ interface Props {
   manuscript: ManuscriptProps;
   onReviewClick: () => void;
   onSectionClick: () => void;
+  onViewReviews: () => void;
   selected: boolean;
 }
 
@@ -29,6 +30,7 @@ export default function CEManuscriptCard({
   manuscript,
   onReviewClick,
   onSectionClick,
+  onViewReviews,
   selected,
 }: Props) {
   const {
@@ -202,7 +204,20 @@ export default function CEManuscriptCard({
                   Other Documents
                 </Typography>
               )}
-              <Box display="flex" justifyContent="flex-end">
+              <Box display="flex" justifyContent="flex-end" gap={1}>
+                <Button
+                  variant="text"
+                  color="secondary"
+                  sx={{
+                    borderRadius: "50px",
+                    textTransform: "none",
+                    fontSize: "12px",
+                    "&:hover": { boxShadow: "none" },
+                  }}
+                  onClick={onViewReviews}
+                >
+                  View Reviews
+                </Button>
                 <Button
                   variant="outlined"
                   sx={{

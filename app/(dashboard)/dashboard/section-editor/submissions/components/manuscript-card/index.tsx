@@ -20,6 +20,7 @@ import Iconify from "@/app/components/@dashboard/components/@dashboard/iconify";
 interface Props {
   manuscript: ManuscriptProps;
   onReviewClick: () => void;
+  onViewReviews: () => void;
   selected: boolean;
 }
 
@@ -27,6 +28,7 @@ interface Props {
 export default function SEManuscriptCard({
   manuscript,
   onReviewClick,
+  onViewReviews,
   selected,
 }: Props) {
   const {
@@ -212,7 +214,20 @@ export default function SEManuscriptCard({
                   Other Documents
                 </Typography>
               )}
-              <Box display="flex" justifyContent="flex-end">
+              <Box display="flex" justifyContent="flex-end" gap={1}>
+                <Button
+                  variant="text"
+                  color="secondary"
+                  sx={{
+                    borderRadius: "50px",
+                    textTransform: "none",
+                    fontSize: "12px",
+                    "&:hover": { boxShadow: "none" },
+                  }}
+                  onClick={onViewReviews}
+                >
+                  View Reviews
+                </Button>
                 <Button
                   variant="outlined"
                   sx={{

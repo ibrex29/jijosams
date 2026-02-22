@@ -8,6 +8,7 @@ import { ManuscriptProps } from "@/types";
 import CEManuscriptCard from "../manuscript-card";
 import useNotification from "@/hooks/useNotification";
 import ReviewerModal from "@/app/(dashboard)/dashboard/section-editor/submissions/components/reviewer-dialog";
+import ReviewViewerModal from "@/app/(dashboard)/dashboard/common/review-viewer-modal";
 
 interface Props {
   manuscripts: ManuscriptProps[];
@@ -19,6 +20,7 @@ export default function ManuscriptCardGrid({ manuscripts, refetch }: Props) {
     useState<ManuscriptProps | null>(null);
   const [openSectionModal, setOpenSectionModal] = useState(false);
     const [openReviewModal, setOpenReviewModal] = useState(false);
+    const [openReviewViewer, setOpenReviewViewer] = useState(false);
   
     const { notify } = useNotification();
   
@@ -51,6 +53,11 @@ export default function ManuscriptCardGrid({ manuscripts, refetch }: Props) {
    const handleReviewClick = (manuscript: ManuscriptProps) => {
     setSelectedManuscript(manuscript);
     setOpenReviewModal(true);
+  };
+
+  const handleViewReviews = (manuscript: ManuscriptProps) => {
+    setSelectedManuscript(manuscript);
+    setOpenReviewViewer(true);
   };
 
 
@@ -88,6 +95,7 @@ export default function ManuscriptCardGrid({ manuscripts, refetch }: Props) {
               manuscript={manuscript}
               onReviewClick={() => handleReviewClick(manuscript)}
               onSectionClick={() => handleSectionClick(manuscript)}
+              onViewReviews={() => handleViewReviews(manuscript)}
               selected={selectedManuscript?.id === manuscript.id}
             />
           </Grid>
@@ -111,6 +119,15 @@ export default function ManuscriptCardGrid({ manuscripts, refetch }: Props) {
                 onAssign={handleAssignReviewer}
               />
             )}
+
+      {selectedManuscript && (
+        <ReviewViewerModal
+          manuscriptId={selectedManuscript.id}
+          manuscriptTitle={selectedManuscript.title}
+          open={openReviewViewer}
+          onClose={() => setOpenReviewViewer(false)}
+        />
+      )}
     </Box>
   );
 }

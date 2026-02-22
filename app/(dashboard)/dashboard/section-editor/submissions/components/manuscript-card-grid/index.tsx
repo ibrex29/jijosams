@@ -6,6 +6,7 @@ import { ManuscriptProps } from "@/types";
 
 import SEManuscriptCard from "../manuscript-card";
 import ReviewerModal from "../reviewer-dialog";
+import ReviewViewerModal from "@/app/(dashboard)/dashboard/common/review-viewer-modal";
 import useNotification from "@/hooks/useNotification";
 
 interface Props {
@@ -17,12 +18,18 @@ export default function ManuscriptCardGrid({ manuscripts, refetch }: Props) {
   const [selectedManuscript, setSelectedManuscript] =
     useState<ManuscriptProps | null>(null);
   const [openReviewModal, setOpenReviewModal] = useState(false);
+  const [openReviewViewer, setOpenReviewViewer] = useState(false);
 
   const { notify } = useNotification();
 
   const handleReviewClick = (manuscript: ManuscriptProps) => {
     setSelectedManuscript(manuscript);
     setOpenReviewModal(true);
+  };
+
+  const handleViewReviews = (manuscript: ManuscriptProps) => {
+    setSelectedManuscript(manuscript);
+    setOpenReviewViewer(true);
   };
 
   const handleAssignReviewer = async (
@@ -58,6 +65,7 @@ export default function ManuscriptCardGrid({ manuscripts, refetch }: Props) {
             <SEManuscriptCard
               manuscript={manuscript}
               onReviewClick={() => handleReviewClick(manuscript)}
+              onViewReviews={() => handleViewReviews(manuscript)}
               selected={selectedManuscript?.id === manuscript.id}
             />
           </Grid>
@@ -69,6 +77,14 @@ export default function ManuscriptCardGrid({ manuscripts, refetch }: Props) {
           open={openReviewModal}
           onClose={() => setOpenReviewModal(false)}
           onAssign={handleAssignReviewer}
+        />
+      )}
+      {selectedManuscript && (
+        <ReviewViewerModal
+          manuscriptId={selectedManuscript.id}
+          manuscriptTitle={selectedManuscript.title}
+          open={openReviewViewer}
+          onClose={() => setOpenReviewViewer(false)}
         />
       )}
     </Box>

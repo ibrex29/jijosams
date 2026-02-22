@@ -20,6 +20,7 @@ export const api = {
   assignManuscriptSection: `${baseUrl}/v1/manuscripts/assign-section`,
   authorMetrics: `${baseUrl}/v1/author/status-counts`,
   reviewerMetrics: `${baseUrl}/v1/analytics/reviewer/manuscripts-count`,
+  globalSearch: `${baseUrl}/v1/publication/global-search`,
 };
 
 export const publication = {

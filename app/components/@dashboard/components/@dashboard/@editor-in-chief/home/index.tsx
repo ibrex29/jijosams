@@ -2,7 +2,7 @@
 
 import { Box } from "@mui/material";
 
-import Metrics from "../../common/metrics";
+import EditorInChiefMetrics from "@/app/(dashboard)/dashboard/editor-in-chief/metrics";
 import PageBreadcrumbs from "../../common/page/breadcrumbs";
 import { MainBox } from "../../common/styled-components";
 
@@ -14,7 +14,7 @@ const CEHome: React.FC = () => {
           <PageBreadcrumbs page="Home" tab="" />
         </Box>
         <Box sx={{ marginTop: "25px" }}>
-          <Metrics />
+          <EditorInChiefMetrics />
         </Box>
       </MainBox>
     </main>

@@ -2,7 +2,7 @@
 
 import { Box } from "@mui/material";
 
-import ReviewerMetrics from "@/app/(dashboard)/dashboard/reviewer/metrics";
+import SectionEditorMetrics from "@/app/(dashboard)/dashboard/section-editor/metrics";
 
 import PageBreadcrumbs from "../../common/page/breadcrumbs";
 import { MainBox } from "../../common/styled-components";
@@ -15,7 +15,7 @@ const SectionEditorHome: React.FC = () => {
           <PageBreadcrumbs page="Home" tab="" />
         </Box>
         <Box sx={{ marginTop: "25px" }}>
-          <ReviewerMetrics />
+          <SectionEditorMetrics />
         </Box>
       </MainBox>
     </main>

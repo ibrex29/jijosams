@@ -137,7 +137,8 @@ export default function ReviewerModal({
 
           {/* Search Input */}
           <TextField
-            label="Search Reviewers"
+            label="Search by Name or Email"
+            placeholder="Type reviewer name or email..."
             value={search}
             onChange={handleSearchChange}
             fullWidth
@@ -195,15 +196,22 @@ export default function ReviewerModal({
                           "&:last-child": { pb: 0 },
                         }}
                       >
-                        <Tooltip title="Reviewer Email">
+                        <Tooltip title="Reviewer">
                           <Typography
                             variant="subtitle1"
                             fontWeight="bold"
                             noWrap
                           >
-                            {reviewer.email}
+                            {[reviewer.firstName, reviewer.lastName].filter(Boolean).join(" ") || "N/A"}
                           </Typography>
                         </Tooltip>
+                        <Typography
+                          variant="body2"
+                          color="text.secondary"
+                          noWrap
+                        >
+                          {reviewer.email}
+                        </Typography>
                         <DatePicker
                           label="Due Date"
                           value={

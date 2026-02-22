@@ -56,8 +56,6 @@ const RegisterUserForm = () => {
   const isReviewer = normalizedRole === "reviewer";
   const requiresSectionSelection =
     isReviewer || normalizedRole === "section-editor";
-  const reviewerRequired = (fieldLabel: string) =>
-    isReviewer ? `${fieldLabel} is required for reviewers` : undefined;
   const titleOptions = ["Mr", "Mrs", "Prof", "Dr", "Miss"];
   const [showPassword, setShowPassword] = useState(false);
 
@@ -236,7 +234,7 @@ const RegisterUserForm = () => {
             <Controller
               name="firstName"
               control={control}
-              rules={{ required: reviewerRequired("First name") }}
+              rules={{ required: "First name is required" }}
               defaultValue=""
               render={({ field }) => (
                 <TextField
@@ -253,7 +251,7 @@ const RegisterUserForm = () => {
             <Controller
               name="lastName"
               control={control}
-              rules={{ required: reviewerRequired("Last name") }}
+              rules={{ required: "Last name is required" }}
               defaultValue=""
               render={({ field }) => (
                 <TextField
@@ -270,7 +268,7 @@ const RegisterUserForm = () => {
             <Controller
               name="affiliation"
               control={control}
-              rules={{ required: reviewerRequired("Affiliation") }}
+              rules={{ required: "Affiliation is required" }}
               defaultValue=""
               render={({ field }) => (
                 <TextField
@@ -287,7 +285,7 @@ const RegisterUserForm = () => {
             <Controller
               name="phoneNumber"
               control={control}
-              rules={{ required: reviewerRequired("Phone number") }}
+              rules={{ required: "Phone number is required" }}
               defaultValue=""
               render={({ field }) => (
                 <TextField
