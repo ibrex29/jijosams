@@ -86,7 +86,7 @@ const ManuscriptInfoStep: React.FC<ManuscriptInfoStepProps> = ({
         render={({ field, fieldState }) => (
           <TextField
             fullWidth
-            label="Suggested Reviewer"
+            label="Suggested Reviewer (email address or name)"
             variant="outlined"
             margin="normal"
             {...field}
