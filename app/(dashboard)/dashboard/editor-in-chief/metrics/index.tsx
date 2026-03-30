@@ -6,13 +6,17 @@ import { useEffect, useState } from "react";
 import { getAllManuscripts } from "@/app/api/manuscript";
 import { ManuscriptProps } from "@/types";
 
-import { TotalSubmitted } from "@/app/components/@dashboard/components/@dashboard/common/metrics/cards/TotalSubmitted";
+import { Approved } from "@/app/components/@dashboard/components/@dashboard/common/metrics/cards/Approved";
 import { AwaitingReview } from "@/app/components/@dashboard/components/@dashboard/common/metrics/cards/AwaitingReview";
 import { Rejected } from "@/app/components/@dashboard/components/@dashboard/common/metrics/cards/Rejected";
-import { Approved } from "@/app/components/@dashboard/components/@dashboard/common/metrics/cards/Approved";
+import { TotalSubmitted } from "@/app/components/@dashboard/components/@dashboard/common/metrics/cards/TotalSubmitted";
+import { QuickActionsPanel } from "@/app/components/@dashboard/components/@dashboard/common/analytics/quick-actions-panel";
+import { RecentManuscriptsCard } from "@/app/components/@dashboard/components/@dashboard/common/analytics/recent-manuscripts-card";
+import { StatusBreakdownCard } from "@/app/components/@dashboard/components/@dashboard/common/analytics/status-breakdown-card";
 
 const EditorInChiefMetrics: React.FC = (): React.JSX.Element => {
   const [loading, setLoading] = useState(true);
+  const [manuscripts, setManuscripts] = useState<ManuscriptProps[]>([]);
   const [data, setData] = useState({
     totalSubmitted: 0,
     awaitingReview: 0,
@@ -24,26 +28,26 @@ const EditorInChiefMetrics: React.FC = (): React.JSX.Element => {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const manuscripts: ManuscriptProps[] = await getAllManuscripts();
-        if (Array.isArray(manuscripts)) {
-          const counts = {
-            totalSubmitted: manuscripts.length,
-            awaitingReview: manuscripts.filter(
+        const list: ManuscriptProps[] = await getAllManuscripts();
+        if (Array.isArray(list)) {
+          setManuscripts(list);
+          setData({
+            totalSubmitted: list.length,
+            awaitingReview: list.filter(
               (m) =>
                 m.status?.toLowerCase() === "under_review" ||
                 m.status?.toLowerCase() === "submitted" ||
                 m.status?.toLowerCase() === "pending",
             ).length,
-            rejected: manuscripts.filter(
+            rejected: list.filter(
               (m) => m.status?.toLowerCase() === "rejected",
             ).length,
-            approved: manuscripts.filter(
+            approved: list.filter(
               (m) =>
                 m.status?.toLowerCase() === "accepted" ||
                 m.status?.toLowerCase() === "approved",
             ).length,
-          };
-          setData(counts);
+          });
         }
       } catch (error) {
         console.error("Failed to fetch editor-in-chief metrics:", error);
@@ -51,41 +55,76 @@ const EditorInChiefMetrics: React.FC = (): React.JSX.Element => {
         setLoading(false);
       }
     };
-
     fetchData();
   }, []);
 
+  const statusCounts = {
+    submitted: manuscripts.filter((m) =>
+      ["submitted", "pending"].includes(m.status?.toLowerCase()),
+    ).length,
+    underReview: manuscripts.filter(
+      (m) => m.status?.toLowerCase() === "under_review",
+    ).length,
+    accepted: manuscripts.filter((m) =>
+      ["accepted", "approved"].includes(m.status?.toLowerCase()),
+    ).length,
+    rejected: manuscripts.filter(
+      (m) => m.status?.toLowerCase() === "rejected",
+    ).length,
+    total: manuscripts.length,
+  };
+
   return (
-    <Grid container spacing={3}>
-      <Grid item lg={3} sm={6} xs={12}>
-        <TotalSubmitted
-          sx={{ height: "100%" }}
-          value={data.totalSubmitted?.toString() || "0"}
-          loading={loading}
-        />
+    <>
+      {/* Stat cards */}
+      <Grid container spacing={3}>
+        <Grid item lg={3} sm={6} xs={12}>
+          <TotalSubmitted
+            sx={{ height: "100%" }}
+            value={data.totalSubmitted?.toString() || "0"}
+            loading={loading}
+          />
+        </Grid>
+        <Grid item lg={3} sm={6} xs={12}>
+          <AwaitingReview
+            sx={{ height: "100%" }}
+            value={data.awaitingReview?.toString() || "0"}
+            loading={loading}
+          />
+        </Grid>
+        <Grid item lg={3} sm={6} xs={12}>
+          <Rejected
+            sx={{ height: "100%" }}
+            value={data.rejected?.toString() || "0"}
+            loading={loading}
+          />
+        </Grid>
+        <Grid item lg={3} sm={6} xs={12}>
+          <Approved
+            sx={{ height: "100%" }}
+            value={data.approved?.toString() || "0"}
+            loading={loading}
+          />
+        </Grid>
       </Grid>
-      <Grid item lg={3} sm={6} xs={12}>
-        <AwaitingReview
-          sx={{ height: "100%" }}
-          value={data.awaitingReview?.toString() || "0"}
-          loading={loading}
-        />
+
+      {/* Analytics panels */}
+      <Grid container spacing={3} sx={{ mt: 0.5 }}>
+        <Grid item xs={12} md={5}>
+          <StatusBreakdownCard counts={statusCounts} loading={loading} />
+        </Grid>
+        <Grid item xs={12} md={7}>
+          <RecentManuscriptsCard
+            manuscripts={manuscripts}
+            loading={loading}
+            title="Recent Submissions"
+          />
+        </Grid>
       </Grid>
-      <Grid item lg={3} sm={6} xs={12}>
-        <Rejected
-          sx={{ height: "100%" }}
-          value={data.rejected?.toString() || "0"}
-          loading={loading}
-        />
-      </Grid>
-      <Grid item lg={3} sm={6} xs={12}>
-        <Approved
-          sx={{ height: "100%" }}
-          value={data.approved?.toString() || "0"}
-          loading={loading}
-        />
-      </Grid>
-    </Grid>
+
+      {/* Quick actions */}
+      <QuickActionsPanel role="editor-in-chief" />
+    </>
   );
 };
 

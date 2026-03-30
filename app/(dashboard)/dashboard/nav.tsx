@@ -14,6 +14,7 @@ import { NAV } from "./config-layout";
 import {
   authorNavConfig,
   basePath,
+  copyEditorNavConfig,
   editorInChiefNavConfig,
   managingEditorNavConfig,
   productionEditorNavConfig,
@@ -47,6 +48,9 @@ export default function Nav({ openNav, onCloseNav }: NavProps) {
       break;
     case pathname?.includes(basePath.production_editor):
       navConfig = productionEditorNavConfig;
+      break;
+    case pathname?.includes(basePath.copy_editor):
+      navConfig = copyEditorNavConfig;
       break;
     case pathname?.includes(basePath.reviewer):
       navConfig = reviewerNavConfig;
@@ -144,27 +148,30 @@ function NavItem({ item }: NavItemProps) {
       component={Link}
       href={item.path}
       sx={{
-        minHeight: 22,
-        borderRadius: 2.75,
+        minHeight: 44,
+        borderRadius: 1.5,
         typography: "body2",
         color: theme.palette.text.secondary,
         textTransform: "capitalize",
         fontWeight: theme.typography.fontWeightMedium,
+        transition: "background 0.15s, color 0.15s",
         "&:hover": {
-          bgcolor: theme.palette.primary.main,
-          color: theme.palette.common.white,
+          bgcolor: `${theme.palette.primary.main}14`,
+          color: theme.palette.primary.main,
         },
         ...(active && {
-          color: theme.palette.common.white,
+          color: theme.palette.primary.main,
           fontWeight: theme.typography.fontWeightBold,
-          bgcolor: theme.palette.primary.main,
+          bgcolor: `${theme.palette.primary.main}14`,
+          borderLeft: `3px solid ${theme.palette.primary.main}`,
+          pl: "13px", // compensate for border so text doesn't shift
           "&:hover": {
-            bgcolor: theme.palette.primary.light,
+            bgcolor: `${theme.palette.primary.main}1F`,
           },
         }),
       }}
     >
-      <Box component="span" sx={{ width: 24, height: 24, mr: 2 }}>
+      <Box component="span" sx={{ width: 24, height: 24, mr: 2, display: "flex", alignItems: "center" }}>
         {item.icon}
       </Box>
 

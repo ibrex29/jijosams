@@ -2,11 +2,16 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
+import ArticleOutlinedIcon from "@mui/icons-material/ArticleOutlined";
+import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
+import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
+import UploadFileOutlinedIcon from "@mui/icons-material/UploadFileOutlined";
 import {
   Box,
   Button,
   Paper,
   Step,
+  StepIconProps,
   StepLabel,
   Stepper,
   Typography,
@@ -25,7 +30,54 @@ import Loader from "@/app/components/@dashboard/components/loader";
 import useNotification from "@/hooks/useNotification";
 import ManuscriptSubHeader from "@/app/components/@dashboard/components/@dashboard/common/sub-header/my-manuscript";
 
-const steps = ["Contact Information", "File Uploads", "Manuscript Information"];
+// ─── Custom Stepper Icons ────────────────────────────────────────────────────
+
+const stepIcons: React.ReactNode[] = [
+  <ArticleOutlinedIcon fontSize="small" />,
+  <PersonOutlineIcon fontSize="small" />,
+  <UploadFileOutlinedIcon fontSize="small" />,
+];
+
+function CustomStepIcon(props: StepIconProps) {
+  const { active, completed, className, icon } = props;
+  const iconIndex = (icon as number) - 1;
+
+  return (
+    <Box
+      className={className}
+      sx={{
+        width: 36,
+        height: 36,
+        borderRadius: "50%",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        fontSize: "0.8rem",
+        fontWeight: 700,
+        transition: "all 0.2s",
+        backgroundColor: completed
+          ? "success.main"
+          : active
+            ? "primary.main"
+            : "grey.300",
+        color: completed || active ? "white" : "grey.600",
+        boxShadow: active ? "0 4px 14px rgba(0,0,0,0.18)" : "none",
+      }}
+    >
+      {completed ? (
+        <CheckCircleOutlineIcon sx={{ fontSize: "1.1rem" }} />
+      ) : (
+        stepIcons[iconIndex]
+      )}
+    </Box>
+  );
+}
+
+// ─── Step config ─────────────────────────────────────────────────────────────
+
+const steps = ["Manuscript Details", "Authors & Reviewer", "Document Uploads"];
+
+// ─── Main Form ────────────────────────────────────────────────────────────────
 
 const MultiStepForm: React.FC = () => {
   const [loading, setLoading] = useState(false);
@@ -33,13 +85,8 @@ const MultiStepForm: React.FC = () => {
   const [activeStep, setActiveStep] = useState(0);
   const { notify } = useNotification();
 
-  const handleNext = () => {
-    setActiveStep((prevStep) => prevStep + 1);
-  };
-
-  const handleBack = () => {
-    setActiveStep((prevStep) => prevStep - 1);
-  };
+  const handleNext = () => setActiveStep((prev) => prev + 1);
+  const handleBack = () => setActiveStep((prev) => prev - 1);
 
   const { mutateAsync: submitManuscriptMutation } = useMutation({
     mutationFn: submitManuscript,
@@ -47,49 +94,49 @@ const MultiStepForm: React.FC = () => {
       notify("Manuscript Submitted Successfully", { mode: "success" });
     },
     onError: (error: unknown) => {
-      let errorMessage = "Unknown error occurred";
+      let msg = "Unknown error occurred";
       if (error instanceof Error) {
-        errorMessage = error.message;
+        msg = error.message;
       } else if (
         typeof error === "object" &&
         error !== null &&
         "response" in error
       ) {
-        errorMessage = (error as any).response?.data?.message || errorMessage;
+        msg = (error as any).response?.data?.message || msg;
       }
-      notify(`Failed to submit manuscripts: ${errorMessage}`, {
-        mode: "error",
-      });
+      notify(`Failed to submit manuscript: ${msg}`, { mode: "error" });
     },
   });
 
-  const handleSubmit = async (data: SubmitManuscriptProps) => {
+  const handleFinalSubmit = async (data: SubmitManuscriptProps) => {
     setLoading(true);
     try {
       await submitManuscriptMutation(data);
       methods.reset();
-      setActiveStep(0);
-    } catch (error) {}
+      setActiveStep(steps.length); // show success screen
+    } catch (_) {
+      /* error handled in onError */
+    }
     setLoading(false);
   };
 
-  const getStepContent = (stepIndex: number) => {
-    switch (stepIndex) {
+  const getStepContent = (step: number) => {
+    switch (step) {
       case 0:
-        return <ContactInfoStep handleNext={handleNext} />;
+        return <ManuscriptInfoStep handleNext={handleNext} />;
       case 1:
         return (
-          <FileUploadStep handleSubmit={handleNext} handleBack={handleBack} />
+          <ContactInfoStep handleNext={handleNext} handleBack={handleBack} />
         );
       case 2:
         return (
-          <ManuscriptInfoStep
-            handleSubmit={methods.handleSubmit(handleSubmit)}
+          <FileUploadStep
+            handleSubmit={methods.handleSubmit(handleFinalSubmit)}
             handleBack={handleBack}
           />
         );
       default:
-        return "Unknown step";
+        return null;
     }
   };
 
@@ -98,61 +145,98 @@ const MultiStepForm: React.FC = () => {
       <Loader loading={loading} />
       <ManuscriptSubHeader
         title="Submit Manuscript"
-        subtitle="Submit your manuscript for review"
+        subtitle="Complete all steps to submit your manuscript for peer review"
       />
-      <Paper
-        sx={{
-          backgroundColor: "white",
-          py: 1,
-          mx: "-30px",
-          px: "30px",
-          my: 0,
-          boxShadow: "none",
-        }}
-      >
+
+      <Box sx={{ mt: 3 }}>
         <FormProvider {...methods}>
-          <Box sx={{ width: "100%", height: "100%", mt: 8 }}>
-            {" "}
-            {/* Added margin-top (mt) */}
-            <Stepper activeStep={activeStep} sx={{ mb: 3 }}>
-              {steps.map((label) => (
+          {/* Stepper */}
+          <Paper
+            variant="outlined"
+            sx={{ p: { xs: 2, md: 3 }, mb: 3, borderRadius: 3 }}
+          >
+            <Stepper activeStep={activeStep} alternativeLabel>
+              {steps.map((label, index) => (
                 <Step key={label}>
-                  <StepLabel>{label}</StepLabel>
+                  <StepLabel
+                    StepIconComponent={CustomStepIcon}
+                    sx={{
+                      "& .MuiStepLabel-label": {
+                        fontSize: "0.78rem",
+                        fontWeight: activeStep === index ? 700 : 500,
+                        mt: 0.5,
+                      },
+                    }}
+                  >
+                    {label}
+                  </StepLabel>
                 </Step>
               ))}
             </Stepper>
-            {activeStep === steps.length ? (
-              <Box sx={{ textAlign: "center", mt: 4 }}>
-                <Typography variant="h6" sx={{ mb: 2 }}>
-                  Your submission is complete!
-                </Typography>
-                <Typography variant="body1" sx={{ mb: 3 }}>
-                  Thank you for submitting your manuscript. We have received
-                  your information and will get back to you soon.
-                </Typography>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={() => setActiveStep(0)}
-                >
-                  Submit Another Manuscript
-                </Button>
-              </Box>
-            ) : (
+          </Paper>
+
+          {/* Step content */}
+          {activeStep === steps.length ? (
+            /* ─── Success screen ─── */
+            <Paper
+              variant="outlined"
+              sx={{
+                p: { xs: 3, md: 5 },
+                borderRadius: 3,
+                textAlign: "center",
+              }}
+            >
               <Box
                 sx={{
-                  p: 4,
-                  borderRadius: 2,
-                  boxShadow: 3,
-                  backgroundColor: "background.paper",
+                  width: 72,
+                  height: 72,
+                  borderRadius: "50%",
+                  backgroundColor: "success.light",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  mx: "auto",
+                  mb: 2,
                 }}
               >
-                {getStepContent(activeStep)}
+                <CheckCircleOutlineIcon
+                  sx={{ fontSize: "2.5rem", color: "success.main" }}
+                />
               </Box>
-            )}
-          </Box>
+              <Typography variant="h5" fontWeight={700} gutterBottom>
+                Submission Complete!
+              </Typography>
+              <Typography
+                variant="body2"
+                color="text.secondary"
+                sx={{ maxWidth: 440, mx: "auto", mb: 3 }}
+              >
+                Thank you for submitting your manuscript. Our editorial team
+                will review it and get back to you via email.
+              </Typography>
+              <Button
+                variant="contained"
+                size="large"
+                sx={{ borderRadius: 2, textTransform: "none", px: 4 }}
+                onClick={() => setActiveStep(0)}
+              >
+                Submit Another Manuscript
+              </Button>
+            </Paper>
+          ) : (
+            /* ─── Form step panel ─── */
+            <Paper
+              variant="outlined"
+              sx={{
+                p: { xs: 3, md: 4 },
+                borderRadius: 3,
+              }}
+            >
+              {getStepContent(activeStep)}
+            </Paper>
+          )}
         </FormProvider>
-      </Paper>
+      </Box>
     </>
   );
 };

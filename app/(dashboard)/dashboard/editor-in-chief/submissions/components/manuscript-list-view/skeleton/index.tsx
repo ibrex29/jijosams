@@ -1,6 +1,6 @@
 import { Box, Paper, Skeleton } from "@mui/material";
 
-const ListSkeleton = () => (
+const CEListSkeleton = () => (
   <Box sx={{ display: "flex", flexDirection: "column", gap: 1.5 }}>
     {Array.from(new Array(6)).map((_, i) => (
       <Paper
@@ -21,10 +21,14 @@ const ListSkeleton = () => (
           <Skeleton animation="wave" variant="text" width="55%" height={18} sx={{ mb: 0.5 }} />
           <Skeleton animation="wave" variant="text" width="40%" height={14} />
         </Box>
-        <Skeleton animation="wave" variant="rounded" width={90} height={28} sx={{ borderRadius: "20px", flexShrink: 0 }} />
+        <Box display="flex" gap={1} flexShrink={0}>
+          <Skeleton animation="wave" variant="rounded" width={88} height={28} sx={{ borderRadius: "16px" }} />
+          <Skeleton animation="wave" variant="rounded" width={108} height={28} sx={{ borderRadius: "16px" }} />
+          <Skeleton animation="wave" variant="rounded" width={112} height={28} sx={{ borderRadius: "16px" }} />
+        </Box>
       </Paper>
     ))}
   </Box>
 );
 
-export default ListSkeleton;
+export default CEListSkeleton;

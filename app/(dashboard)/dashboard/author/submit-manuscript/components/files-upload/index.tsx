@@ -1,10 +1,22 @@
 "use client";
 
+import AttachFileIcon from "@mui/icons-material/AttachFile";
+import ReceiptOutlinedIcon from "@mui/icons-material/ReceiptOutlined";
+import UploadFileOutlinedIcon from "@mui/icons-material/UploadFileOutlined";
+import {
+  Box,
+  Button,
+  Chip,
+  Divider,
+  Paper,
+  Stack,
+  Typography,
+} from "@mui/material";
 import dynamic from "next/dynamic";
 import React from "react";
 import { Controller, useFormContext } from "react-hook-form";
+
 import { SubmitManuscriptProps } from "@/types";
-import { Button, Stack } from "@mui/material";
 
 const DocumentUpload = dynamic(
   () => import("@/app/components/document-upload"),
@@ -16,141 +28,192 @@ interface FileUploadStepProps {
   handleBack: () => void;
 }
 
+interface UploadSection {
+  name: keyof Pick<
+    SubmitManuscriptProps,
+    "manuscriptLink" | "proofofPayment" | "otherDocsLink"
+  >;
+  label: string;
+  description: string;
+  accept: string;
+  icon: React.ReactNode;
+  chipLabel: string;
+  chipColor: "primary" | "warning" | "default";
+}
+
+const uploadSections: UploadSection[] = [
+  {
+    name: "manuscriptLink",
+    label: "Manuscript File",
+    description:
+      "Upload your manuscript in PDF or DOCX format. Ensure it follows the journal\u2019s formatting guidelines.",
+    accept: ".pdf,.docx",
+    icon: <UploadFileOutlinedIcon fontSize="small" />,
+    chipLabel: "Required",
+    chipColor: "primary",
+  },
+  {
+    name: "proofofPayment",
+    label: "Proof of Payment",
+    description:
+      "Upload a receipt or screenshot confirming the submission/processing fee payment.",
+    accept: ".pdf,.jpg,.jpeg,.png",
+    icon: <ReceiptOutlinedIcon fontSize="small" />,
+    chipLabel: "Required",
+    chipColor: "warning",
+  },
+  {
+    name: "otherDocsLink",
+    label: "Additional Documents",
+    description:
+      "Optional supplementary files such as cover letter, ethics clearance, or data appendices.",
+    accept: ".pdf,.docx",
+    icon: <AttachFileIcon fontSize="small" />,
+    chipLabel: "Optional",
+    chipColor: "default",
+  },
+];
+
 const FileUploadStep: React.FC<FileUploadStepProps> = ({
   handleSubmit,
   handleBack,
 }) => {
-  const { control, setValue, getValues, setError } =
+  const { setValue, getValues, setError } =
     useFormContext<SubmitManuscriptProps>();
 
   const validateAndSubmit = () => {
     const values = getValues();
-    const newErrors: { [key: string]: string } = {};
+    let hasError = false;
 
     if (!values.manuscriptLink) {
-      newErrors.manuscriptLink =
-        "Please upload the manuscript file before proceeding.";
       setError("manuscriptLink", {
         type: "manual",
-        message: newErrors.manuscriptLink,
+        message: "Please upload the manuscript file before proceeding.",
       });
+      hasError = true;
     }
     if (!values.proofofPayment) {
-      newErrors.proofofPayment =
-        "Please upload proof of payment before proceeding.";
       setError("proofofPayment", {
         type: "manual",
-        message: newErrors.proofofPayment,
+        message: "Please upload proof of payment before proceeding.",
       });
+      hasError = true;
     }
 
-    if (Object.keys(newErrors).length > 0) {
-      return;
-    }
-
-    handleSubmit();
+    if (!hasError) handleSubmit();
   };
 
   return (
-    <div className="space-y-6">
-      {/* Manuscript upload */}
-      <Controller
-        name="manuscriptLink"
-        control={control}
-        render={({ fieldState: { error } }) => (
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Manuscript File (PDF/DOCX) *
-            </label>
-            <DocumentUpload
-              fieldName="manuscriptLink"
-              label="Manuscript File"
-              accept=".pdf,.docx"
-              onUpload={(url) =>
-                setValue("manuscriptLink", url, { shouldValidate: true })
-              }
-              error={error?.message}
-            />
-          </div>
-        )}
-      />
-
-      {/* Proof of Payment upload */}
-      <Controller
-        name="proofofPayment"
-        control={control}
-        render={({ fieldState: { error } }) => (
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Proof of Payment (Image/PDF) *
-            </label>
-            <DocumentUpload
-              fieldName="proofofPayment"
-              label="Proof of Payment"
-              accept=".pdf,.jpg,.jpeg,.png"
-              onUpload={(url) =>
-                setValue("proofofPayment", url, { shouldValidate: true })
-              }
-              error={error?.message}
-            />
-          </div>
-        )}
-      />
-
-      {/* Additional documents */}
-      <Controller
-        name="otherDocsLink"
-        control={control}
-        render={({ fieldState: { error } }) => (
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Additional Documents (PDF/DOCX)
-            </label>
-            <DocumentUpload
-              fieldName="otherDocsLink"
-              label="Additional Documents"
-              accept=".pdf,.docx"
-              onUpload={(url) =>
-                setValue("otherDocsLink", url, { shouldValidate: true })
-              }
-              error={error?.message}
-            />
-          </div>
-        )}
-      />
-
-      {/* Navigation */}
-      <Stack direction="row" justifyContent="space-between" width="100%">
-        <Button
-          variant="contained"
-          onClick={handleBack}
+    <Box>
+      {/* Section header */}
+      <Stack direction="row" alignItems="center" spacing={1.5} mb={2}>
+        <Box
           sx={{
-            backgroundColor: "grey.300",
-            color: "grey.700",
-            px: 3,
-            py: 1.5,
+            width: 40,
+            height: 40,
             borderRadius: 2,
-            "&:hover": { backgroundColor: "grey.400" },
+            backgroundColor: "info.main",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            color: "white",
+            flexShrink: 0,
           }}
         >
-          Back
-        </Button>
+          <UploadFileOutlinedIcon fontSize="small" />
+        </Box>
+        <Box>
+          <Typography variant="subtitle1" fontWeight={700} lineHeight={1.2}>
+            Document Uploads
+          </Typography>
+          <Typography variant="caption" color="text.secondary">
+            Upload your manuscript and supporting documents
+          </Typography>
+        </Box>
+      </Stack>
 
+      <Divider sx={{ mb: 3 }} />
+
+      <Stack spacing={2.5}>
+        {uploadSections.map((section) => (
+          <Controller
+            key={section.name}
+            name={section.name}
+            render={({ fieldState: { error } }) => (
+              <Paper
+                variant="outlined"
+                sx={{
+                  p: 2.5,
+                  borderRadius: 2,
+                  borderColor: error ? "error.main" : "divider",
+                  transition: "border-color 0.2s",
+                }}
+              >
+                <Stack
+                  direction="row"
+                  alignItems="center"
+                  justifyContent="space-between"
+                  mb={1}
+                >
+                  <Stack direction="row" alignItems="center" spacing={1}>
+                    <Box sx={{ color: "primary.main" }}>{section.icon}</Box>
+                    <Typography variant="subtitle2" fontWeight={600}>
+                      {section.label}
+                    </Typography>
+                  </Stack>
+                  <Chip
+                    label={section.chipLabel}
+                    size="small"
+                    color={section.chipColor}
+                    sx={{ fontSize: "0.65rem", height: 20 }}
+                  />
+                </Stack>
+
+                <Typography
+                  variant="caption"
+                  color="text.secondary"
+                  display="block"
+                  mb={1.5}
+                >
+                  {section.description}
+                </Typography>
+
+                <DocumentUpload
+                  fieldName={section.name}
+                  label={section.label}
+                  accept={section.accept}
+                  onUpload={(url) =>
+                    setValue(section.name, url, { shouldValidate: true })
+                  }
+                  error={error?.message}
+                />
+              </Paper>
+            )}
+          />
+        ))}
+      </Stack>
+
+      {/* Navigation */}
+      <Stack direction="row" justifyContent="space-between" sx={{ mt: 4 }}>
+        <Button
+          variant="outlined"
+          size="large"
+          onClick={handleBack}
+          sx={{ px: 3, borderRadius: 2, textTransform: "none" }}
+        >
+          ← Back
+        </Button>
         <Button
           variant="contained"
           color="primary"
+          size="large"
           onClick={validateAndSubmit}
-          sx={{
-            px: 3,
-            py: 1.5,
-            borderRadius: 2,
-            textTransform: "none", // keeps text normal instead of uppercase
-          }}
+          sx={{ px: 4, borderRadius: 2, textTransform: "none", fontWeight: 600 }}
         >
-          Next
+          Submit Manuscript
         </Button>
       </Stack>
-    </div>
+    </Box>
   );
 };
 

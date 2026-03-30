@@ -18,6 +18,7 @@ export const basePath = {
   section_editor: "/dashboard/section-editor",
   editor_in_chief: "/dashboard/editor-in-chief",
   production_editor: "/dashboard/production-editor",
+  copy_editor: "/dashboard/copy-editor",
 };
 
 export const authorNavConfig = [
@@ -145,5 +146,18 @@ export const sectionEditorNavConfig = [
     title: "Users",
     path: `${basePath.section_editor}/users`,
     icon: icon(PeopleIcon),
+  },
+];
+
+export const copyEditorNavConfig = [
+  {
+    title: "Home",
+    path: `${basePath.copy_editor}`,
+    icon: icon(HomeIcon),
+  },
+  {
+    title: "Manuscript",
+    path: `${basePath.copy_editor}/submissions`,
+    icon: icon(ArticleIcon),
   },
 ];

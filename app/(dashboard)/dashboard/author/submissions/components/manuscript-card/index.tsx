@@ -119,7 +119,7 @@ export default function AuthorManuscriptCard({
                   fontSize: "18px",
                 }}
               >
-                {getInitials(authorName.toUpperCase())}
+                {getInitials((authorName ?? "").toUpperCase())}
               </Avatar>
 
               <Stack spacing={1} flex={1}>

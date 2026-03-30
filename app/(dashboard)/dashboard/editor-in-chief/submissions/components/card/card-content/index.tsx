@@ -1,7 +1,11 @@
 import { ManuscriptProps } from "@/types";
 import ManuscriptCardGrid from "../../manuscript-card-grid";
+import CEManuscriptListView from "../../manuscript-list-view";
+import CEManuscriptTableView from "../../manuscript-table-view";
 import NoTicket from "../../no-manuscript";
 import ManuscriptCardSkeleton from "./skeleton";
+import ListSkeleton from "../../manuscript-list-view/skeleton";
+import TableSkeleton from "../../manuscript-table-view/skeleton";
 
 interface ManuscriptContentProps {
   refetch: () => void;
@@ -10,6 +14,7 @@ interface ManuscriptContentProps {
   noManuscriptsIcon: string;
   noResultManuscriptIcon: string;
   availableManuscripts: boolean;
+  view: "card" | "table" | "list";
 }
 
 const ManuscriptContent: React.FC<ManuscriptContentProps> = ({
@@ -18,9 +23,17 @@ const ManuscriptContent: React.FC<ManuscriptContentProps> = ({
   manuscripts = [],
   noManuscriptsIcon,
   availableManuscripts,
+  view,
 }) => {
   if (isFetching) {
-    return <ManuscriptCardSkeleton />;
+    switch (view) {
+      case "table":
+        return <TableSkeleton />;
+      case "list":
+        return <ListSkeleton />;
+      default:
+        return <ManuscriptCardSkeleton />;
+    }
   }
 
   if (manuscripts.length === 0) {
@@ -37,7 +50,14 @@ const ManuscriptContent: React.FC<ManuscriptContentProps> = ({
   }
 
   if (availableManuscripts) {
-    return <ManuscriptCardGrid manuscripts={manuscripts} refetch={refetch} />;
+    switch (view) {
+      case "table":
+        return <CEManuscriptTableView manuscripts={manuscripts} refetch={refetch} />;
+      case "list":
+        return <CEManuscriptListView manuscripts={manuscripts} refetch={refetch} />;
+      default:
+        return <ManuscriptCardGrid manuscripts={manuscripts} refetch={refetch} />;
+    }
   }
 
   return null;

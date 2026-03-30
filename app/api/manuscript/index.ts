@@ -109,6 +109,43 @@ export const getAllManuscripts = async (): Promise<ManuscriptProps[]> => {
   return response as Promise<ManuscriptProps[]>;
 };
 
+export const getAllManuscriptsFiltered = async (
+  params: FetchManuscriptsParams = {},
+): Promise<FetchManuscriptsResponse> => {
+  const {
+    sortOrder = "desc",
+    page = 1,
+    limit = 10,
+    search = "",
+    status = "",
+  } = params;
+  const bearerHeader = await getBearerHeader();
+
+  const queryParams = new URLSearchParams({
+    sortOrder,
+    page: page.toString(),
+    limit: limit.toString(),
+    ...(search && { search }),
+    ...(status && { status }),
+  });
+
+  const response = await request(
+    "GET",
+    `${api.CEManuscripts}?${queryParams.toString()}`,
+    {
+      headers: {
+        "Content-Type": "application/json",
+        ...bearerHeader.headers,
+      },
+    },
+  );
+
+  if (response && response.statusCode === 401) {
+    logout();
+  }
+  return response as FetchManuscriptsResponse;
+};
+
 export const getSEManuscript = async (): Promise<ManuscriptProps[]> => {
   const bearerHeader = await getBearerHeader();
 
