@@ -57,6 +57,24 @@ export default function ManuscriptCardGrid({ manuscripts, refetch }: Props) {
     }
   };
 
+  const handleAssignSuggestedReviewer = async (payload: {
+    suggestedReviewerId: string;
+    manuscriptId: string;
+    reviewDueDate: string;
+  }) => {
+    try {
+      console.log("[Add & Assign Suggested Reviewer — pending endpoint]", payload);
+      // TODO: replace with actual API call once backend endpoint is ready
+      // await addAndAssignSuggestedReviewer(payload);
+      notify("Suggested reviewer added & assigned (pending backend endpoint)");
+      refetch();
+      setOpenReviewModal(false);
+    } catch (error) {
+      console.error("Error assigning suggested reviewer:", error);
+      notify("Failed to assign suggested reviewer");
+    }
+  };
+
   return (
     <Box sx={{ display: "block" }}>
       <Grid container spacing={2} direction="row">
@@ -77,6 +95,7 @@ export default function ManuscriptCardGrid({ manuscripts, refetch }: Props) {
           open={openReviewModal}
           onClose={() => setOpenReviewModal(false)}
           onAssign={handleAssignReviewer}
+          onAssignSuggested={handleAssignSuggestedReviewer}
         />
       )}
       {selectedManuscript && (

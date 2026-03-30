@@ -1,9 +1,8 @@
 import ArticleOutlinedIcon from "@mui/icons-material/ArticleOutlined";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
-import FormatAlignLeftIcon from "@mui/icons-material/FormatAlignLeft";
-import GroupOutlinedIcon from "@mui/icons-material/GroupOutlined";
-import PublishOutlinedIcon from "@mui/icons-material/PublishOutlined";
-import ScheduleOutlinedIcon from "@mui/icons-material/ScheduleOutlined";
+import EditNoteOutlinedIcon from "@mui/icons-material/EditNoteOutlined";
+import FormatColorTextOutlinedIcon from "@mui/icons-material/FormatColorTextOutlined";
+import SpellcheckOutlinedIcon from "@mui/icons-material/SpellcheckOutlined";
 import WavingHandIcon from "@mui/icons-material/WavingHand";
 import {
   Avatar,
@@ -19,64 +18,74 @@ import {
 import Link from "next/link";
 
 export const metadata = {
-  title: "Production Editor",
+  title: "Copy Editor",
 };
 
 const statCards = [
   {
-    label: "In Production",
+    label: "Assigned",
     value: "—",
     icon: <ArticleOutlinedIcon />,
-    color: "#1a237e",
+    color: "#0d47a1",
   },
   {
-    label: "Published",
+    label: "In Review",
     value: "—",
-    icon: <PublishOutlinedIcon />,
-    color: "#1b5e20",
-  },
-  {
-    label: "Pending Layout",
-    value: "—",
-    icon: <FormatAlignLeftIcon />,
+    icon: <EditNoteOutlinedIcon />,
     color: "#e65100",
   },
   {
-    label: "Team Members",
+    label: "Proofread",
     value: "—",
-    icon: <GroupOutlinedIcon />,
+    icon: <SpellcheckOutlinedIcon />,
+    color: "#1b5e20",
+  },
+  {
+    label: "Completed",
+    value: "—",
+    icon: <CheckCircleOutlineIcon />,
     color: "#4a148c",
   },
 ];
 
 const activities = [
   {
-    text: "Accepted manuscript sent to layout team",
+    text: "Copyediting completed for manuscript #042",
     time: "Today",
-    icon: <FormatAlignLeftIcon fontSize="small" />,
-    color: "primary.main",
-  },
-  {
-    text: "Volume 12, Issue 3 published successfully",
-    time: "Yesterday",
-    icon: <PublishOutlinedIcon fontSize="small" />,
+    icon: <CheckCircleOutlineIcon fontSize="small" />,
     color: "success.main",
   },
   {
-    text: "Proofread corrections applied to 2 manuscripts",
-    time: "2 days ago",
-    icon: <CheckCircleOutlineIcon fontSize="small" />,
+    text: "Grammar corrections submitted for #038",
+    time: "Yesterday",
+    icon: <EditNoteOutlinedIcon fontSize="small" />,
     color: "warning.main",
   },
   {
-    text: "Schedule updated for upcoming publication",
+    text: "Style guide review for 3 manuscripts",
+    time: "2 days ago",
+    icon: <FormatColorTextOutlinedIcon fontSize="small" />,
+    color: "primary.main",
+  },
+  {
+    text: "New manuscript assigned for copyediting",
     time: "3 days ago",
-    icon: <ScheduleOutlinedIcon fontSize="small" />,
+    icon: <ArticleOutlinedIcon fontSize="small" />,
     color: "info.main",
   },
 ];
 
-const ProductionEditorHome = () => {
+const quickLinks = [
+  {
+    href: "/dashboard/copy-editor/submissions",
+    label: "My Assignments",
+    desc: "View manuscripts assigned for copyediting",
+    chip: "Manuscripts",
+    color: "primary" as const,
+  },
+];
+
+const CopyEditorHome = () => {
   return (
     <Box sx={{ p: { xs: 2, md: 3 } }}>
       {/* Welcome Banner */}
@@ -85,7 +94,7 @@ const ProductionEditorHome = () => {
           p: 3,
           mb: 3,
           background:
-            "linear-gradient(135deg, #4a148c 0%, #6a1b9a 60%, #7b1fa2 100%)",
+            "linear-gradient(135deg, #0d47a1 0%, #1565c0 60%, #1976d2 100%)",
           color: "white",
           borderRadius: 3,
           border: "none",
@@ -108,11 +117,11 @@ const ProductionEditorHome = () => {
         <Stack direction="row" alignItems="center" spacing={1.5} mb={0.5}>
           <WavingHandIcon sx={{ fontSize: "1.25rem", color: "#FFD700" }} />
           <Typography variant="h6" fontWeight={700} sx={{ color: "white" }}>
-            Welcome, Production Editor!
+            Welcome, Copy Editor!
           </Typography>
         </Stack>
         <Typography variant="body2" sx={{ color: "rgba(255,255,255,0.72)" }}>
-          Manage manuscript production, layout, and publication scheduling from here.
+          Review, proofread, and polish manuscripts for publication-ready quality.
         </Typography>
       </Paper>
 
@@ -165,15 +174,29 @@ const ProductionEditorHome = () => {
       <Grid container spacing={3}>
         {/* Recent Activity */}
         <Grid item xs={12} md={6}>
-          <Card sx={{ border: "1px solid", borderColor: "divider", height: "100%" }}>
+          <Card
+            sx={{ border: "1px solid", borderColor: "divider", height: "100%" }}
+          >
             <CardContent>
               <Typography variant="subtitle1" fontWeight={700} mb={2}>
                 Recent Activity
               </Typography>
               <Stack spacing={2}>
                 {activities.map((a, i) => (
-                  <Stack key={i} direction="row" spacing={1.5} alignItems="flex-start">
-                    <Avatar sx={{ width: 32, height: 32, backgroundColor: a.color, color: "white" }}>
+                  <Stack
+                    key={i}
+                    direction="row"
+                    spacing={1.5}
+                    alignItems="flex-start"
+                  >
+                    <Avatar
+                      sx={{
+                        width: 32,
+                        height: 32,
+                        backgroundColor: a.color,
+                        color: "white",
+                      }}
+                    >
                       {a.icon}
                     </Avatar>
                     <Box flex={1}>
@@ -193,21 +216,15 @@ const ProductionEditorHome = () => {
 
         {/* Quick Navigation */}
         <Grid item xs={12} md={6}>
-          <Card sx={{ border: "1px solid", borderColor: "divider", height: "100%" }}>
+          <Card
+            sx={{ border: "1px solid", borderColor: "divider", height: "100%" }}
+          >
             <CardContent>
               <Typography variant="subtitle1" fontWeight={700} mb={2}>
                 Quick Navigation
               </Typography>
               <Stack spacing={1.5}>
-                {[
-                  {
-                    href: "/dashboard/production-editor/users",
-                    label: "Manage Users",
-                    desc: "View and manage production team members",
-                    chip: "Team",
-                    color: "primary" as const,
-                  },
-                ].map((item) => (
+                {quickLinks.map((item) => (
                   <Paper
                     key={item.href}
                     component={Link}
@@ -222,7 +239,11 @@ const ProductionEditorHome = () => {
                       "&:hover": { boxShadow: "0 4px 16px rgba(0,0,0,0.1)" },
                     }}
                   >
-                    <Stack direction="row" justifyContent="space-between" alignItems="center">
+                    <Stack
+                      direction="row"
+                      justifyContent="space-between"
+                      alignItems="center"
+                    >
                       <Box>
                         <Typography variant="subtitle2" fontWeight={600}>
                           {item.label}
@@ -244,4 +265,4 @@ const ProductionEditorHome = () => {
   );
 };
 
-export default ProductionEditorHome;
+export default CopyEditorHome;

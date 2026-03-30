@@ -167,7 +167,7 @@ export default function ReviewerManuscriptCard({
           <CardContent>
             <Box display="flex" flexDirection="row" height={250} gap={2} mt={2}>
               <Avatar sx={{ width: 60, height: 60, bgcolor: "primary.main" }}>
-                {getInitials(authorName.toUpperCase())}
+                {getInitials((authorName ?? "").toUpperCase())}
               </Avatar>
               <Stack direction="column" mt={1} width="100%">
                 <Typography

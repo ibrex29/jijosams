@@ -92,6 +92,7 @@ export interface ManuscriptProps {
   ActionLog: any[];
   Review: any[];
   Reviewers: ReviewerProps[];
+  SuggestedReviewers: ManuscriptSuggestedReviewer[];
 }
 
 export interface Reviewer {
@@ -112,13 +113,32 @@ export interface DocumentProps {
   updatedAt: string;
 }
 
+export interface SuggestedReviewerProps {
+  name: string;
+  email: string;
+  phone: string;
+  affiliation: string;
+}
+
+// Suggested reviewer as stored/returned in the manuscript response
+export interface ManuscriptSuggestedReviewer {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+  affiliation: string;
+  manuscriptId: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface SubmitManuscriptProps {
   title: string;
   abstract: string;
   keywords: string;
   author: string;
-  coAuthors: string[];
-  suggestedReviewer: string;
+  coAuthors: string;
+  suggestedReviewer: SuggestedReviewerProps;
   manuscriptLink: string;
   proofofPayment: string;
   otherDocsLink: string;

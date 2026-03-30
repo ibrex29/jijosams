@@ -12,6 +12,7 @@ export const api = {
   publishManuscript: `${baseUrl}/v1/publication/publish`,
   AuthorManuscripts: `${baseUrl}/v1/author/submitted-manuscripts`,
   AllManuscripts: `${baseUrl}/v1/manuscripts/submitted`,
+  CEManuscripts: `${baseUrl}/v1/manuscripts`,
   SEManuscript: `${baseUrl}/v1/manuscripts/section-editor`,
   REManuscript: `${baseUrl}/v1/review/assigned-manuscript`,
   getSection: `${baseUrl}/v1/section/all`,

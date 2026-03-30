@@ -6,6 +6,7 @@ import SectionEditorMetrics from "@/app/(dashboard)/dashboard/section-editor/met
 
 import PageBreadcrumbs from "../../common/page/breadcrumbs";
 import { MainBox } from "../../common/styled-components";
+import { WelcomeBanner } from "../../common/analytics/welcome-banner";
 
 const SectionEditorHome: React.FC = () => {
   return (
@@ -14,7 +15,8 @@ const SectionEditorHome: React.FC = () => {
         <Box sx={{ marginBottom: "20px", marginTop: "-5px" }}>
           <PageBreadcrumbs page="Home" tab="" />
         </Box>
-        <Box sx={{ marginTop: "25px" }}>
+        <WelcomeBanner />
+        <Box sx={{ marginTop: "16px" }}>
           <SectionEditorMetrics />
         </Box>
       </MainBox>

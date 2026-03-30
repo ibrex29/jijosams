@@ -90,7 +90,7 @@ export default function ManuscriptListView({ manuscripts }: Props) {
             >
               <ListItemAvatar>
                 <Avatar sx={{ bgcolor: "primary.main" }}>
-                  {getInitials(m.authorName.toUpperCase())}
+                  {getInitials((m.authorName ?? "").toUpperCase())}
                 </Avatar>
               </ListItemAvatar>
 
