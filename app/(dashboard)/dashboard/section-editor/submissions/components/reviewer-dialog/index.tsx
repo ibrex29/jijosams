@@ -1,6 +1,7 @@
 "use client";
 
 import CloseIcon from "@mui/icons-material/Close";
+import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
 import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
 import PhoneOutlinedIcon from "@mui/icons-material/PhoneOutlined";
@@ -55,6 +56,7 @@ interface ReviewerModalProps {
     reviewDueDate: string,
   ) => void;
   onAssignSuggested?: (payload: AssignSuggestedPayload) => void;
+  onUnassign?: (reviewerId: string, manuscriptId: string) => void;
 }
 
 export default function ReviewerModal({
@@ -63,6 +65,7 @@ export default function ReviewerModal({
   onClose,
   onAssign,
   onAssignSuggested,
+  onUnassign,
 }: ReviewerModalProps) {
   const [dueDates, setDueDates] = useState<{ [key: string]: Dayjs | null }>({});
   const [dateErrors, setDateErrors] = useState<{ [key: string]: boolean }>({});
@@ -81,6 +84,20 @@ export default function ReviewerModal({
   });
   const [formDueDate, setFormDueDate] = useState<Dayjs | null>(null);
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
+
+  // Build sets once per render for O(1) lookup
+  const assignedReviewerIds = new Set(
+    (manuscript.Reviewers ?? []).map((r) => r.reviewerId),
+  );
+  const assignedEmails = new Set(
+    (manuscript.Reviewers ?? [])
+      .map((r) => r.reviewer?.User?.email?.toLowerCase())
+      .filter(Boolean) as string[],
+  );
+
+  const handleUnassign = (reviewerProfileId: string) => {
+    if (onUnassign) onUnassign(reviewerProfileId, manuscript.id);
+  };
 
   const openSuggestedForm = (sr: ManuscriptSuggestedReviewer) => {
     setActiveSuggested(sr);
@@ -257,6 +274,9 @@ export default function ReviewerModal({
 
               <Stack spacing={1.5}>
                 {manuscript.SuggestedReviewers.map((sr) => {
+                  const isSuggestedAssigned = assignedEmails.has(
+                    (sr.email ?? "").toLowerCase(),
+                  );
                   return (
                     <Paper
                       key={sr.id}
@@ -315,24 +335,35 @@ export default function ReviewerModal({
                       </Box>
 
                       {/* Assign button */}
-                      <Button
-                        variant="contained"
-                        color="warning"
-                        size="small"
-                        onClick={() => openSuggestedForm(sr)}
-                        sx={{
-                          borderRadius: "20px",
-                          textTransform: "none",
-                          fontSize: "0.72rem",
-                          whiteSpace: "nowrap",
-                          px: 2,
-                          py: "6px",
-                          flexShrink: 0,
-                          color: "white",
-                        }}
-                      >
-                        Add &amp; Assign
-                      </Button>
+                      {isSuggestedAssigned ? (
+                        <Chip
+                          icon={<CheckCircleOutlineIcon sx={{ fontSize: "14px !important" }} />}
+                          label="Assigned"
+                          size="small"
+                          color="success"
+                          variant="outlined"
+                          sx={{ borderRadius: "20px", fontSize: "0.72rem", px: 0.5, flexShrink: 0 }}
+                        />
+                      ) : (
+                        <Button
+                          variant="contained"
+                          color="warning"
+                          size="small"
+                          onClick={() => openSuggestedForm(sr)}
+                          sx={{
+                            borderRadius: "20px",
+                            textTransform: "none",
+                            fontSize: "0.72rem",
+                            whiteSpace: "nowrap",
+                            px: 2,
+                            py: "6px",
+                            flexShrink: 0,
+                            color: "white",
+                          }}
+                        >
+                          Add &amp; Assign
+                        </Button>
+                      )}
                     </Paper>
                   );
                 })}
@@ -422,6 +453,7 @@ export default function ReviewerModal({
                       .filter(Boolean)
                       .join(" ") || "N/A";
                   const hasError = !!dateErrors[rid];
+                  const isAssigned = assignedReviewerIds.has(rid);
 
                   return (
                     <Paper
@@ -434,9 +466,14 @@ export default function ReviewerModal({
                         display: "flex",
                         alignItems: "center",
                         gap: 2,
-                        borderColor: hasError ? "error.main" : "grey.200",
+                        borderColor: isAssigned
+                          ? "success.300"
+                          : hasError
+                            ? "error.main"
+                            : "grey.200",
+                        backgroundColor: isAssigned ? "success.50" : "transparent",
                         transition: "border-color 0.2s",
-                        "&:hover": { borderColor: "primary.main" },
+                        "&:hover": { borderColor: isAssigned ? "success.main" : "primary.main" },
                       }}
                     >
                       {/* Avatar */}
@@ -489,58 +526,79 @@ export default function ReviewerModal({
                           flexShrink: 0,
                         }}
                       >
-                        <Box sx={{ display: "flex", flexDirection: "column" }}>
-                          <DatePicker
-                            label="Due Date *"
-                            value={dueDates[rid] ?? null}
-                            minDate={dayjs().add(1, "day")}
-                            onChange={(date) => handleDateChange(rid, date)}
-                            slotProps={{
-                              textField: {
-                                size: "small",
-                                error: hasError,
-                                helperText: hasError ? "Required" : undefined,
-                                FormHelperTextProps: {
-                                  sx: { fontSize: "0.65rem", mx: 0, mt: 0.3 },
-                                },
-                                sx: {
-                                  width: 148,
-                                  "& .MuiInputBase-input": {
-                                    fontSize: "0.75rem",
-                                    py: "6px",
-                                    px: "8px",
-                                  },
-                                  "& .MuiInputLabel-root": {
-                                    fontSize: "0.75rem",
-                                  },
-                                  "& .MuiInputLabel-shrink": {
-                                    fontSize: "0.7rem",
-                                  },
-                                  "& .MuiIconButton-root": {
-                                    padding: "4px",
-                                    "& svg": { fontSize: "1rem" },
-                                  },
-                                },
-                              },
+                        {isAssigned ? (
+                          <Button
+                            variant="outlined"
+                            color="error"
+                            size="small"
+                            onClick={() => handleUnassign(rid)}
+                            sx={{
+                              borderRadius: "20px",
+                              textTransform: "none",
+                              fontSize: "0.75rem",
+                              whiteSpace: "nowrap",
+                              px: 2,
+                              py: "6px",
                             }}
-                          />
-                        </Box>
-                        <Button
-                          variant="contained"
-                          size="small"
-                          onClick={() => handleAssign(rid)}
-                          sx={{
-                            borderRadius: "20px",
-                            textTransform: "none",
-                            fontSize: "0.75rem",
-                            whiteSpace: "nowrap",
-                            px: 2,
-                            py: "6px",
-                            alignSelf: "flex-start",
-                          }}
-                        >
-                          Assign
-                        </Button>
+                          >
+                            Unassign
+                          </Button>
+                        ) : (
+                          <>
+                            <Box sx={{ display: "flex", flexDirection: "column" }}>
+                              <DatePicker
+                                label="Due Date *"
+                                value={dueDates[rid] ?? null}
+                                minDate={dayjs().add(1, "day")}
+                                onChange={(date) => handleDateChange(rid, date)}
+                                slotProps={{
+                                  textField: {
+                                    size: "small",
+                                    error: hasError,
+                                    helperText: hasError ? "Required" : undefined,
+                                    FormHelperTextProps: {
+                                      sx: { fontSize: "0.65rem", mx: 0, mt: 0.3 },
+                                    },
+                                    sx: {
+                                      width: 148,
+                                      "& .MuiInputBase-input": {
+                                        fontSize: "0.75rem",
+                                        py: "6px",
+                                        px: "8px",
+                                      },
+                                      "& .MuiInputLabel-root": {
+                                        fontSize: "0.75rem",
+                                      },
+                                      "& .MuiInputLabel-shrink": {
+                                        fontSize: "0.7rem",
+                                      },
+                                      "& .MuiIconButton-root": {
+                                        padding: "4px",
+                                        "& svg": { fontSize: "1rem" },
+                                      },
+                                    },
+                                  },
+                                }}
+                              />
+                            </Box>
+                            <Button
+                              variant="contained"
+                              size="small"
+                              onClick={() => handleAssign(rid)}
+                              sx={{
+                                borderRadius: "20px",
+                                textTransform: "none",
+                                fontSize: "0.75rem",
+                                whiteSpace: "nowrap",
+                                px: 2,
+                                py: "6px",
+                                alignSelf: "flex-start",
+                              }}
+                            >
+                              Assign
+                            </Button>
+                          </>
+                        )}
                       </Box>
                     </Paper>
                   );

@@ -65,6 +65,12 @@ export interface ReviewerProps {
     expertiseArea: string;
     higestQualification: string | null;
     sectionId: string;
+    User?: {
+      firstName: string;
+      lastName: string;
+      email: string;
+      phoneNumber: string;
+    };
   };
 }
 export interface ManuscriptProps {

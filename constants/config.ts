@@ -33,6 +33,8 @@ export const SectionEditor = {
   getAllReviewer: `${baseUrl}/v1/manuscripts/reviewers-for-section-editor`,
   assignManuscriptReviewer: `${baseUrl}/v1/manuscripts/assign-reviewers`,
   assignSuggestedReviewer: `${baseUrl}/v1/manuscripts/assign/suggested-reviewer`,
+  unassignReviewer: (manuscriptId: string) =>
+    `${baseUrl}/v1/manuscripts/${manuscriptId}/unassign-reviewers`,
 };
 
 export const reviewer = {

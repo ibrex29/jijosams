@@ -12,6 +12,16 @@ export interface AssignManuscriptReviewerPayload {
   reviewDueDate: string;
 }
 
+export interface AssignSuggestedReviewerPayload {
+  suggestedReviewerId: string;
+  sectionId: string;
+  reviewDueDate: string;
+}
+
+export interface UnassignReviewerPayload {
+  reviewerIds: string[];
+}
+
 export const assignManuscriptSection = async (payload: any) => {
   const bearerHeader = await getBearerHeader();
 
@@ -41,5 +51,54 @@ export const assignManuscriptReviewer = async (
       data: payload,
     },
   );
+  return response;
+};
+
+export const assignSuggestedReviewer = async (
+  payload: AssignSuggestedReviewerPayload,
+) => {
+  const bearerHeader = await getBearerHeader();
+
+  const response = await request(
+    "POST",
+    `${SectionEditor.assignSuggestedReviewer}`,
+    {
+      headers: {
+        "Content-Type": "application/json",
+        ...bearerHeader.headers,
+      },
+      data: payload,
+    },
+  );
+
+  if (response?.statusCode && response.statusCode >= 400) {
+    throw new Error(response.message ?? `Request failed with status ${response.statusCode}`);
+  }
+
+  return response;
+};
+
+export const unassignReviewer = async (
+  manuscriptId: string,
+  payload: UnassignReviewerPayload,
+) => {
+  const bearerHeader = await getBearerHeader();
+
+  const response = await request(
+    "POST",
+    SectionEditor.unassignReviewer(manuscriptId),
+    {
+      headers: {
+        "Content-Type": "application/json",
+        ...bearerHeader.headers,
+      },
+      data: payload,
+    },
+  );
+
+  if (response?.statusCode && response.statusCode >= 400) {
+    throw new Error(response.message ?? `Request failed with status ${response.statusCode}`);
+  }
+
   return response;
 };

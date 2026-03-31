@@ -21,6 +21,7 @@ interface Props {
   manuscript: ManuscriptProps;
   onReviewClick: () => void;
   onSectionClick: () => void;
+  onViewReviews: () => void;
   selected: boolean;
 }
 
@@ -29,6 +30,7 @@ export default function MEManuscriptCard({
   manuscript,
   onReviewClick,
   onSectionClick,
+  onViewReviews,
   selected,
 }: Props) {
   const {
@@ -41,6 +43,7 @@ export default function MEManuscriptCard({
     Document,
     sectionId,
     Section,
+    Reviewers,
   } = manuscript;
 
   const manuscriptLink =
@@ -52,7 +55,7 @@ export default function MEManuscriptCard({
     <Card
       sx={{
         maxWidth: { xs: "100%", md: 700 },
-        height: { xs: "fit", md: 370 },
+        height: { xs: "fit", md: 390 },
         borderRadius: "16px",
         position: "relative",
         boxShadow: selected
@@ -204,6 +207,19 @@ export default function MEManuscriptCard({
               )}
               <Box display="flex" justifyContent="flex-end">
                 <Button
+                  variant="text"
+                  color="secondary"
+                  sx={{
+                    borderRadius: "50px",
+                    textTransform: "none",
+                    fontSize: "12px",
+                    "&:hover": { boxShadow: "none" },
+                  }}
+                  onClick={onViewReviews}
+                >
+                  View Reviews
+                </Button>
+                <Button
                   variant="outlined"
                   sx={{
                     borderRadius: "50px",
@@ -213,7 +229,7 @@ export default function MEManuscriptCard({
                   }}
                   onClick={onReviewClick}
                 >
-                  Assign to a Reviewer
+                  {Reviewers?.length > 0 ? "Re-Assign to a Reviewer" : "Assign to a Reviewer"}
                 </Button>
               </Box>
             </Box>

@@ -22,8 +22,9 @@ import ReviewViewerModal from "@/app/(dashboard)/dashboard/common/review-viewer-
 import {
   assignManuscriptReviewer,
   assignManuscriptSection,
+  assignSuggestedReviewer,
+  unassignReviewer,
 } from "@/app/api/manuscript/assign-manuscript";
-import { assignSuggestedReviewer } from "@/app/api/manuscript";
 import useNotification from "@/hooks/useNotification";
 import { ManuscriptProps } from "@/types";
 import { getInitials, truncateText } from "@/utils";
@@ -106,6 +107,21 @@ export default function CEManuscriptListView({ manuscripts, refetch }: Props) {
     } catch (error) {
       console.error("Error assigning suggested reviewer:", error);
       notify("Failed to assign suggested reviewer");
+    }
+  };
+
+  const handleUnassignReviewer = async (
+    reviewerId: string,
+    manuscriptId: string,
+  ) => {
+    try {
+      await unassignReviewer(manuscriptId, { reviewerIds: [reviewerId] });
+      notify("Reviewer unassigned successfully");
+      refetch();
+      setOpenReviewModal(false);
+    } catch (error) {
+      console.error("Error unassigning reviewer:", error);
+      notify("Failed to unassign reviewer");
     }
   };
 
@@ -231,6 +247,7 @@ export default function CEManuscriptListView({ manuscripts, refetch }: Props) {
           onClose={() => setOpenReviewModal(false)}
           onAssign={handleAssignReviewer}
           onAssignSuggested={handleAssignSuggestedReviewer}
+          onUnassign={handleUnassignReviewer}
         />
       )}
 

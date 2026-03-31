@@ -43,6 +43,7 @@ export default function CEManuscriptCard({
     Document,
     sectionId,
     Section,
+    Reviewers,
   } = manuscript;
 
   const manuscriptLink =
@@ -228,7 +229,7 @@ export default function CEManuscriptCard({
                   }}
                   onClick={onReviewClick}
                 >
-                  Assign to a Reviewer
+                  {Reviewers?.length > 0 ? "Re-Assign to a Reviewer" : "Assign to a Reviewer"}
                 </Button>
               </Box>
             </Box>

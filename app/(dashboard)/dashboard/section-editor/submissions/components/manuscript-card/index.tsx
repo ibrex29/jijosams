@@ -42,6 +42,7 @@ export default function SEManuscriptCard({
     sectionId,
     Section,
     reviewDueDate,
+    Reviewers,
   } = manuscript;
 
   const manuscriptLink =
@@ -238,7 +239,7 @@ export default function SEManuscriptCard({
                   }}
                   onClick={onReviewClick}
                 >
-                  Assign to a Reviewer
+                  {Reviewers?.length > 0 ? "Re-Assign to a Reviewer" : "Assign to a Reviewer"}
                 </Button>
               </Box>
             </Box>

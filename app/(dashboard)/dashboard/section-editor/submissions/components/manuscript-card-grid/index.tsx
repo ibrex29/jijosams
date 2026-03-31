@@ -1,8 +1,7 @@
 import { Box, Grid } from "@mui/material";
 import { useState } from "react";
 
-import { assignManuscriptReviewer } from "@/app/api/manuscript/assign-manuscript";
-import { assignSuggestedReviewer } from "@/app/api/manuscript";
+import { assignManuscriptReviewer, assignSuggestedReviewer, unassignReviewer } from "@/app/api/manuscript/assign-manuscript";
 import { ManuscriptProps } from "@/types";
 
 import SEManuscriptCard from "../manuscript-card";
@@ -74,6 +73,21 @@ export default function ManuscriptCardGrid({ manuscripts, refetch }: Props) {
     }
   };
 
+  const handleUnassignReviewer = async (
+    reviewerId: string,
+    manuscriptId: string,
+  ) => {
+    try {
+      await unassignReviewer(manuscriptId, { reviewerIds: [reviewerId] });
+      notify("Reviewer unassigned successfully");
+      refetch();
+      setOpenReviewModal(false);
+    } catch (error) {
+      console.error("Error unassigning reviewer:", error);
+      notify("Failed to unassign reviewer");
+    }
+  };
+
   return (
     <Box sx={{ display: "block" }}>
       <Grid container spacing={2} direction="row">
@@ -95,6 +109,7 @@ export default function ManuscriptCardGrid({ manuscripts, refetch }: Props) {
           onClose={() => setOpenReviewModal(false)}
           onAssign={handleAssignReviewer}
           onAssignSuggested={handleAssignSuggestedReviewer}
+          onUnassign={handleUnassignReviewer}
         />
       )}
       {selectedManuscript && (
