@@ -2,28 +2,33 @@
 "use client";
 
 import { Visibility, VisibilityOff } from "@mui/icons-material";
+import BadgeOutlinedIcon from "@mui/icons-material/BadgeOutlined";
+import BusinessOutlinedIcon from "@mui/icons-material/BusinessOutlined";
+import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
+import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import ScienceOutlinedIcon from "@mui/icons-material/ScienceOutlined";
 import {
   Alert,
   Box,
-  Container,
-  FilledInput,
+  Button,
+  Divider,
   FormControl,
   Grid,
   IconButton,
   InputAdornment,
   InputLabel,
-  Link,
   MenuItem,
   Select,
+  Stack,
   TextField,
   Typography,
 } from "@mui/material";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { FC, MouseEvent, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 
 import { createAuthor } from "@/app/api/users";
-import StyledButton from "../../styled-button";
 import { expertiseAreas } from "@/constants/constant";
 
 interface SignupData {
@@ -35,6 +40,8 @@ interface SignupData {
   affiliation: string;
   expertiseArea: string;
 }
+
+const fieldRadius = { "& .MuiOutlinedInput-root": { borderRadius: 2 } };
 
 const SignupForm: FC = () => {
   const router = useRouter();
@@ -63,11 +70,10 @@ const SignupForm: FC = () => {
 
   const signup = async (data: SignupData) => {
     setIsLoading(true);
-    console.log(data);
+    setErrorMessage(null);
 
     try {
       const response = await createAuthor(data);
-      console.log(response);
 
       if (response.id && response.userId) {
         router.push("/signin");
@@ -75,18 +81,16 @@ const SignupForm: FC = () => {
         response.statusCode === 409 &&
         response.message.includes("Email address already exists")
       ) {
-        setErrorMessage("The email address you entered is already registered.");
+        setErrorMessage("This email address is already registered.");
       } else if (
         response.statusCode === 400 &&
         response.message[0].includes("Password too weak")
       ) {
         setErrorMessage(
-          "Password is too weak. It must contain at least one uppercase letter, one lowercase letter, and one number.",
+          "Password is too weak. Use at least one uppercase letter, one lowercase letter, and one number.",
         );
       } else {
-        setErrorMessage(
-          "Sign-up failed. Please check your details and try again.",
-        );
+        setErrorMessage("Sign-up failed. Please check your details and try again.");
       }
     } catch (error) {
       setErrorMessage("A network error occurred. Please try again.");
@@ -97,272 +101,286 @@ const SignupForm: FC = () => {
   };
 
   return (
-    <Box sx={{ display: "flex", justifyContent: "center" }}>
-      <Container component="main" maxWidth="md">
-        {errorMessage && (
-          <Alert sx={{ mb: 5 }} variant="filled" severity="error">
-            {errorMessage}
-          </Alert>
-        )}
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            pt: 8,
-            borderRadius: 3,
-            px: 4,
-            py: 4,
-            boxShadow: 4,
-            backgroundColor: "background.paper",
-          }}
-        >
-          <Typography
-            component="h1"
-            variant="h5"
-            sx={{
-              color: "primary.main",
-              fontWeight: 700,
-              fontSize: "26px",
-              lineHeight: "91%",
-            }}
-          >
-            Sign Up
-          </Typography>
-          <Typography
-            component="p"
-            variant="subtitle1"
-            sx={{
-              color: "text.disabled",
-              fontWeight: 600,
-              fontSize: "16px",
-              lineHeight: "131%",
-              textAlign: "center",
-              marginY: 2,
-            }}
-          >
-            Create your account to get started
-          </Typography>
-          <form onSubmit={handleSubmit(signup)}>
-            <Grid container spacing={2}>
-              <Grid item xs={12}>
-                <Controller
-                  name="title"
-                  control={control}
-                  rules={{ required: "Title is required" }}
-                  render={({ field, fieldState }) => (
-                    <FormControl
-                      fullWidth
-                      variant="filled"
-                      error={!!fieldState.error}
-                    >
-                      <InputLabel>Title</InputLabel>
-                      <Select
-                        {...field}
-                        label="Title"
-                        sx={{
-                          textAlign: "left",
-                          "& .MuiSelect-select": {
-                            textAlign: "left",
-                          },
-                        }}
-                        aria-label="Select title"
-                      >
-                        <MenuItem value="Mr">Mr</MenuItem>
-                        <MenuItem value="Mrs">Mrs</MenuItem>
-                        <MenuItem value="Ms">Ms</MenuItem>
-                        <MenuItem value="Dr">Dr</MenuItem>
-                        <MenuItem value="Prof">Prof</MenuItem>
-                      </Select>
-                      {fieldState.error && (
-                        <Typography variant="body2" color="error">
-                          {fieldState.error.message}
-                        </Typography>
-                      )}
-                    </FormControl>
+    <Box>
+      {/* Heading */}
+      <Stack spacing={0.5} mb={3}>
+        <Typography variant="h5" fontWeight={800} color="text.primary">
+          Create your account
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
+          Join the SLU JST community and start submitting your research.
+        </Typography>
+      </Stack>
+
+      {errorMessage && (
+        <Alert severity="error" sx={{ mb: 3, borderRadius: 2 }}>
+          {errorMessage}
+        </Alert>
+      )}
+
+      <form onSubmit={handleSubmit(signup)} noValidate>
+        <Grid container spacing={2}>
+
+          {/* Title (full width) */}
+          <Grid item xs={12}>
+            <Controller
+              name="title"
+              control={control}
+              rules={{ required: "Title is required" }}
+              render={({ field, fieldState }) => (
+                <FormControl
+                  fullWidth
+                  error={!!fieldState.error}
+                  sx={{ "& .MuiOutlinedInput-root": { borderRadius: 2 } }}
+                >
+                  <InputLabel>Title *</InputLabel>
+                  <Select {...field} label="Title *">
+                    <MenuItem value="Mr">Mr</MenuItem>
+                    <MenuItem value="Mrs">Mrs</MenuItem>
+                    <MenuItem value="Ms">Ms</MenuItem>
+                    <MenuItem value="Dr">Dr</MenuItem>
+                    <MenuItem value="Prof">Prof</MenuItem>
+                  </Select>
+                  {fieldState.error && (
+                    <Typography variant="caption" color="error" sx={{ mt: 0.4, ml: 1.5 }}>
+                      {fieldState.error.message}
+                    </Typography>
                   )}
-                />
-              </Grid>
-              <Grid item xs={6}>
-                <Controller
-                  name="firstName"
-                  control={control}
-                  rules={{ required: "First name is required" }}
-                  render={({ field, fieldState }) => (
-                    <TextField
-                      {...field}
-                      fullWidth
-                      label="First Name"
-                      variant="filled"
-                      error={!!fieldState.error}
-                      helperText={fieldState.error?.message}
-                      aria-label="First name"
-                    />
-                  )}
-                />
-              </Grid>
-              <Grid item xs={6}>
-                <Controller
-                  name="lastName"
-                  control={control}
-                  rules={{ required: "Last name is required" }}
-                  render={({ field, fieldState }) => (
-                    <TextField
-                      {...field}
-                      fullWidth
-                      label="Last Name"
-                      variant="filled"
-                      error={!!fieldState.error}
-                      helperText={fieldState.error?.message}
-                      aria-label="Last name"
-                    />
-                  )}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <Controller
-                  name="email"
-                  control={control}
-                  rules={{
-                    required: "Email is required",
-                    pattern: {
-                      value: /^\S+@\S+$/i,
-                      message: "Invalid email address",
-                    },
-                  }}
-                  render={({ field, fieldState }) => (
-                    <TextField
-                      {...field}
-                      fullWidth
-                      label="Email Address"
-                      variant="filled"
-                      error={!!fieldState.error}
-                      helperText={fieldState.error?.message}
-                      aria-label="Email address"
-                    />
-                  )}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <FormControl variant="filled" fullWidth>
-                  <InputLabel htmlFor="password">Password</InputLabel>
-                  <Controller
-                    name="password"
-                    control={control}
-                    rules={{ required: "Password is required" }}
-                    render={({ field }) => (
-                      <FilledInput
-                        {...field}
-                        type={showPassword ? "text" : "password"}
-                        endAdornment={
-                          <InputAdornment position="end">
-                            <IconButton
-                              onClick={handleClickShowPassword}
-                              onMouseDown={handleMouseDownPassword}
-                              aria-label={
-                                showPassword ? "Hide password" : "Show password"
-                              }
-                            >
-                              {showPassword ? (
-                                <VisibilityOff />
-                              ) : (
-                                <Visibility />
-                              )}
-                            </IconButton>
-                          </InputAdornment>
-                        }
-                      />
-                    )}
-                  />
                 </FormControl>
-              </Grid>
-              <Grid item xs={12}>
-                <Controller
-                  name="affiliation"
-                  control={control}
-                  rules={{ required: "Affiliation is required" }}
-                  render={({ field, fieldState }) => (
-                    <TextField
-                      {...field}
-                      fullWidth
-                      label="Affiliation"
-                      variant="filled"
-                      error={!!fieldState.error}
-                      helperText={fieldState.error?.message}
-                      aria-label="Affiliation"
-                    />
-                  )}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <Controller
-                  name="expertiseArea"
-                  control={control}
-                  rules={{ required: "Expertise Area is required" }}
-                  render={({ field, fieldState }) => (
-                    <FormControl
-                      fullWidth
-                      variant="filled"
-                      error={!!fieldState.error}
-                    >
-                      <InputLabel>Expertise Area</InputLabel>
-                      <Select
-                        {...field}
-                        label="Expertise Area"
-                        aria-label="Select expertise area"
-                      >
-                        {expertiseAreas.map((area) => (
-                          <MenuItem key={area} value={area}>
-                            {area}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                      {fieldState.error && (
-                        <Typography variant="body2" color="error">
-                          {fieldState.error.message}
-                        </Typography>
-                      )}
-                    </FormControl>
-                  )}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <StyledButton
-                  type="submit"
-                  variant="contained"
-                  size="xlarge"
-                  disabled={isLoading}
-                >
-                  {isLoading ? "Signing up..." : "Sign Up"}
-                </StyledButton>
-              </Grid>
-              <Grid item xs={12}>
-                <Typography
-                  variant="body2"
-                  sx={{
-                    color: "text.disabled",
-                    textAlign: "center",
-                    mt: 2,
+              )}
+            />
+          </Grid>
+
+          {/* First name */}
+          <Grid item xs={12} sm={6}>
+            <Controller
+              name="firstName"
+              control={control}
+              rules={{ required: "First name is required" }}
+              render={({ field, fieldState }) => (
+                <TextField
+                  {...field}
+                  fullWidth
+                  label="First Name *"
+                  error={!!fieldState.error}
+                  helperText={fieldState.error?.message}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <BadgeOutlinedIcon sx={{ fontSize: 20, color: "text.secondary" }} />
+                      </InputAdornment>
+                    ),
                   }}
+                  sx={fieldRadius}
+                />
+              )}
+            />
+          </Grid>
+
+          {/* Last name */}
+          <Grid item xs={12} sm={6}>
+            <Controller
+              name="lastName"
+              control={control}
+              rules={{ required: "Last name is required" }}
+              render={({ field, fieldState }) => (
+                <TextField
+                  {...field}
+                  fullWidth
+                  label="Last Name *"
+                  error={!!fieldState.error}
+                  helperText={fieldState.error?.message}
+                  sx={fieldRadius}
+                />
+              )}
+            />
+          </Grid>
+
+          {/* Email */}
+          <Grid item xs={12}>
+            <Controller
+              name="email"
+              control={control}
+              rules={{
+                required: "Email is required",
+                pattern: {
+                  value: /^\S+@\S+$/i,
+                  message: "Invalid email address",
+                },
+              }}
+              render={({ field, fieldState }) => (
+                <TextField
+                  {...field}
+                  fullWidth
+                  label="Email Address *"
+                  type="email"
+                  autoComplete="email"
+                  error={!!fieldState.error}
+                  helperText={fieldState.error?.message}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <EmailOutlinedIcon sx={{ fontSize: 20, color: "text.secondary" }} />
+                      </InputAdornment>
+                    ),
+                  }}
+                  sx={fieldRadius}
+                />
+              )}
+            />
+          </Grid>
+
+          {/* Password */}
+          <Grid item xs={12}>
+            <Controller
+              name="password"
+              control={control}
+              rules={{ required: "Password is required" }}
+              render={({ field, fieldState }) => (
+                <TextField
+                  {...field}
+                  fullWidth
+                  label="Password *"
+                  type={showPassword ? "text" : "password"}
+                  autoComplete="new-password"
+                  error={!!fieldState.error}
+                  helperText={fieldState.error?.message}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <LockOutlinedIcon sx={{ fontSize: 20, color: "text.secondary" }} />
+                      </InputAdornment>
+                    ),
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton
+                          size="small"
+                          onClick={handleClickShowPassword}
+                          onMouseDown={handleMouseDownPassword}
+                          edge="end"
+                          aria-label={showPassword ? "Hide password" : "Show password"}
+                        >
+                          {showPassword ? <VisibilityOff fontSize="small" /> : <Visibility fontSize="small" />}
+                        </IconButton>
+                      </InputAdornment>
+                    ),
+                  }}
+                  sx={fieldRadius}
+                />
+              )}
+            />
+          </Grid>
+
+          {/* Affiliation */}
+          <Grid item xs={12}>
+            <Controller
+              name="affiliation"
+              control={control}
+              rules={{ required: "Affiliation is required" }}
+              render={({ field, fieldState }) => (
+                <TextField
+                  {...field}
+                  fullWidth
+                  label="Affiliation / Institution *"
+                  error={!!fieldState.error}
+                  helperText={fieldState.error?.message}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <BusinessOutlinedIcon sx={{ fontSize: 20, color: "text.secondary" }} />
+                      </InputAdornment>
+                    ),
+                  }}
+                  sx={fieldRadius}
+                />
+              )}
+            />
+          </Grid>
+
+          {/* Expertise Area */}
+          <Grid item xs={12}>
+            <Controller
+              name="expertiseArea"
+              control={control}
+              rules={{ required: "Expertise area is required" }}
+              render={({ field, fieldState }) => (
+                <FormControl
+                  fullWidth
+                  error={!!fieldState.error}
+                  sx={{ "& .MuiOutlinedInput-root": { borderRadius: 2 } }}
                 >
-                  Already have an account?{" "}
-                  <Link
-                    href="/signin"
-                    color="primary.main"
-                    sx={{
-                      textDecoration: "none",
-                      "&:hover": { textDecoration: "underline" },
-                    }}
-                    aria-label="Navigate to sign-in page"
+                  <InputLabel>Expertise Area *</InputLabel>
+                  <Select
+                    {...field}
+                    label="Expertise Area *"
+                    startAdornment={
+                      <InputAdornment position="start">
+                        <ScienceOutlinedIcon sx={{ fontSize: 20, color: "text.secondary", ml: 0.5 }} />
+                      </InputAdornment>
+                    }
                   >
-                    Sign in here
-                  </Link>
+                    {expertiseAreas.map((area) => (
+                      <MenuItem key={area} value={area}>
+                        {area}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                  {fieldState.error && (
+                    <Typography variant="caption" color="error" sx={{ mt: 0.4, ml: 1.5 }}>
+                      {fieldState.error.message}
+                    </Typography>
+                  )}
+                </FormControl>
+              )}
+            />
+          </Grid>
+
+          {/* Submit */}
+          <Grid item xs={12}>
+            <Button
+              type="submit"
+              variant="contained"
+              fullWidth
+              disabled={isLoading}
+              size="large"
+              sx={{
+                borderRadius: 2,
+                py: 1.4,
+                fontWeight: 700,
+                fontSize: "0.95rem",
+                textTransform: "none",
+                boxShadow: "none",
+                mt: 0.5,
+                "&:hover": { boxShadow: "none", opacity: 0.92 },
+              }}
+            >
+              {isLoading ? "Creating account..." : "Create Account"}
+            </Button>
+          </Grid>
+
+          {/* Sign in link */}
+          <Grid item xs={12}>
+            <Divider sx={{ mb: 1.5 }}>
+              <Typography variant="caption" color="text.disabled">
+                OR
+              </Typography>
+            </Divider>
+            <Typography variant="body2" color="text.secondary" textAlign="center">
+              Already have an account?{" "}
+              <Link href="/signin" style={{ textDecoration: "none" }}>
+                <Typography
+                  component="span"
+                  variant="body2"
+                  sx={{ color: "primary.main", fontWeight: 700, "&:hover": { textDecoration: "underline" } }}
+                >
+                  Sign in here
                 </Typography>
-              </Grid>
-            </Grid>
-          </form>
-        </Box>
-      </Container>
+              </Link>
+            </Typography>
+          </Grid>
+
+        </Grid>
+      </form>
     </Box>
   );
 };

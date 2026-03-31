@@ -41,7 +41,7 @@ import { getInitials } from "@/utils";
 
 interface AssignSuggestedPayload {
   suggestedReviewerId: string;
-  manuscriptId: string;
+  sectionId: string;
   reviewDueDate: string;
 }
 
@@ -111,7 +111,7 @@ export default function ReviewerModal({
 
     const payload: AssignSuggestedPayload = {
       suggestedReviewerId: activeSuggested!.id,
-      manuscriptId: manuscript.id,
+      sectionId: manuscript.sectionId,
       reviewDueDate: formDueDate!.toISOString(),
     };
 

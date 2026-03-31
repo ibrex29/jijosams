@@ -23,6 +23,7 @@ import {
   assignManuscriptReviewer,
   assignManuscriptSection,
 } from "@/app/api/manuscript/assign-manuscript";
+import { assignSuggestedReviewer } from "@/app/api/manuscript";
 import useNotification from "@/hooks/useNotification";
 import { ManuscriptProps } from "@/types";
 import { getInitials, truncateText } from "@/utils";
@@ -94,14 +95,12 @@ export default function CEManuscriptListView({ manuscripts, refetch }: Props) {
 
   const handleAssignSuggestedReviewer = async (payload: {
     suggestedReviewerId: string;
-    manuscriptId: string;
+    sectionId: string;
     reviewDueDate: string;
   }) => {
     try {
-      console.log("[Add & Assign Suggested Reviewer — pending endpoint]", payload);
-      // TODO: replace with actual API call once backend endpoint is ready
-      // await addAndAssignSuggestedReviewer(payload);
-      notify("Suggested reviewer added & assigned (pending backend endpoint)");
+      await assignSuggestedReviewer(payload);
+      notify("Suggested reviewer added & assigned successfully");
       refetch();
       setOpenReviewModal(false);
     } catch (error) {

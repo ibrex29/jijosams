@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { api } from "@/constants/config";
+import { api, SectionEditor } from "@/constants/config";
 import { ManuscriptProps } from "@/types";
 import { request } from "@/utils/request";
 
@@ -177,6 +177,36 @@ export const getREManuscript = async (): Promise<ManuscriptProps[]> => {
     logout();
   }
   return response as Promise<ManuscriptProps[]>;
+};
+
+export interface AssignSuggestedReviewerPayload {
+  suggestedReviewerId: string;
+  sectionId: string;
+  reviewDueDate: string;
+}
+
+export const assignSuggestedReviewer = async (
+  payload: AssignSuggestedReviewerPayload,
+) => {
+  const bearerHeader = await getBearerHeader();
+
+  const response = await request(
+    "POST",
+    SectionEditor.assignSuggestedReviewer,
+    {
+      headers: {
+        "Content-Type": "application/json",
+        ...bearerHeader.headers,
+      },
+      data: payload,
+    },
+  );
+
+  if (response && response.statusCode === 401) {
+    logout();
+  }
+
+  return response;
 };
 
 export const publishManuscript = async (payload: any) => {
