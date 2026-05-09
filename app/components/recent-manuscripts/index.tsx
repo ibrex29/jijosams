@@ -60,7 +60,7 @@ const LatestArticles = () => {
               >
                 <Image
                   className="my-1"
-                  src={"/logo/slu_jst_logo.svg"}
+                  src={"/logo/jijosams_logo.png"}
                   alt="slu-jst"
                   width={120}
                   height={15}

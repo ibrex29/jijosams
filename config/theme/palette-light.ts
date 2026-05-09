@@ -4,15 +4,15 @@ import { common, grey } from "@mui/material/colors";
 const palette: PaletteOptions = {
   mode: "light",
   background: {
-    default: "#F4F6F8",  // standard academic SaaS off-white — lighter than #ececec
-    paper: common.white,
+    default: "#f8f4ea",
+    paper: "#fffdf7",
   },
   text: {
-    primary: grey[900],
-    secondary: grey[600],
-    disabled: grey[400],
+    primary: "#123727",
+    secondary: "#40544a",
+    disabled: grey[500],
   },
-  divider: "rgba(145, 158, 171, 0.2)",
+  divider: "rgba(4, 103, 55, 0.2)",
 };
 
 export default palette;

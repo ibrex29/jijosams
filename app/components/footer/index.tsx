@@ -1,110 +1,145 @@
-"use client";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { Envelope, Phone, MapPin } from "@phosphor-icons/react/dist/ssr";
+
+const scopeList = [
+  "Accounting",
+  "Business Management",
+  "Administration",
+  "Economics",
+  "Geography",
+  "Political Science",
+  "International Relations",
+  "Sociology and related fields",
+];
+
+const quickLinks = [
+  { label: "Home", href: "/" },
+  { label: "Manuscripts", href: "/manuscripts" },
+  { label: "Submission Guidelines", href: "/submission-guidelines" },
+  { label: "Events & Conferences", href: "/events-conferences" },
+  { label: "About Us", href: "/about-us" },
+  { label: "Contact Us", href: "/contact-us" },
+];
 
 const Footer = () => {
-  const router = useRouter();
-
   return (
-    <footer className="bg-white mt-auto  bottom-0 py-8 px-6 md:px-12 lg:px-24">
-      <div className=" mx-auto w-full border-t-2 border-primary py-4 grid grid-cols-1 md:grid-cols-2 gap-8">
-        {/* Left Section */}
-        <div className="flex flex-col">
-          <div className="flex items-center">
-            <Image
-              src="/logo/slu_jst_logo.svg"
-              alt="SLUJST Logo"
-              width={150}
-              height={60}
-            />
-          </div>
-          <p className="mt-4 text-gray-700">
-            The SLU Journal of Science and Technology (SLUJST) is an
-            open-access, peer-reviewed platform dedicated to advancing research
-            and innovation in science and technology.
-          </p>
-          <p className="mt-4 text-gray-700 font-medium">Address:</p>
-          <p className="text-gray-700">
-            Sule Lamido University, <br />
-            Kafin Hausa, Jigawa State, Nigeria.
-          </p>
-        </div>
+    <footer className="mt-20 bg-[var(--jijosams-green-deep)] text-white">
+      {/* Top accent bar */}
+      <div className="h-1 w-full bg-[linear-gradient(90deg,var(--jijosams-gold),var(--jijosams-red),var(--jijosams-gold))]" />
 
-        <div className=" justify-end grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {/* Quick Links */}
-          <div>
-            <h3 className="text-gray-600 font-semibold">Quick Links</h3>
-            <ul className="mt-2 space-y-1">
-              <li
-                className="text-black hover:underline cursor-pointer"
-                onClick={() => router.push("/submission-guidelines")}
-              >
-                Submission Guidelines
-              </li>
-              <li className="text-black hover:underline cursor-pointer">
-                Issues
-              </li>
-            </ul>
-          </div>
+      <div className="mx-auto max-w-7xl px-4 py-14 lg:px-6">
+        <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-4">
 
-          {/* About Us */}
-          <div>
-            <h3 className="text-gray-600 font-semibold">About Us</h3>
-            <ul className="mt-2 space-y-1">
-              <li
-                className="text-black hover:underline cursor-pointer"
-                onClick={() => router.push("/about-us")}
-              >
-                Editorial Board
-              </li>
-              <li
-                className="text-black hover:underline cursor-pointer"
-                onClick={() => router.push("/about-us")}
-              >
-                Advisory Board
-              </li>
-              <li
-                className="text-black hover:underline cursor-pointer"
-                onClick={() => router.push("/about-us")}
-              >
-                Section Editors
-              </li>
+          {/* Brand column */}
+          <section className="lg:col-span-1">
+            <div className="mb-5 flex items-center gap-3">
+              <Image
+                src="/logo/jijosams_logo.png"
+                alt="JIJOSAMS logo"
+                width={72}
+                height={72}
+              />
+              <div>
+                <p className="font-semibold uppercase tracking-[0.2em] text-[var(--jijosams-gold)]">
+                  JIJOSAMS
+                </p>
+                <p className="text-xs text-white/75">Bi-Annual Peer-Reviewed Journal</p>
+              </div>
+            </div>
+            <p className="text-sm leading-7 text-white/80">
+              A peer-reviewed print and e-journal published by the Faculty of Social
+              and Management Sciences, Sule Lamido University, Kafin Hausa, Jigawa
+              State, Nigeria.
+            </p>
+          </section>
+
+          {/* Quick links */}
+          <section>
+            <h3 className="mb-5 text-sm font-bold uppercase tracking-[0.14em] text-[var(--jijosams-gold)]">
+              Quick Links
+            </h3>
+            <ul className="space-y-3">
+              {quickLinks.map((link) => (
+                <li key={link.href}>
+                  <Link
+                    href={link.href}
+                    className="flex items-center gap-2 text-sm text-white/80 transition hover:text-[var(--jijosams-gold)]"
+                  >
+                    <span className="h-px w-3 bg-[var(--jijosams-gold)]/60" />
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
             </ul>
-          </div>
+          </section>
+
+          {/* Journal scope */}
+          <section>
+            <h3 className="mb-5 text-sm font-bold uppercase tracking-[0.14em] text-[var(--jijosams-gold)]">
+              Journal Scope
+            </h3>
+            <ul className="space-y-2.5">
+              {scopeList.map((scope) => (
+                <li key={scope} className="flex items-start gap-2 text-sm text-white/80">
+                  <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--jijosams-gold)]/70" />
+                  {scope}
+                </li>
+              ))}
+            </ul>
+          </section>
 
           {/* Contact */}
-          <div>
-            <h3
-              className="text-gray-600 font-semibold"
-              onClick={() => router.push("/contact-us")}
-            >
-              Contact
+          <section>
+            <h3 className="mb-5 text-sm font-bold uppercase tracking-[0.14em] text-[var(--jijosams-gold)]">
+              Contact Us
             </h3>
-            <ul className="mt-2 space-y-1">
-              <li className="text-black hover:underline cursor-pointer">
-                Help
+            <ul className="space-y-4 text-sm text-white/80">
+              <li className="flex items-start gap-3">
+                <MapPin size={16} className="mt-0.5 shrink-0 text-[var(--jijosams-gold)]" />
+                <span className="leading-6">
+                  Faculty of Social and Management Sciences,<br />
+                  Sule Lamido University, Kafin Hausa,<br />
+                  Jigawa State, Nigeria
+                </span>
               </li>
-              <li className="text-black hover:underline cursor-pointer">
-                Privacy
+              <li className="flex items-center gap-3">
+                <Phone size={16} className="shrink-0 text-[var(--jijosams-gold)]" />
+                <span>+2348032817414 | +2349078451648</span>
               </li>
-              <li className="text-black hover:underline cursor-pointer">
-                Support
+              <li className="flex items-center gap-3">
+                <Envelope size={16} className="shrink-0 text-[var(--jijosams-gold)]" />
+                <a
+                  href="mailto:journal.sms@slu.edu.ng"
+                  className="transition hover:text-[var(--jijosams-gold)]"
+                >
+                  journal.sms@slu.edu.ng
+                </a>
+              </li>
+              <li className="flex items-center gap-3">
+                <Envelope size={16} className="shrink-0 text-[var(--jijosams-gold)]" />
+                <a
+                  href="mailto:muhammad.abdulkadir@slu.edu.ng"
+                  className="transition hover:text-[var(--jijosams-gold)]"
+                >
+                  muhammad.abdulkadir@slu.edu.ng
+                </a>
               </li>
             </ul>
-          </div>
+          </section>
         </div>
-      </div>
 
-      {/* Bottom Section */}
-      <div className="flex flex-col md:flex-row justify-between items-center mt-8 border-t pt-4 text-gray-600 text-sm">
-        <p>© 2024 SLUJST. All Rights Reserved.</p>
-        <div className="flex flex-row space-x-4">
-          <p>Online ISSN: <span className="font-semibold">2736-0903</span></p>
-          <p>Print ISSN: <span className="font-semibold">2736-089X</span></p>
+        {/* Divider */}
+        <div className="mt-12 border-t border-white/10" />
+
+        {/* Bottom bar */}
+        <div className="mt-6 flex flex-col items-center justify-between gap-3 text-xs text-white/55 sm:flex-row">
+          <p>© 2026 Jigawa Journal of Social and Management Sciences (JIJOSAMS). All rights reserved.</p>
+          <p>
+            Published by the Faculty of SMS,{" "}
+            <span className="text-white/70">Sule Lamido University</span>
+          </p>
         </div>
-        {/* TODO Add Social Media Icons */}
-        {/* <div className="flex space-x-4">
-        </div> */}
       </div>
     </footer>
   );

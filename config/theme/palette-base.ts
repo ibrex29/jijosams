@@ -2,39 +2,39 @@ import { PaletteOptions } from "@mui/material";
 
 const paletteBase: Partial<PaletteOptions> = {
   primary: {
-    light: "#D78A25",
-    main: "#C88532",
-    dark: "#8D4F19",
+    light: "#26b567",
+    main: "#039447",
+    dark: "#046737",
     contrastText: "#ffffff",
   },
   secondary: {
-    light: "#6B7FD7",  // indigo-blue — functional contrast to the warm primary
-    main: "#4C63C9",
-    dark: "#3349A8",
-    contrastText: "#ffffff",
+    light: "#e1c58f",
+    main: "#d3ae66",
+    dark: "#b89246",
+    contrastText: "#1f1f1f",
   },
   info: {
-    light: "#60A5FA",
-    main: "#2563EB",
-    dark: "#1D4ED8",
+    light: "#8ec5b0",
+    main: "#4f9f80",
+    dark: "#2c6f58",
     contrastText: "#ffffff",
   },
   warning: {
-    light: "#FCD34D",
-    main: "#F59E0B",
-    dark: "#D97706",
+    light: "#f4cf7e",
+    main: "#d3ae66",
+    dark: "#9b7530",
     contrastText: "#ffffff",
   },
   error: {
-    light: "#FCA5A5",
-    main: "#EF4444",
-    dark: "#DC2626",
+    light: "#ef8c78",
+    main: "#c0391b",
+    dark: "#90280f",
     contrastText: "#ffffff",
   },
   success: {
-    light: "#6EE7B7",
-    main: "#10B981",
-    dark: "#059669",
+    light: "#5ec684",
+    main: "#2f9d5f",
+    dark: "#1f7244",
     contrastText: "#ffffff",
   },
 };

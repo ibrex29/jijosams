@@ -1,85 +1,97 @@
 "use client";
-import React from "react";
-import { Boxes } from "../ui/bg-boxes";
-import { cn } from "@/app/lib/utils";
-import { Button } from "@mui/material";
-import { useRouter } from "next/navigation";
+
+import Image from "next/image";
+import Link from "next/link";
+import { useEffect, useState } from "react";
+
+const heroImages = [
+  "/images/landing-pages-images/jijosams1.jpeg",
+  "/images/landing-pages-images/jijosams2.jpeg",
+  "/images/landing-pages-images/jijosams3.jpeg",
+  "/images/landing-pages-images/jijosams4.jpeg",
+  "/images/landing-pages-images/jijosams5.jpeg",
+];
 
 export function HeroSection() {
-  const router = useRouter();
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  useEffect(() => {
+    const intervalId = window.setInterval(() => {
+      setActiveIndex((currentIndex) => (currentIndex + 1) % heroImages.length);
+    }, 4500);
+
+    return () => window.clearInterval(intervalId);
+  }, []);
+
   return (
-    <div className="h-[560px] relative w-full  overflow-hidden bg-white flex flex-col items-center justify-center rounded-lg">
-      <div className="absolute inset-0 w-full h-full bg-white z-20 [mask-image:radial-gradient(transparent,white)] pointer-events-none" />
+    <section className="w-full">
+      <article className="relative min-h-[700px] overflow-hidden bg-[var(--jijosams-green-deep)] text-white shadow-[0_30px_80px_rgba(4,103,55,0.28)] sm:min-h-[820px]">
+        <div className="absolute inset-0">
+          {heroImages.map((image, index) => (
+            <div
+              key={image}
+              className={`absolute inset-0 transition-opacity duration-[1600ms] ${
+                index === activeIndex ? "opacity-100" : "opacity-0"
+              }`}
+            >
+              <Image
+                src={image}
+                alt="JIJOSAMS editorial and academic activities"
+                fill
+                priority={index === 0}
+                className="object-cover object-[72%_center]"
+                sizes="100vw"
+              />
+            </div>
+          ))}
+        </div>
 
-      <Boxes />
+        <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(7,32,20,0.88)_0%,rgba(7,32,20,0.72)_24%,rgba(7,32,20,0.42)_50%,rgba(7,32,20,0.08)_75%,rgba(7,32,20,0.18)_100%)]" />
+        <div className="absolute inset-y-0 left-0 w-[60%] bg-white/5 backdrop-blur-[22px] [mask-image:linear-gradient(90deg,black_0%,black_55%,transparent_100%)]" />
+        <div className="absolute inset-y-0 left-0 w-full bg-[radial-gradient(circle_at_left_center,rgba(211,174,102,0.14),transparent_42%)]" />
 
-      {/* Content */}
-      <div className="relative z-20 max-w-4xl px-4 text-center">
-  <h1
-    className={cn(
-      "text-4xl md:text-5xl font-extrabold tracking-tight text-[#a96c04] drop-shadow-md",
-    )}
-  >
-    Advancing Science & Technology <br />
-    through Research Excellence
-  </h1>
-  <p className="mt-4 text-lg md:text-xl text-primary drop-shadow-md">
-    Open-access journal publishing cutting-edge research in science and
-    technology.
-  </p>
+        <div className="absolute bottom-8 left-1/2 z-20 flex -translate-x-1/2 gap-2 rounded-full border border-white/20 bg-black/20 px-4 py-2.5 backdrop-blur-md">
+          {heroImages.map((image, index) => (
+            <span
+              key={`${image}-indicator`}
+              className={`h-2 rounded-full transition-all duration-500 ${
+                index === activeIndex ? "w-8 bg-[var(--jijosams-gold)]" : "w-2 bg-white/45"
+              }`}
+            />
+          ))}
+        </div>
 
-  {/* ISSN Numbers */}
-<div className="mt-4 flex flex-col sm:flex-row items-center justify-center gap-2">
-  <span className="px-3 py-1 text-sm md:text-sm font-semibold text-[#a96c04] bg-[#fff6eb] border border-[#a96c04]/30 rounded-full shadow-sm">
-    Online ISSN: <span className="font-bold">2736-0903</span>
-  </span>
-  <span className="px-3 py-1 text-sm md:text-sm font-semibold text-[#a96c04] bg-[#fff6eb] border border-[#a96c04]/30 rounded-full shadow-sm">
-    Print ISSN: <span className="font-bold">2736-089X</span>
-  </span>
-</div>
-
-
-  {/* CTA Buttons */}
-  <div className="mt-6 flex gap-4 justify-center">
-    <Button
-      onClick={() => router.push("/signin")}
-      variant="contained"
-      color="primary"
-      sx={{
-        px: 4,
-        py: 1.5,
-        borderRadius: "12px",
-        textTransform: "none",
-        fontSize: "1rem",
-        backgroundColor: "#a96c04",
-        "&:hover": { backgroundColor: "#8b5803" },
-      }}
-    >
-      Submit Your Paper
-    </Button>
-    <Button
-      onClick={() => router.push("/manuscripts")}
-      variant="outlined"
-      color="primary"
-      sx={{
-        px: 4,
-        py: 1.5,
-        borderRadius: "12px",
-        textTransform: "none",
-        fontSize: "1rem",
-        borderColor: "#a96c04",
-        color: "#a96c04",
-        "&:hover": {
-          backgroundColor: "#a96c0415",
-          borderColor: "#a96c04",
-        },
-      }}
-    >
-      Explore Journals
-    </Button>
-  </div>
-</div>
-
-    </div>
+        <div className="relative z-10 flex min-h-[700px] items-end sm:min-h-[820px]">
+          <div className="mx-auto w-full max-w-7xl px-8 py-14 sm:px-12 sm:py-18 lg:px-16 lg:py-22">
+            <p className="mb-4 inline-flex rounded-full border border-white/35 bg-white/10 px-4 py-1 text-xs font-bold uppercase tracking-[0.18em] text-white/95 backdrop-blur-md">
+              Call For Papers • Volume 2 Issue 1
+            </p>
+            <h1 className="max-w-2xl text-3xl leading-tight text-white sm:text-5xl lg:text-6xl">
+              Jigawa Journal of Social and Management Sciences
+            </h1>
+            <p className="mt-5 max-w-xl text-sm leading-7 text-white/90 sm:text-base">
+              JIJOSAMS is an invaluable bi-annual peer-reviewed print and e-journal
+              published by the Faculty of Social and Management Sciences, Sule Lamido
+              University Kafin Hausa, Jigawa State, Nigeria. Scholars, academics and
+              researchers are invited to submit original manuscripts.
+            </p>
+            <div className="mt-8 flex flex-wrap gap-3">
+              <Link
+                href="/signup"
+                className="rounded-full bg-[var(--jijosams-red)] px-6 py-3 text-sm font-semibold text-white transition hover:opacity-90"
+              >
+                Submit Manuscript
+              </Link>
+              <Link
+                href="/submission-guidelines"
+                className="rounded-full border border-white/75 bg-white/10 px-6 py-3 text-sm font-semibold text-white backdrop-blur-sm transition hover:bg-white hover:text-[var(--jijosams-green-deep)]"
+              >
+                Author Guidelines
+              </Link>
+            </div>
+          </div>
+        </div>
+      </article>
+    </section>
   );
 }

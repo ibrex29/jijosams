@@ -1,126 +1,144 @@
-"use client";
-import { motion } from "framer-motion";
-import { Avatar } from "@mui/material";
-import { teams } from "@/app/constants";
 import Image from "next/image";
+import Link from "next/link";
+
+const pillars = [
+  {
+    title: "Editorial Quality",
+    description:
+      "Structured manuscript screening and peer-review to maintain publication integrity.",
+  },
+  {
+    title: "Research Relevance",
+    description:
+      "Work that addresses current societal, policy, and management challenges.",
+  },
+  {
+    title: "Academic Visibility",
+    description:
+      "A platform that supports discoverability, indexing, and scholarly engagement.",
+  },
+];
+
+const activities = [
+  { title: "Academic Workshop", image: "/images/IBREX.jpeg" },
+  { title: "Faculty Board Meeting", image: "/images/aboutus_bg.jpg" },
+  { title: "Research Review Session", image: "/images/slu_background.jpg" },
+];
+
+const impactStats = [
+  { label: "Publication Cycle", value: "Bi-Annual" },
+  { label: "Review Model", value: "Double-Blind" },
+  { label: "Access Mode", value: "Print + E-Journal" },
+];
 
 export default function AboutUsPage() {
   return (
-    <div className="font-[family-name:var(--font-geist-sans)]">
-      {/* Hero Section with Background */}
-      <div
-        className="relative h-[300px] md:h-[550px] flex items-center justify-center text-center bg-cover bg-center"
-        style={{ backgroundImage: "url('/images/aboutus_bg.jpg')" }}
-      >
-        <div className="absolute inset-0 bg-black bg-opacity-50"></div>
-        <motion.h1
-          className="relative text-white text-4xl md:text-5xl font-bold z-10"
-          initial={{ opacity: 0, y: -30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-        >
-          Who We Are
-        </motion.h1>
-      </div>
-
-      {/* Content Section (Outside Background) */}
-      <div className="bg-white min-h-screen px-4 md:px-12 lg:px-24 py-12">
-        {teams.map((team, index) => (
-          <div
-            key={index}
-            className="mb-1 grid grid-cols-1 md:grid-cols-3 my-16 gap-2"
-          >
-            <motion.div
-              className="col-span-1 mb-6"
-              initial={{ opacity: 0, x: -30 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.5, delay: index * 0.2 }}
-            >
-              <div className="flex flex-col border-l-[6px] border-double border-primary pl-2">
-                <h2 className="text-lg font-semibold text-gray-900">
-                  {team.category}
-                </h2>
-                <p className="text-gray-600 text-base mt-2">
-                  {team.description}
-                </p>
+    <div className="pb-20 pt-8">
+      <section className="mx-auto max-w-7xl px-4 lg:px-6">
+        <div className="overflow-hidden rounded-[2.25rem] border border-[var(--jijosams-gold)]/35 bg-white shadow-[0_20px_60px_rgba(3,148,71,0.09)]">
+          <div className="grid lg:grid-cols-[1.1fr_0.9fr]">
+            <div className="p-8 sm:p-12">
+              <p className="mb-3 text-sm font-bold uppercase tracking-[0.16em] text-[var(--jijosams-red)]">
+                About The Journal
+              </p>
+              <h1 className="max-w-4xl text-3xl leading-tight text-[var(--jijosams-green-deep)] sm:text-4xl">
+                Jigawa Journal of Social and Management Sciences (JIJOSAMS)
+              </h1>
+              <p className="mt-5 max-w-4xl text-sm leading-7 text-[#2e4a3e] sm:text-base">
+                JIJOSAMS is a bi-annual peer-reviewed print and e-journal published by
+                the Faculty of Social and Management Sciences, Sule Lamido University,
+                Kafin Hausa, Jigawa State, Nigeria. The journal provides a strong
+                academic forum for scholarship in social and management sciences.
+              </p>
+              <div className="mt-7 flex flex-wrap gap-3">
+                <Link
+                  href="/manuscripts"
+                  className="rounded-full bg-[var(--jijosams-red)] px-5 py-2.5 text-sm font-semibold text-white transition hover:opacity-90"
+                >
+                  Explore Manuscripts
+                </Link>
+                <Link
+                  href="/submission-guidelines"
+                  className="rounded-full border border-[var(--jijosams-green-deep)]/25 px-5 py-2.5 text-sm font-semibold text-[var(--jijosams-green-deep)] transition hover:bg-[var(--jijosams-green-deep)] hover:text-white"
+                >
+                  Submission Guidelines
+                </Link>
               </div>
-            </motion.div>
-
-            {typeof team.members[0] === "object" ? (
-              <div className="col-span-2 overflow-x-auto">
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                  {team.members.map((member, i) => (
-                    <motion.div
-                      key={i}
-                      className="text-center flex flex-col items-center"
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.5, delay: i * 0.2 }}
-                    >
-                      <Avatar
-                        src={
-                          typeof member === "object" ? member.img : undefined
-                        }
-                        alt={
-                          typeof member === "object" ? member.name : undefined
-                        }
-                        sx={{
-                          width: 128,
-                          height: 128,
-                          fontSize: 48,
-                          bgcolor: "#ccc",
-                        }}
-                      >
-                        {typeof member === "object" && !member.img}
-                      </Avatar>
-                      {typeof member === "object" && (
-                        <h3 className="text-sm font-semibold text-gray-900 mt-4">
-                          {member.name}
-                        </h3>
-                      )}
-                      {typeof member === "object" && (
-                        <p className="text-xs text-gray-600">{member.role}</p>
-                      )}
-                      {typeof member === "object" && "email" in member && (
-                        <p className="text-blue-600 text-sm hover:underline">
-                          {member.email}
-                        </p>
-                      )}
-                      {typeof member === "object" && "tel_number" in member && (
-                        <p className="text-xs text-gray-600">
-                          {member.tel_number}
-                        </p>
-                      )}
-                    </motion.div>
-                  ))}
-                </div>
-              </div>
-            ) : (
-              <div className="col-span-2 flex flex-col items-start gap-2 text-gray-600">
-                {team.members.map((member, i) => (
-                  <span key={i} className="flex items-center">
-                    <Image
-                      alt="verified"
-                      width={30}
-                      height={30}
-                      src="/icons/verified.jpg"
-                      className="mr-2"
-                    />
-                    <a
-                      href="#"
-                      className="text-blue-600 text-sm hover:underline"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      {typeof member === "string" ? member : member.name}
-                    </a>
-                  </span>
-                ))}
-              </div>
-            )}
+            </div>
+            <div className="relative min-h-[320px] bg-[var(--jijosams-green-deep)]">
+              <Image
+                src="/images/landing-pages-images/jijosams3.jpeg"
+                alt="JIJOSAMS academic engagement"
+                fill
+                className="object-cover"
+                sizes="(max-width: 1024px) 100vw, 40vw"
+              />
+              <div className="absolute inset-0 bg-[linear-gradient(145deg,rgba(4,103,55,0.68),rgba(4,103,55,0.08))]" />
+            </div>
           </div>
+        </div>
+      </section>
+
+      <section className="mx-auto mt-8 max-w-7xl px-4 lg:px-6">
+        <div className="grid gap-4 sm:grid-cols-3">
+          {impactStats.map((item) => (
+            <article
+              key={item.label}
+              className="rounded-2xl border border-[var(--jijosams-green)]/15 bg-white p-5 shadow-sm"
+            >
+              <p className="text-xs font-bold uppercase tracking-[0.14em] text-[var(--jijosams-red)]">
+                {item.label}
+              </p>
+              <p className="mt-2 text-2xl font-semibold text-[var(--jijosams-green-deep)]">{item.value}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="mx-auto mt-8 max-w-7xl px-4 lg:px-6">
+        <div className="grid gap-4 sm:grid-cols-3">
+        {pillars.map((pillar) => (
+          <article
+            key={pillar.title}
+              className="rounded-2xl border border-[var(--jijosams-green)]/20 bg-[#f5fbf7] p-5"
+          >
+            <h2 className="text-xl text-[var(--jijosams-green-deep)]">{pillar.title}</h2>
+            <p className="mt-3 text-sm leading-7 text-[#2e4a3e]">
+              {pillar.description}
+            </p>
+          </article>
         ))}
-      </div>
+        </div>
+      </section>
+
+      <section className="mx-auto mt-8 max-w-7xl px-4 lg:px-6">
+        <div className="rounded-3xl bg-[var(--jijosams-cream)] p-6 sm:p-8">
+          <div className="mb-5 flex items-end justify-between gap-3">
+            <div>
+              <p className="text-sm font-bold uppercase tracking-[0.16em] text-[var(--jijosams-red)]">
+                News and Activities
+              </p>
+              <h2 className="mt-1 text-2xl text-[var(--jijosams-green-deep)]">
+                Highlights from previous journal activities
+              </h2>
+            </div>
+          </div>
+          <div className="grid gap-4 md:grid-cols-3">
+            {activities.map((activity) => (
+              <article key={activity.title} className="overflow-hidden rounded-2xl bg-white">
+                <div className="relative h-44 w-full">
+                  <Image src={activity.image} alt={activity.title} fill className="object-cover" />
+                </div>
+                <div className="p-4">
+                  <h3 className="text-base font-semibold text-[var(--jijosams-green-deep)]">
+                    {activity.title}
+                  </h3>
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
     </div>
   );
 }

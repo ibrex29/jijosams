@@ -1,239 +1,316 @@
 "use client";
+
 import Image from "next/image";
-import { useState, useEffect } from "react";
 import Link from "next/link";
-import { MagnifyingGlass, X, List } from "@phosphor-icons/react";
-import Button from "../ui/button";
-import { Manuscript } from "@/types";
-import { globalSearch } from "@/app/api/(landing-page)/manuscript";
+import { usePathname, useRouter } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
+import { CaretDown, List, MagnifyingGlass, X } from "@phosphor-icons/react";
 import { useMutation } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
+import { globalSearch } from "@/app/api/(landing-page)/manuscript";
+import { Manuscript } from "@/types";
+
+const topNavItems = [
+  { label: "Home", href: "/" },
+  { label: "About", href: "/about-us" },
+  { label: "Contact", href: "/contact-us" },
+];
+
+const publicationsDropdown = [
+  { label: "Manuscripts", href: "/manuscripts" },
+  { label: "Submission Guidelines", href: "/submission-guidelines" },
+  { label: "Events & Conferences", href: "/events-conferences" },
+];
 
 export default function Navbar() {
   const [query, setQuery] = useState("");
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [showResults, setShowResults] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isPublicationsOpen, setIsPublicationsOpen] = useState(false);
+  const [isMobilePublicationsOpen, setIsMobilePublicationsOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const pathname = usePathname();
   const router = useRouter();
 
-  // Mutation for fetching search results
- const {
-  mutate,
-  data: searchResults,
-  status,
-} = useMutation({
-  mutationFn: (search: string) => globalSearch(search),
-  onSuccess: (response) => {
-    console.log("Search results:", response);
-    if (response?.data?.length > 0) {
-      setIsModalOpen(true);
-    }
-  },
-  onError: (error) => {
-    console.error("Error fetching search results:", error);
-  },
-});
+  const { mutate, data: searchResults, status } = useMutation({
+    mutationFn: (search: string) => globalSearch(search),
+    onSuccess: (response) => {
+      setShowResults(Boolean(response?.data?.length));
+    },
+    onError: () => {
+      setShowResults(false);
+    },
+  });
 
-
-  // Handle search input change
-  const handleSearch = (search: string) => {
-    setQuery(search);
-    if (!search) {
-      setIsModalOpen(false);
-      return;
-    }
-    mutate(search);
-  };
-
-  // Debounce the search input to avoid too many requests
   useEffect(() => {
-    const delayDebounceFn = setTimeout(() => {
-      if (query) {
-        handleSearch(query);
+    const debounce = setTimeout(() => {
+      const trimmed = query.trim();
+      if (!trimmed) {
+        setShowResults(false);
+        return;
       }
-    }, 300);
+      mutate(trimmed);
+    }, 250);
 
-    return () => clearTimeout(delayDebounceFn);
-  }, [query]);
+    return () => clearTimeout(debounce);
+  }, [query, mutate]);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsPublicationsOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const isPublicationsActive = publicationsDropdown.some((item) => pathname === item.href);
 
   return (
-    <nav className="bg-white fixed top-0 left-0 w-full z-50">
-      <div className="container mx-auto px-6 py-4 flex justify-between items-center">
-        <div className="flex justify-between gap-12">
-          <Link href="/">
+    <header className="sticky top-0 z-50">
+      <div className="bg-[var(--jijosams-green-deep)] px-4 py-2 text-xs text-white sm:text-sm">
+        <div className="mx-auto flex max-w-7xl flex-col gap-1 text-center sm:flex-row sm:items-center sm:justify-between sm:text-left">
+          <span>journal.sms@slu.edu.ng</span>
+          <span>+2348032817414 | +2349078451648</span>
+        </div>
+      </div>
+
+      <nav className="border-b border-[var(--jijosams-gold)]/60 bg-[var(--jijosams-cream)]/95 backdrop-blur">
+        <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3 lg:px-6">
+          <Link href="/" className="flex items-center gap-3">
             <Image
-              src="/logo/slu_jst_logo.svg"
-              alt="Logo"
-              width={160}
-              height={100}
+              src="/logo/jijosams_logo.png"
+              alt="JIJOSAMS logo"
+              width={68}
+              height={68}
+              priority
             />
+            <div className="hidden sm:block">
+              <p className="font-semibold uppercase tracking-[0.2em] text-[var(--jijosams-red)]">
+                JIJOSAMS
+              </p>
+              <p className="text-sm font-medium text-[var(--jijosams-green-deep)]">
+                Social and Management Sciences Journal
+              </p>
+            </div>
           </Link>
-          <div className="hidden lg:flex lg:space-x-2 xl:space-x-6">
+
+          <div className="hidden items-center gap-5 lg:flex">
+            {/* Home */}
             <Link
               href="/"
-              className="text-gray-700 font-semibold hover:text-primary"
+              className={`text-sm font-semibold transition ${
+                pathname === "/"
+                  ? "text-[var(--jijosams-red)]"
+                  : "text-[var(--jijosams-green-deep)] hover:text-[var(--jijosams-red)]"
+              }`}
             >
               Home
             </Link>
-            <Link
-              href="/manuscripts"
-              className="text-gray-700 font-semibold hover:text-primary"
-            >
-              Manuscripts
-            </Link>
-            <Link
-              href="/about-us"
-              className="text-gray-700 font-semibold hover:text-primary"
-            >
-              About Us
-            </Link>
-            <Link
-              href="/contact-us"
-              className="text-gray-700 font-semibold hover:text-primary"
-            >
-              Contact Us
-            </Link>
-          </div>
-        </div>
 
-        <div className="flex items-center space-x-4 xl:space-x-6">
-          {/* Search Input */}
-          <div className="hidden w-64 lg:flex relative ">
-            <input
-              type="text"
-              placeholder="Search manuscripts..."
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border-2 border-[#9e6962] rounded-lg focus:outline-none focus:ring-1 focus:ring-[#AC3122]"
-            />
-            <MagnifyingGlass
-              size={20}
-              className="absolute left-3 top-1/2 transform -translate-y-1/2 text-light-blue-500"
-            />
-            {/* Search Results Modal */}
-            {isModalOpen && (
-              <div className="absolute left-0 right-0 mt-12 bg-white rounded-lg shadow-lg p-6 max-h-80 overflow-y-auto z-50">
-                <div className="flex justify-end items-center mb-4">
-                  {/* <button
-                  className="text-gray-600 hover:text-gray-900"
-                  onClick={() => setIsModalOpen(false)}
-                >
-                  <X size={24} />
-                </button> */}
-                </div>
-
-                {status === "pending" ? (
-                  <p className="text-gray-500">Loading...</p>
-                ) : searchResults?.data && searchResults.data.length > 0 ? (
-                  <ul>
-                    {searchResults?.data.map((manuscript: Manuscript) => (
-                      <li key={manuscript.id} className="mb-2">
-                        <Link
-                          href={`/manuscripts/details/${manuscript.id}`}
-                          className="text-blue-600 hover:underline"
-                          onClick={() => setIsModalOpen(false)}
-                        >
-                          {manuscript.title}
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
-                ) : (
-                  <p className="text-gray-500">No results found.</p>
-                )}
-              </div>
-            )}
-          </div>
-
-          <div className="flex justify-center items-center space-x-6">
-            <div className="hidden lg:flex justify-center items-center space-x-2">
-              <Button className="w-24" onClick={() => router.push("/signup")}>
-                sign up
-              </Button>
-              <Link
-                href="/signin"
-                className="text-black px-4 py-2 rounded-lg bg-[#f1e7e7] font-bold hover:text-primary whitespace-nowrap"
+            {/* Publications dropdown */}
+            <div ref={dropdownRef} className="relative">
+              <button
+                type="button"
+                onClick={() => setIsPublicationsOpen((prev) => !prev)}
+                className={`flex items-center gap-1 text-sm font-semibold transition ${
+                  isPublicationsActive
+                    ? "text-[var(--jijosams-red)]"
+                    : "text-[var(--jijosams-green-deep)] hover:text-[var(--jijosams-red)]"
+                }`}
               >
-                login
-              </Link>
+                Publications
+                <CaretDown
+                  size={14}
+                  weight="bold"
+                  className={`transition-transform duration-200 ${isPublicationsOpen ? "rotate-180" : ""}`}
+                />
+              </button>
+
+              {isPublicationsOpen && (
+                <div className="absolute left-0 top-9 z-50 min-w-[220px] overflow-hidden rounded-xl border border-[var(--jijosams-gold)]/50 bg-white shadow-xl">
+                  {publicationsDropdown.map((item) => (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      onClick={() => setIsPublicationsOpen(false)}
+                      className={`block px-5 py-3 text-sm font-semibold transition hover:bg-[var(--jijosams-cream)] ${
+                        pathname === item.href
+                          ? "text-[var(--jijosams-red)]"
+                          : "text-[var(--jijosams-green-deep)]"
+                      }`}
+                    >
+                      {item.label}
+                    </Link>
+                  ))}
+                </div>
+              )}
             </div>
-            {/* Mobile Menu Button */}
+
+            {/* About & Contact */}
+            {topNavItems.slice(1).map((item) => {
+              const active = pathname === item.href;
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={`text-sm font-semibold transition ${
+                    active
+                      ? "text-[var(--jijosams-red)]"
+                      : "text-[var(--jijosams-green-deep)] hover:text-[var(--jijosams-red)]"
+                  }`}
+                >
+                  {item.label}
+                </Link>
+              );
+            })}
+          </div>
+
+          <div className="hidden w-full max-w-xs lg:block">
+            <div className="relative">
+              <MagnifyingGlass
+                size={18}
+                className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[var(--jijosams-green-deep)]"
+              />
+              <input
+                value={query}
+                onChange={(event) => setQuery(event.target.value)}
+                placeholder="Search manuscript title"
+                className="w-full rounded-full border border-[var(--jijosams-gold)] bg-white py-2 pl-9 pr-3 text-sm text-[var(--jijosams-green-deep)] outline-none ring-0 transition focus:border-[var(--jijosams-red)]"
+              />
+              {showResults && (
+                <div className="absolute left-0 right-0 top-12 max-h-72 overflow-auto rounded-xl border border-[var(--jijosams-gold)] bg-white p-3 shadow-xl">
+                  {status === "pending" && (
+                    <p className="text-sm text-[var(--jijosams-green-deep)]">Searching...</p>
+                  )}
+                  {searchResults?.data?.map((manuscript: Manuscript) => (
+                    <Link
+                      key={manuscript.id}
+                      href={`/manuscripts/details/${manuscript.id}`}
+                      className="block rounded-md px-2 py-2 text-sm text-[var(--jijosams-green-deep)] hover:bg-[var(--jijosams-cream)]"
+                      onClick={() => {
+                        setShowResults(false);
+                        setQuery("");
+                      }}
+                    >
+                      {manuscript.title}
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+
+          <div className="hidden shrink-0 items-center gap-2 lg:flex">
             <button
-              className="lg:hidden text-gray-700"
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              type="button"
+              onClick={() => router.push("/signin")}
+              className="whitespace-nowrap rounded-full border border-[var(--jijosams-green)] px-4 py-2 text-sm font-semibold text-[var(--jijosams-green)] transition hover:bg-[var(--jijosams-green)] hover:text-white"
             >
-              {isMenuOpen ? <X size={32} /> : <List size={32} />}
+              Sign In
+            </button>
+            <button
+              type="button"
+              onClick={() => router.push("/signup")}
+              className="whitespace-nowrap rounded-full bg-[var(--jijosams-red)] px-4 py-2 text-sm font-semibold text-white transition hover:opacity-90"
+            >
+              Submit Manuscript
             </button>
           </div>
-        </div>
-      </div>
-      {/* Mobile Menu Overlay */}
-      {isMenuOpen && (
-        <div className="lg:hidden fixed inset-0 bg-primary z-50 p-6 flex flex-col items-center space-y-6">
-          {/* Close Button */}
+
           <button
-            className="absolute top-4 right-6 text-white"
-            onClick={() => setIsMenuOpen(false)}
+            type="button"
+            onClick={() => setIsMenuOpen((prev) => !prev)}
+            className="rounded-md border border-[var(--jijosams-gold)] p-2 text-[var(--jijosams-green-deep)] lg:hidden"
+            aria-label="Toggle menu"
           >
-            <X size={32} />
+            {isMenuOpen ? <X size={24} /> : <List size={24} />}
           </button>
-
-          {/* Mobile Links */}
-          <Link
-            href="/"
-            className="text-white text-lg hover:text-primary"
-            onClick={() => setIsMenuOpen(false)}
-          >
-            Home
-          </Link>
-          <Link
-            href="/manuscripts"
-            className="text-white text-lg hover:text-primary"
-            onClick={() => setIsMenuOpen(false)}
-          >
-            Manuscript
-          </Link>
-          <Link
-            href="/about-us"
-            className="text-white text-lg hover:text-primary"
-            onClick={() => setIsMenuOpen(false)}
-          >
-            About Us
-          </Link>
-          <Link
-            href="/contact-us"
-            className="text-white text-lg hover:text-primary"
-            onClick={() => setIsMenuOpen(false)}
-          >
-            Contact Us
-          </Link>
-
-          {/* Mobile Search */}
-          {/* <div className="relative w-full max-w-md">
-            <input
-              type="text"
-              placeholder="Search manuscripts..."
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border-2 border-[#9e6962] rounded-lg focus:outline-none focus:ring-1 focus:ring-[#AC3122]"
-            />
-            <MagnifyingGlass size={20} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-light-blue-500" />
-          </div> */}
-
-          {/* Mobile Auth Buttons */}
-          <Button
-            className="w-full  text-black max-w-xs"
-            onClick={() => router.push("/signup")}
-          >
-            Sign Up
-          </Button>
-          <Link
-            href="/login"
-            className="text-black font-bold hover:text-primary"
-          >
-            Log in
-          </Link>
         </div>
-      )}
-    </nav>
+
+        {isMenuOpen && (
+          <div className="border-t border-[var(--jijosams-gold)] bg-[var(--jijosams-cream)] px-4 py-4 lg:hidden">
+            <div className="mb-4 grid gap-1">
+              {/* Home */}
+              <Link
+                href="/"
+                className="rounded-lg px-3 py-2 text-sm font-semibold text-[var(--jijosams-green-deep)]"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Home
+              </Link>
+
+              {/* Publications collapsible */}
+              <div>
+                <button
+                  type="button"
+                  onClick={() => setIsMobilePublicationsOpen((prev) => !prev)}
+                  className="flex w-full items-center justify-between rounded-lg px-3 py-2 text-sm font-semibold text-[var(--jijosams-green-deep)]"
+                >
+                  Publications
+                  <CaretDown
+                    size={14}
+                    weight="bold"
+                    className={`transition-transform duration-200 ${isMobilePublicationsOpen ? "rotate-180" : ""}`}
+                  />
+                </button>
+                {isMobilePublicationsOpen && (
+                  <div className="ml-3 mt-1 grid gap-1 border-l-2 border-[var(--jijosams-gold)]/50 pl-3">
+                    {publicationsDropdown.map((item) => (
+                      <Link
+                        key={item.href}
+                        href={item.href}
+                        className="rounded-lg px-2 py-2 text-sm text-[var(--jijosams-green-deep)]"
+                        onClick={() => {
+                          setIsMenuOpen(false);
+                          setIsMobilePublicationsOpen(false);
+                        }}
+                      >
+                        {item.label}
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* About & Contact */}
+              {topNavItems.slice(1).map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className="rounded-lg px-3 py-2 text-sm font-semibold text-[var(--jijosams-green-deep)]"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  {item.label}
+                </Link>
+              ))}
+            </div>
+            <div className="grid grid-cols-2 gap-2">
+              <button
+                type="button"
+                onClick={() => {
+                  setIsMenuOpen(false);
+                  router.push("/signin");
+                }}
+                className="rounded-full border border-[var(--jijosams-green)] px-3 py-2 text-sm font-semibold text-[var(--jijosams-green)]"
+              >
+                Sign In
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setIsMenuOpen(false);
+                  router.push("/signup");
+                }}
+                className="rounded-full bg-[var(--jijosams-red)] px-3 py-2 text-sm font-semibold text-white"
+              >
+                Submit
+              </button>
+            </div>
+          </div>
+        )}
+      </nav>
+    </header>
   );
 }

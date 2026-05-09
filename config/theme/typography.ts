@@ -1,15 +1,9 @@
 import { TypographyOptions } from "@mui/material/styles/createTypography";
 
-// Inter is the de-facto standard for academic/SaaS dashboards — crisp at small sizes
 export const fontFamily = [
-  '"Inter"',
-  '"Open Sans"',
-  '-apple-system',
-  'BlinkMacSystemFont',
+  '"Manrope"',
   '"Segoe UI"',
-  'Roboto',
-  '"Helvetica Neue"',
-  'Arial',
+  '-apple-system',
   'sans-serif',
 ].join(",");
 
@@ -27,8 +21,8 @@ const typography: TypographyOptions = {
   h4: { fontSize: 20, lineHeight: headingLineHeight, fontWeight: 700 },
   h5: { fontSize: 16, lineHeight: headingLineHeight, fontWeight: 600 },
   h6: { fontSize: 14, lineHeight: headingLineHeight, fontWeight: 600 },
-  body1: { fontSize: "0.9375rem", lineHeight: 1.6 },   // 15px — readable for article metadata
-  body2: { fontSize: "0.875rem", lineHeight: 1.57 },   // 14px
+  body1: { fontSize: "0.9375rem", lineHeight: 1.6 },
+  body2: { fontSize: "0.875rem", lineHeight: 1.57 },
   subtitle1: { fontSize: "0.9375rem", fontWeight: 500, lineHeight: 1.5 },
   subtitle2: { fontSize: "0.875rem", fontWeight: 500, lineHeight: 1.57 },
   caption: { fontSize: "0.75rem", lineHeight: 1.5 },
