@@ -65,7 +65,7 @@ const SigninMain: FC = () => {
           <Stack spacing={2}>
             <Box>
               <Image
-                src="/logo/jijosams_logo.png"
+                src="/logo/slu_jst_logo.svg"
                 alt="SLU JST Logo"
                 width={160}
                 height={100}
@@ -137,7 +137,7 @@ const SigninMain: FC = () => {
           {isMobile && (
             <Stack alignItems="center" mb={4} spacing={1}>
               <Image
-                src="/logo/jijosams_logo.png"
+                src="/logo/slu_jst_logo.svg"
                 alt="SLU JST Logo"
                 width={120}
                 height={75}

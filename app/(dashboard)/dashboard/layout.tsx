@@ -16,9 +16,6 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
       name: "John Doe",
       role: "Admin",
     };
-
-    // Set the dummy profile data here
-    console.log("Profile data set:", profileData);
   }, []);
 
   return (

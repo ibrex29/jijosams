@@ -4,7 +4,7 @@
 import { getServerSession } from "next-auth";
 
 import { User } from "@/constants/config";
-import { request } from "@/utils/request";
+import { request, getJournalSubdomain } from "@/utils/request";
 
 import { authOptions } from "../auth/[...nextauth]/options";
 
@@ -155,6 +155,7 @@ export const getUsers = async ({
         "Content-Type": "application/json",
         Accept: "*/*",
         Authorization: `Bearer ${session?.token}`,
+        "x-journal-subdomain": getJournalSubdomain(),
       },
     },
   );
@@ -176,6 +177,7 @@ export const getUserById = async (id: string): Promise<User> => {
       "Content-Type": "application/json",
       Accept: "*/*",
       Authorization: `Bearer ${session?.token}`,
+      "x-journal-subdomain": getJournalSubdomain(),
     },
   });
 

@@ -11,6 +11,7 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
+import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 
 import { ManuscriptProps } from "@/types";
 import { getInitials, truncateText } from "@/utils";
@@ -46,6 +47,10 @@ export default function CEManuscriptCard({
     Reviewers,
   } = manuscript;
 
+  const reviewCompleted = manuscript.ActionLog?.some(
+    (log) => log?.action === "REVIEW_COMPLETED",
+  );
+
   const manuscriptLink =
     Document && Document[0]?.manuscriptLink ? Document[0].manuscriptLink : "";
   const otherDocsLink =
@@ -72,7 +77,7 @@ export default function CEManuscriptCard({
       }}
     >
       <CardActionArea>
-        <Box sx={{ position: "absolute", top: 8, right: 12 }}>
+        <Box sx={{ position: "absolute", top: 8, right: 12 , display: "flex", flexDirection: "row", alignItems: "flex-end", gap: 0.5}}>
           <Chip
             label={status}
             color="primary"
@@ -84,6 +89,21 @@ export default function CEManuscriptCard({
               padding: "2px 4px",
             }}
           />
+          {reviewCompleted && (
+            <Chip
+              label="Review Completed"
+              icon={<CheckCircleOutlineIcon sx={{ fontSize: 14 }} />}
+              color="success"
+              size="small"
+              sx={{
+                mt: 0.8,
+                borderRadius: "12px",
+                fontWeight: 600,
+                fontSize: "10px",
+                padding: "2px 4px",
+              }}
+            />
+          )}
         </Box>
         <CardContent>
           <Box display="flex" flexDirection="row" height={250} gap={2} mt={2}>

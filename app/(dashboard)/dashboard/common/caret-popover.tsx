@@ -12,7 +12,6 @@ import DialogTitle from "@mui/material/DialogTitle";
 import IconButton from "@mui/material/IconButton";
 import Popover from "@mui/material/Popover";
 import Typography from "@mui/material/Typography";
-import { useRouter } from "next/navigation";
 import { getSession, signOut } from "next-auth/react";
 import { MouseEvent, useEffect, useState } from "react";
 import Iconify from "@/app/components/@dashboard/components/@dashboard/iconify";
@@ -39,7 +38,6 @@ export default function CaretPopover() {
   const [logo] = useState<string>("/images/avatar_bigger.png");
   const [openDialog, setOpenDialog] = useState(false); // To control the dialog visibility
   const [loading, setLoading] = useState(false);
-  const router = useRouter();
   // Fetch user details when the component mounts
   useEffect(() => {
     const fetchDetails = async () => {

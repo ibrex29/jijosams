@@ -3,8 +3,8 @@
 import { Grid } from "@mui/material";
 import { useEffect, useState } from "react";
 
-import { getSEManuscript } from "@/app/api/manuscript";
-import { ManuscriptProps } from "@/types";
+import { getSectionEditorDashboardAnalytics } from "@/app/api/manuscript";
+import { SectionEditorDashboardAnalytics } from "@/types";
 
 import { Approved } from "@/app/components/@dashboard/components/@dashboard/common/metrics/cards/Approved";
 import { AwaitingReview } from "@/app/components/@dashboard/components/@dashboard/common/metrics/cards/AwaitingReview";
@@ -16,38 +16,15 @@ import { StatusBreakdownCard } from "@/app/components/@dashboard/components/@das
 
 const SectionEditorMetrics: React.FC = (): React.JSX.Element => {
   const [loading, setLoading] = useState(true);
-  const [manuscripts, setManuscripts] = useState<ManuscriptProps[]>([]);
-  const [data, setData] = useState({
-    totalSubmitted: 0,
-    awaitingReview: 0,
-    rejected: 0,
-    approved: 0,
-  });
+  const [analytics, setAnalytics] = useState<SectionEditorDashboardAnalytics | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const list: ManuscriptProps[] = await getSEManuscript();
-        if (Array.isArray(list)) {
-          setManuscripts(list);
-          setData({
-            totalSubmitted: list.length,
-            awaitingReview: list.filter(
-              (m) =>
-                m.status?.toLowerCase() === "under_review" ||
-                m.status?.toLowerCase() === "submitted" ||
-                m.status?.toLowerCase() === "pending",
-            ).length,
-            rejected: list.filter(
-              (m) => m.status?.toLowerCase() === "rejected",
-            ).length,
-            approved: list.filter(
-              (m) =>
-                m.status?.toLowerCase() === "accepted" ||
-                m.status?.toLowerCase() === "approved",
-            ).length,
-          });
+        const data = await getSectionEditorDashboardAnalytics();
+        if (data) {
+          setAnalytics(data);
         }
       } catch (error) {
         console.error("Failed to fetch section editor metrics:", error);
@@ -58,21 +35,21 @@ const SectionEditorMetrics: React.FC = (): React.JSX.Element => {
     fetchData();
   }, []);
 
-  const statusCounts = {
-    submitted: manuscripts.filter((m) =>
-      ["submitted", "pending"].includes(m.status?.toLowerCase()),
-    ).length,
-    underReview: manuscripts.filter(
-      (m) => m.status?.toLowerCase() === "under_review",
-    ).length,
-    accepted: manuscripts.filter((m) =>
-      ["accepted", "approved"].includes(m.status?.toLowerCase()),
-    ).length,
-    rejected: manuscripts.filter(
-      (m) => m.status?.toLowerCase() === "rejected",
-    ).length,
-    total: manuscripts.length,
-  };
+  const statusCounts = analytics
+    ? {
+        submitted: analytics.pipeline.submittedPending.count,
+        underReview: analytics.pipeline.underReview.count,
+        accepted: analytics.pipeline.acceptedApproved.count,
+        rejected: analytics.pipeline.rejected.count,
+        total: analytics.pipeline.totalManuscripts,
+      }
+    : {
+        submitted: 0,
+        underReview: 0,
+        accepted: 0,
+        rejected: 0,
+        total: 0,
+      };
 
   return (
     <>
@@ -81,28 +58,28 @@ const SectionEditorMetrics: React.FC = (): React.JSX.Element => {
         <Grid item lg={3} sm={6} xs={12}>
           <TotalSubmitted
             sx={{ height: "100%" }}
-            value={data.totalSubmitted?.toString() || "0"}
+            value={analytics?.cards.totalSubmitted?.toString() || "0"}
             loading={loading}
           />
         </Grid>
         <Grid item lg={3} sm={6} xs={12}>
           <AwaitingReview
             sx={{ height: "100%" }}
-            value={data.awaitingReview?.toString() || "0"}
+            value={analytics?.cards.awaitingReview?.toString() || "0"}
             loading={loading}
           />
         </Grid>
         <Grid item lg={3} sm={6} xs={12}>
           <Rejected
             sx={{ height: "100%" }}
-            value={data.rejected?.toString() || "0"}
+            value={analytics?.cards.rejected?.toString() || "0"}
             loading={loading}
           />
         </Grid>
         <Grid item lg={3} sm={6} xs={12}>
           <Approved
             sx={{ height: "100%" }}
-            value={data.approved?.toString() || "0"}
+            value={analytics?.cards.approved?.toString() || "0"}
             loading={loading}
           />
         </Grid>
@@ -115,9 +92,9 @@ const SectionEditorMetrics: React.FC = (): React.JSX.Element => {
         </Grid>
         <Grid item xs={12} md={7}>
           <RecentManuscriptsCard
-            manuscripts={manuscripts}
+            manuscripts={analytics?.recentSubmissions || []}
             loading={loading}
-            title="My Section – Recent Manuscripts"
+            title={analytics?.section?.name ? `${analytics.section.name} - Recent Manuscripts` : "My Section - Recent Manuscripts"}
           />
         </Grid>
       </Grid>

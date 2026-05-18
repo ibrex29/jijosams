@@ -42,6 +42,7 @@ export default function SEManuscriptCard({
     sectionId,
     Section,
     reviewDueDate,
+    Review,
     Reviewers,
   } = manuscript;
 
@@ -173,6 +174,14 @@ export default function SEManuscriptCard({
                   </Typography>
                 </Box>
               )}
+              <Box mt={1}>
+                <Chip
+                  label={`Reviews: ${Review?.length || 0}`}
+                  size="small"
+                  variant="outlined"
+                  color={Review?.length ? "success" : "default"}
+                />
+              </Box>
             </Stack>
           </Box>
           <Divider sx={{ my: 1 }} />

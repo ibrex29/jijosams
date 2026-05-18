@@ -16,13 +16,14 @@ import {
 import CloseIcon from "@mui/icons-material/Close";
 import RateReviewIcon from "@mui/icons-material/RateReview";
 import { useQuery } from "@tanstack/react-query";
-import { getRepliesAuthor } from "@/app/api/reviewer";
+import { getReviewsByManuscriptId } from "@/app/api/reviewer";
 import { Review, Reply } from "@/types";
 import { formatDate } from "@/utils";
 
 interface ReviewViewerModalProps {
   manuscriptId: string;
   manuscriptTitle: string;
+  preloadedReviews?: Review[];
   open: boolean;
   onClose: () => void;
 }
@@ -49,21 +50,23 @@ const formatRecommendation = (recommendation: string) => {
 export default function ReviewViewerModal({
   manuscriptId,
   manuscriptTitle,
+  preloadedReviews,
   open,
   onClose,
 }: ReviewViewerModalProps) {
+  const shouldFetchReviews = !preloadedReviews;
+
   const {
     data: reviews,
     isLoading,
     error,
   } = useQuery<Review[]>({
     queryKey: ["manuscript-reviews", manuscriptId],
-    queryFn: () =>
-      getRepliesAuthor(manuscriptId).then((data) =>
-        data && Array.isArray(data) ? data : [],
-      ),
-    enabled: open,
+    queryFn: () => getReviewsByManuscriptId(manuscriptId),
+    enabled: open && shouldFetchReviews,
   });
+
+  const resolvedReviews = preloadedReviews ?? reviews;
 
   return (
     <Modal open={open} onClose={onClose}>
@@ -107,13 +110,13 @@ export default function ReviewViewerModal({
           </Box>
         ) : error ? (
           <Alert severity="error">Failed to load reviews.</Alert>
-        ) : !reviews || reviews.length === 0 ? (
+        ) : !resolvedReviews || resolvedReviews.length === 0 ? (
           <Alert severity="info">
             No reviews have been submitted for this manuscript yet.
           </Alert>
         ) : (
           <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
-            {reviews.map((review, index) => (
+            {resolvedReviews.map((review, index) => (
               <Card
                 key={review.id}
                 sx={{

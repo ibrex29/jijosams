@@ -97,7 +97,7 @@ export default function PublicationCharges() {
         <div className="mt-8 text-center">
           <Button className="bg-primary text-white py-3 px-6 text-lg rounded-md hover:bg-primary-700">
             <a
-              href="https://www.slujst.com.ng/submission/"
+              href="https://www.jijosams.com.ng/submission/"
               target="_blank"
               rel="noopener noreferrer"
             >

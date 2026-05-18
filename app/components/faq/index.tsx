@@ -6,22 +6,22 @@ import { FaChevronDown } from "react-icons/fa";
 
 const faqs = [
   {
-    question: "How can I submit my research to SLUJST?",
+    question: "How can I submit my research to JIJOSAMS?",
     answer:
       "You can submit your research through our online submission portal",
   },
   {
-    question: "What types of research does SLUJST accept?",
+    question: "What types of research does JIJOSAMS accept?",
     answer:
       "We accept original research papers, review articles, and technical notes in various fields, including biochemistry, software engineering, environmental science, and more.",
   },
   {
-    question: "Can I access previous issues of SLUJST?",
+    question: "Can I access previous issues of JIJOSAMS?",
     answer:
-      "Yes, previous issues of SLUJST are available on our website in the archives section.",
+      "Yes, previous issues of JIJOSAMS are available on our website in the archives section.",
   },
   {
-    question: "What is the peer review process for SLUJST?",
+    question: "What is the peer review process for JIJOSAMS?",
     answer:
       "All submissions undergo a double-blind peer review process to ensure quality and originality.",
   },

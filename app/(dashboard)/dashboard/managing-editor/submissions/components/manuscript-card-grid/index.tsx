@@ -49,9 +49,11 @@ export default function ManuscriptCardGrid({ manuscripts, refetch }: Props) {
     const payload = { manuscriptId: selectedManuscript.id, sectionId };
     try {
       await assignManuscriptSection(payload);
+      notify("Section assigned successfully", { mode: "success" });
       refetch();
     } catch (error) {
       console.error("Failed to assign section:", error);
+      notify("Failed to assign section", { mode: "error" });
     } finally {
       setOpenSectionModal(false);
     }
@@ -64,12 +66,12 @@ export default function ManuscriptCardGrid({ manuscripts, refetch }: Props) {
   ) => {
     try {
       await assignManuscriptReviewer({ manuscriptId, reviewerIds: [reviewerId], reviewDueDate });
-      notify("Reviewer assigned successfully");
+      notify("Reviewer assigned successfully", { mode: "success" });
       refetch();
       setOpenReviewModal(false);
     } catch (error) {
       console.error("Error assigning reviewer:", error);
-      notify("Failed to assign reviewer");
+      notify("Failed to assign reviewer", { mode: "error" });
     }
   };
 
@@ -80,12 +82,12 @@ export default function ManuscriptCardGrid({ manuscripts, refetch }: Props) {
   }) => {
     try {
       await assignSuggestedReviewer(payload);
-      notify("Suggested reviewer added & assigned successfully");
+      notify("Suggested reviewer added & assigned successfully", { mode: "success" });
       refetch();
       setOpenReviewModal(false);
     } catch (error) {
       console.error("Error assigning suggested reviewer:", error);
-      notify("Failed to assign suggested reviewer");
+      notify("Failed to assign suggested reviewer", { mode: "error" });
     }
   };
 
@@ -95,12 +97,12 @@ export default function ManuscriptCardGrid({ manuscripts, refetch }: Props) {
   ) => {
     try {
       await unassignReviewer(manuscriptId, { reviewerIds: [reviewerId] });
-      notify("Reviewer unassigned successfully");
+      notify("Reviewer unassigned successfully", { mode: "success" });
       refetch();
       setOpenReviewModal(false);
     } catch (error) {
       console.error("Error unassigning reviewer:", error);
-      notify("Failed to unassign reviewer");
+      notify("Failed to unassign reviewer", { mode: "error" });
     }
   };
 

@@ -5,7 +5,7 @@ import { getServerSession } from "next-auth";
 import { publication } from "@/constants/config";
 import { PublishedManuscriptResponse } from "@/types";
 import { SortOrder } from "@/types/enum";
-import { request } from "@/utils/request";
+import { request, getJournalSubdomain } from "@/utils/request";
 
 import { authOptions } from "../auth/[...nextauth]/options";
 
@@ -64,6 +64,7 @@ export const getPublications = async (
         "Content-Type": "application/json",
         Accept: "*/*",
         Authorization: `Bearer ${session?.token}`,
+        "x-journal-subdomain": getJournalSubdomain(),
       },
     },
   );

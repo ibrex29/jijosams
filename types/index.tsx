@@ -199,10 +199,49 @@ export interface Reply {
   authorId: string;
   subject: string;
   contents: string;
-  uploadFiles: string;
+  uploadFiles: string | null;
   isauthor: boolean;
   createdAt: string;
   updatedAt: string;
+  createdByUserId: string | null;
+  updatedByUserId: string | null;
+}
+
+export type ReviewStatus = 
+  | "PENDING_APPROVAL" 
+  | "APPROVED" 
+  | "REJECTED" 
+  | "UNDER_REVIEW" 
+  | "COMPLETED";
+
+export type ReviewRecommendation = 
+  | "ACCEPT" 
+  | "MINOR_REVISIONS" 
+  | "MAJOR_REVISIONS" 
+  | "REJECT";
+
+export interface ReviewerUser {
+  id: string;
+  title: string | null;
+  firstName: string;
+  lastName: string;
+  password: string;
+  email: string;
+  phoneNumber: string | null;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+  createdBy: string;
+  updatedBy: string;
+}
+
+export interface ReviewerDetails {
+  id: string;
+  userId: string;
+  expertiseArea: string;
+  higestQualification: string | null;
+  sectionId: string;
+  User?: ReviewerUser;
 }
 
 export interface Review {
@@ -210,11 +249,39 @@ export interface Review {
   manuscriptId: string;
   reviewerId: string;
   reviewDate: string;
+  status: ReviewStatus;
   comments: string;
-  recommendation: string;
-  authorId: string;
+  commentsForEditors: string | null;
+  checklist: any | null;
+  recommendation: ReviewRecommendation;
   isClosed: boolean;
+  canAuthorView: boolean;
+  aiDeclarationConfirmed: boolean;
+  notifyOnFinalStatus: boolean;
+  uploadedFileUrl: string | null;
+  approvedByUserId: string | null;
+  approvedAt: string | null;
+  authorId: string;
+  createdByUserId: string | null;
+  editorId: string | null;
+  Manuscript?: ManuscriptProps;
+  Reviewer?: ReviewerDetails;
+  Author?: AuthorProps;
   Reply: Reply[];
+}
+
+export interface PaginationMeta {
+  page: number;
+  limit: number;
+  itemCount: number;
+  pageCount: number;
+  hasPreviousPage: boolean;
+  hasNextPage: boolean;
+}
+
+export interface AllReviewsResponse {
+  data: Review[];
+  meta: PaginationMeta;
 }
 
 /* Interface for Landing Pages */
@@ -309,4 +376,79 @@ export interface RecentManuscript {
     };
     name: string;
   };
+}
+
+export interface DashboardAnalytics {
+  cards: {
+    totalSubmitted: number;
+    awaitingReview: number;
+    rejected: number;
+    approved: number;
+    totalReviewers?: number;
+  };
+  pipeline: {
+    totalManuscripts: number;
+    submittedPending: {
+      count: number;
+      percentage: number;
+    };
+    underReview: {
+      count: number;
+      percentage: number;
+    };
+    acceptedApproved: {
+      count: number;
+      percentage: number;
+    };
+    rejected: {
+      count: number;
+      percentage: number;
+    };
+  };
+  recentSubmissions: ManuscriptProps[];
+}
+
+export interface SectionEditorDashboardAnalytics extends DashboardAnalytics {
+  section: {
+    id: string;
+    name: string;
+  };
+}
+
+export interface ReviewerAssignment {
+  id: string;
+  manuscriptId: string;
+  reviewerId: string;
+  assignedAt: string;
+  dueDate: string | null;
+  manuscript: ManuscriptProps;
+}
+
+export interface ReviewerDashboardAnalytics {
+  cards: {
+    submitted: number;
+    awaitingReview: number;
+    assigned: number;
+    accepted: number;
+  };
+  pipeline: {
+    totalManuscripts: number;
+    submittedPending: {
+      count: number;
+      percentage: number;
+    };
+    underReview: {
+      count: number;
+      percentage: number;
+    };
+    acceptedApproved: {
+      count: number;
+      percentage: number;
+    };
+    rejected: {
+      count: number;
+      percentage: number;
+    };
+  };
+  recentAssignments: ReviewerAssignment[];
 }

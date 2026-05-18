@@ -57,8 +57,6 @@ const AuthorChat: React.FC<ChatProps> = ({ manuscriptId }) => {
       ),
   });
 
-  console.log("Fetched reviews:", reviews);
-
   const replyMutation = useMutation({
     mutationFn: createAuthorReply,
     onSuccess: () => {

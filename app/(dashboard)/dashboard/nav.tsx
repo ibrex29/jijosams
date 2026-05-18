@@ -90,7 +90,7 @@ export default function Nav({ openNav, onCloseNav }: NavProps) {
     >
       <Box sx={{ px: 3, pt: 3, display: "inline-flex" }}>
         <Image
-          src="/logo/jijosams_logo.png"
+          src="/logo/slu_jst_logo.svg"
           alt="Logo"
           width={160}
           height={100}

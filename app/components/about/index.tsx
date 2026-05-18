@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 export default function AboutUs() {
   return (
     <section className="container max-w-7xl mx-auto px-6 py-2 grid grid-cols-1 lg:grid-cols-2 gap-8">
-      {/* Left Section - About SLUJST with Background Image */}
+      {/* Left Section - About JIJOSAMS with Background Image */}
       <motion.div
         initial={{ opacity: 0, x: -50 }}
         animate={{ opacity: 1, x: 0 }}
@@ -21,10 +21,10 @@ export default function AboutUs() {
 
         {/* Content (Overlay to Keep Readable) */}
         <div className="relative z-10">
-          <h2 className="text-lg font-bold  mb-4">About SLUJST</h2>
+          <h2 className="text-lg font-bold  mb-4">About JIJOSAMS</h2>
           <p className="leading-relaxed">
             The Sule Lamido University Journal of Science and Technology
-            (SLUJST) is a peer-reviewed, open-access journal dedicated to
+            (JIJOSAMS) is a peer-reviewed, open-access journal dedicated to
             publishing high-quality research in science and technology.
             Published bi-annually, it provides a platform for interdisciplinary
             studies and groundbreaking discoveries that advance knowledge in

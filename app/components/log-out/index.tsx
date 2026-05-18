@@ -1,4 +1,5 @@
 import { baseUrl } from "@/constants/config";
+import { getJournalSubdomain } from "@/utils/request";
 import { getSession, signOut } from "next-auth/react";
 
 export const logout = async () => {
@@ -9,6 +10,7 @@ export const logout = async () => {
         method: "POST",
         headers: {
           Accept: "*/*",
+          "x-journal-subdomain": getJournalSubdomain(),
           Authorization: `Bearer ${session.token}`,
         },
       });

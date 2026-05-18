@@ -4,7 +4,7 @@
 
 import { getServerSession } from "next-auth";
 
-import { Method, request } from "@/utils/request";
+import { Method, request, getJournalSubdomain } from "@/utils/request";
 
 import { authOptions } from "../auth/[...nextauth]/options";
 
@@ -14,6 +14,7 @@ export const getBearerHeader = async () => {
     headers: {
       // 'Content-Type': 'application/json',
       Authorization: `Bearer ${session?.token}`,
+      "x-journal-subdomain": getJournalSubdomain(),
     },
   };
 };

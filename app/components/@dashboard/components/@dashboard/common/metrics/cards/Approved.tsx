@@ -39,7 +39,7 @@ export function Approved({
           >
             <Stack spacing={1}>
               <Typography color="text.secondary" variant="overline">
-                Approved
+                Published
               </Typography>
               {loading ? (
                 <Skeleton variant="text" width="60%" height={40} /> // Skeleton for loading

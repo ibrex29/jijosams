@@ -47,7 +47,6 @@ export const createSection = async (name: string) => {
     },
     data: { name },
   });
-  console.log(response);
 
   return response;
 };

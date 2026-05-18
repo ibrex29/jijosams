@@ -22,12 +22,12 @@ export default function ManuscriptSubmission() {
           Manuscript submissions are received through our online submission
           platform:
           <a
-            href="https://www.slujst.com.ng/submission/"
+            href="https://www.jijosams.com.ng/submission/"
             target="_blank"
             rel="noopener noreferrer"
             className="text-primary-600 font-medium hover:underline"
           >
-            https://www.slujst.com.ng/submission/
+            https://www.jijosams.com.ng/submission/
           </a>
           .
         </motion.p>
@@ -86,7 +86,7 @@ export default function ManuscriptSubmission() {
       <div className="text-center mt-8">
         <Button className="bg-primary text-white py-3 px-6 text-lg rounded-md hover:bg-primary-700">
           <a
-            href="https://www.slujst.com.ng/submission/"
+            href="https://www.jijosams.com.ng/submission/"
             target="_blank"
             rel="noopener noreferrer"
           >

@@ -4,6 +4,7 @@ import CEIssueManagementTab from "@/app/(dashboard)/dashboard/editor-in-chief/ed
 import CEVolumeManagementTab from "@/app/(dashboard)/dashboard/editor-in-chief/editorial-management/tabs/create-volume";
 import CESectionManagementTab from "@/app/(dashboard)/dashboard/editor-in-chief/sections/tabs/sections";
 import CEManuscriptTab from "@/app/(dashboard)/dashboard/editor-in-chief/submissions/tabs/all-submissions";
+import PendingApprovalsTab from "@/app/(dashboard)/dashboard/editor-in-chief/submissions/tabs/review-submissions";
 import CreateUsers from "@/app/(dashboard)/dashboard/editor-in-chief/users/tabs/create-user";
 import ManageUsersTab from "@/app/(dashboard)/dashboard/editor-in-chief/users/tabs/manage-users";
 import PublishManuscriptTab from "@/app/(dashboard)/dashboard/editor-in-chief/publish-manuscript/tabs/publish";
@@ -17,6 +18,10 @@ export const EditorInChiefManuscriptsPageTab = [
   {
     title: "All Manuscript",
     component: CEManuscriptTab,
+  },
+  {
+    title: "Review Submission",
+    component: PendingApprovalsTab,
   },
 ];
 

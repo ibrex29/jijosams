@@ -2,6 +2,7 @@
 "use client";
 
 import { baseUrl } from "@/constants/config";
+import { getJournalSubdomain } from "@/utils/request";
 import {
   Box,
   CircularProgress,
@@ -58,6 +59,7 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({
         method: "POST",
         headers: {
           accept: "*/*",
+          "x-journal-subdomain": getJournalSubdomain(),
         },
         body: formData,
       });

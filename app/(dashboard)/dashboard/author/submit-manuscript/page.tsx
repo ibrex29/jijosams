@@ -1,3 +1,4 @@
+
 import { AuthorManuscriptPageTabs } from "@/app/components/@dashboard/components/@dashboard/common/config/tabs";
 import PageLayout from "@/app/components/@dashboard/components/@dashboard/common/page/layout";
 import PageTabs from "@/app/components/@dashboard/components/@dashboard/common/page/tabs";

@@ -8,7 +8,7 @@ import { ManuscriptProps } from "@/types";
 import CEManuscriptCard from "../manuscript-card";
 import useNotification from "@/hooks/useNotification";
 import ReviewerModal from "@/app/(dashboard)/dashboard/section-editor/submissions/components/reviewer-dialog";
-import ReviewViewerModal from "@/app/(dashboard)/dashboard/common/review-viewer-modal";
+import ChiefEditorReviewViewerModal from "../ChiefEditorReviewViewerModal";
 
 interface Props {
   manuscripts: ManuscriptProps[];
@@ -40,11 +40,11 @@ export default function ManuscriptCardGrid({ manuscripts, refetch }: Props) {
     };
 
     try {
-      await assignManuscriptSection(payload); // Call the new function
-      console.log(`Manuscript assigned to section ${sectionId}`);
+      await assignManuscriptSection(payload);
+      notify("Section assigned successfully", { mode: "success" });
       refetch();
     } catch (error) {
-      console.error("Failed to assign section:", error);
+      notify("Failed to assign section", { mode: "error" });
     } finally {
       setOpenSectionModal(false);
     }
@@ -67,22 +67,17 @@ export default function ManuscriptCardGrid({ manuscripts, refetch }: Props) {
       reviewDueDate: string,
     ) => {
       try {
-        console.log(
-          `Assigning reviewer: ${reviewerId} to manuscript: ${manuscriptId} with due date: ${reviewDueDate}`,
-        );
-        const response = await assignManuscriptReviewer({
+        await assignManuscriptReviewer({
           manuscriptId,
           reviewerIds: [reviewerId],
           reviewDueDate,
         });
-        console.log(response);
   
-        notify("Reviewer assigned successfully ");
+        notify("Reviewer assigned successfully", { mode: "success" });
         refetch();
         setOpenReviewModal(false);
       } catch (error) {
-        console.error(`Error assigning reviewer:`, error);
-        notify("Failed to assign reviewer ");
+        notify("Failed to assign reviewer", { mode: "error" });
       }
     };
 
@@ -93,12 +88,11 @@ export default function ManuscriptCardGrid({ manuscripts, refetch }: Props) {
   }) => {
     try {
       await assignSuggestedReviewer(payload);
-      notify("Suggested reviewer added & assigned successfully");
+      notify("Suggested reviewer added & assigned successfully", { mode: "success" });
       refetch();
       setOpenReviewModal(false);
     } catch (error) {
-      console.error("Error assigning suggested reviewer:", error);
-      notify("Failed to assign suggested reviewer");
+      notify("Failed to assign suggested reviewer", { mode: "error" });
     }
   };
 
@@ -108,12 +102,11 @@ export default function ManuscriptCardGrid({ manuscripts, refetch }: Props) {
   ) => {
     try {
       await unassignReviewer(manuscriptId, { reviewerIds: [reviewerId] });
-      notify("Reviewer unassigned successfully");
+      notify("Reviewer unassigned successfully", { mode: "success" });
       refetch();
       setOpenReviewModal(false);
     } catch (error) {
-      console.error("Error unassigning reviewer:", error);
-      notify("Failed to unassign reviewer");
+      notify("Failed to unassign reviewer", { mode: "error" });
     }
   };
 
@@ -147,6 +140,7 @@ export default function ManuscriptCardGrid({ manuscripts, refetch }: Props) {
                 manuscript={selectedManuscript}
                 open={openReviewModal}
                 onClose={() => setOpenReviewModal(false)}
+                reviewerScope="all"
                 onAssign={handleAssignReviewer}
                 onAssignSuggested={handleAssignSuggestedReviewer}
                 onUnassign={handleUnassignReviewer}
@@ -154,11 +148,13 @@ export default function ManuscriptCardGrid({ manuscripts, refetch }: Props) {
             )}
 
       {selectedManuscript && (
-        <ReviewViewerModal
+        <ChiefEditorReviewViewerModal
           manuscriptId={selectedManuscript.id}
           manuscriptTitle={selectedManuscript.title}
           open={openReviewViewer}
           onClose={() => setOpenReviewViewer(false)}
+          reviews={selectedManuscript.Review}
+          actionLogs={selectedManuscript.ActionLog}
         />
       )}
     </Box>

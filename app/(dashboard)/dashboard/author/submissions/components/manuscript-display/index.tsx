@@ -24,8 +24,8 @@ import { ManuscriptProps } from "@/types";
 import noResultIcon from "@/public/images/no_upcoming.svg";
 import noManuscriptIcon from "@/public/images/no-tickets.svg";
 import ManuscriptContent from "./inner-manuscript-display";
-import ManuscriptSubHeader from "@/app/components/@dashboard/components/@dashboard/common/sub-header/my-manuscript";
 import Pagination from "@/app/components/pagination";
+import ManuscriptSubHeader from "@/app/components/@dashboard/components/@dashboard/common/sub-header/my-manuscript";
 
 interface ManuscriptDisplayProps {
   manuscripts: ManuscriptProps[];

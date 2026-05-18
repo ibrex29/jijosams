@@ -69,7 +69,6 @@ const CESectionManagementTab = () => {
   };
 
   const handleCreateSection = async () => {
-    console.log(sectionName);
     try {
       const response = await createSection(sectionName);
       if (response.statusCode) {
@@ -105,19 +104,6 @@ const CESectionManagementTab = () => {
 
   const handleDeleteSection = async () => {
     if (!selectedSection) return;
-    // try {
-    //   const response = await deleteCategory(selectedSection.id);
-    //   if (response.statusCode) {
-    //     console.error('Failed to delete the section.');
-    //   } else {
-    //     fetchSections();
-    //   }
-    // } catch (error) {
-    //   console.error('Error deleting section:', error);
-    // } finally {
-    //   handleDialogClose();
-    // }
-    console.log("delete session");
   };
 
   return (

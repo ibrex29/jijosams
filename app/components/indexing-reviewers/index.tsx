@@ -26,7 +26,7 @@ export default function IndexingReviewers() {
             Indexing
           </h2>
           <p className="text-gray-700 mt-2 text-center">
-            SLUJST is currently indexed in the following databases:
+            JIJOSAMS is currently indexed in the following databases:
           </p>
 
           <div className="mt-6 items-center grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">

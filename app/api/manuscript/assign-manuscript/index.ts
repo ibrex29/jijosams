@@ -32,6 +32,11 @@ export const assignManuscriptSection = async (payload: any) => {
     },
     data: payload,
   });
+
+  if (response?.statusCode && response.statusCode >= 400) {
+    throw new Error(response.message ?? `Request failed with status ${response.statusCode}`);
+  }
+
   return response;
 };
 
@@ -51,6 +56,11 @@ export const assignManuscriptReviewer = async (
       data: payload,
     },
   );
+
+  if (response?.statusCode && response.statusCode >= 400) {
+    throw new Error(response.message ?? `Request failed with status ${response.statusCode}`);
+  }
+
   return response;
 };
 

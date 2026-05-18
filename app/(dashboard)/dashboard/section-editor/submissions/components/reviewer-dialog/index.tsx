@@ -35,10 +35,10 @@ import dayjs, { Dayjs } from "dayjs";
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 
-import { getUsers, PaginatedUsersResponse } from "@/app/api/users";
-import { getRoles, Role } from "@/app/api/role";
 import { ManuscriptProps, ManuscriptSuggestedReviewer } from "@/types";
 import { getInitials } from "@/utils";
+import { getChiefEditorReviewers, getSEReviewers } from "@/app/api/manuscript";
+import {  FetchSEReviewersResponse } from "@/app/api/manuscript/types";
 
 interface AssignSuggestedPayload {
   suggestedReviewerId: string;
@@ -50,6 +50,7 @@ interface ReviewerModalProps {
   manuscript: ManuscriptProps;
   open: boolean;
   onClose: () => void;
+  reviewerScope?: "section" | "all";
   onAssign: (
     reviewerId: string,
     manuscriptId: string,
@@ -63,6 +64,7 @@ export default function ReviewerModal({
   manuscript,
   open,
   onClose,
+  reviewerScope = "section",
   onAssign,
   onAssignSuggested,
   onUnassign,
@@ -134,8 +136,6 @@ export default function ReviewerModal({
 
     if (onAssignSuggested) {
       onAssignSuggested(payload);
-    } else {
-      console.log("[Add & Assign Suggested Reviewer — pending endpoint]", payload);
     }
 
     closeSuggestedForm();
@@ -143,36 +143,31 @@ export default function ReviewerModal({
   };
 
   // Fetch roles to get reviewer role ID
-  const {
-    data: roles,
-    isLoading: rolesLoading,
-    isError: rolesError,
-  } = useQuery<Role[]>({
-    queryKey: ["roles"],
-    queryFn: getRoles,
-    enabled: open,
-  });
-
-  const reviewerRoleId = roles?.find(
-    (role) => role.roleName.toLowerCase() === "reviewer",
-  )?.id;
-
-  // Fetch reviewers with pagination
+  // Fetch section-scoped reviewers with pagination
   const {
     data: reviewers,
     isLoading,
     isError,
     refetch,
-  } = useQuery<PaginatedUsersResponse>({
-    queryKey: ["reviewers", page, search, reviewerRoleId],
-    queryFn: () =>
-      getUsers({
-        roleId: reviewerRoleId,
+  } = useQuery<FetchSEReviewersResponse>({
+    queryKey: ["se-dialog-reviewers", reviewerScope, manuscript.sectionId, page, search],
+    queryFn: () => {
+      if (reviewerScope === "all") {
+        return getChiefEditorReviewers({
+          page,
+          limit: 5,
+          search,
+        });
+      }
+
+      return getSEReviewers({
         page,
         limit: 5,
         search,
-      }),
-    enabled: open && !!reviewerRoleId,
+        sectionId: manuscript.sectionId || undefined,
+      });
+    },
+    enabled: open,
   });
 
   const handleAssign = (reviewerId: string) => {
@@ -393,7 +388,7 @@ export default function ReviewerModal({
 
           {/* Scrollable reviewer list */}
           <Box sx={{ flex: 1, overflowY: "auto", px: 3, pb: 2 }}>
-            {isLoading || rolesLoading ? (
+            {isLoading ? (
               <Box sx={{ display: "flex", flexDirection: "column", gap: 1.5 }}>
                 {Array.from({ length: 5 }).map((_, i) => (
                   <Paper
@@ -430,7 +425,7 @@ export default function ReviewerModal({
                   </Paper>
                 ))}
               </Box>
-            ) : isError || rolesError ? (
+            ) : isError ? (
               <Box textAlign="center" py={4}>
                 <Typography color="error" gutterBottom>
                   Failed to load reviewers.
@@ -439,17 +434,12 @@ export default function ReviewerModal({
                   Retry
                 </Button>
               </Box>
-            ) : !reviewerRoleId ? (
-              <Typography color="error" textAlign="center" py={4}>
-                Reviewer role not found.
-              </Typography>
             ) : reviewers && reviewers.meta.itemCount > 0 ? (
               <Box sx={{ display: "flex", flexDirection: "column", gap: 1.5 }}>
                 {reviewers.data.map((reviewer) => {
-                  if (!reviewer?.Reviewer) return null;
-                  const rid = reviewer.Reviewer.id;
+                  const rid = reviewer.id;
                   const fullName =
-                    [reviewer.firstName, reviewer.lastName]
+                    [reviewer.user?.firstName, reviewer.user?.lastName]
                       .filter(Boolean)
                       .join(" ") || "N/A";
                   const hasError = !!dateErrors[rid];
@@ -504,11 +494,11 @@ export default function ReviewerModal({
                           noWrap
                           display="block"
                         >
-                          {reviewer.email}
+                          {reviewer.user?.email}
                         </Typography>
-                        {reviewer.Reviewer.expertiseArea && (
+                        {reviewer.expertiseArea && (
                           <Chip
-                            label={reviewer.Reviewer.expertiseArea}
+                            label={reviewer.expertiseArea}
                             size="small"
                             variant="outlined"
                             icon={<PersonOutlineIcon sx={{ fontSize: "12px !important" }} />}

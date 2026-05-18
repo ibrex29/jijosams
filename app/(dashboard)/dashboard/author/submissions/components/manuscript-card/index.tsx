@@ -50,10 +50,12 @@ export default function AuthorManuscriptCard({
   const handleReviewClick = async () => {
     try {
       const response = await getReviewStatus(manuscript.id);
-      if (response.hasReview) {
+      if (response && response.hasReview) {
         setOpen(true);
-      } else {
+      } else if (response) {
         notify("No review available for this manuscript.");
+      } else {
+        notify("Failed to fetch review status");
       }
     } catch (error) {
       console.error("Error fetching review status:", error);

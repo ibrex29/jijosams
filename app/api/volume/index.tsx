@@ -24,7 +24,6 @@ export const createVolume = async (payload: CreateVolumeProps) => {
     },
     data: payload,
   });
-  console.log(response);
 
   return response;
 };
@@ -64,7 +63,6 @@ export const createIssue = async (payload: CreateIssueProps) => {
     },
     data: payload,
   });
-  console.log(response);
 
   return response;
 };

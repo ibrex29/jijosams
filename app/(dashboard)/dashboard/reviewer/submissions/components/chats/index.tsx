@@ -14,10 +14,6 @@ import {
   MenuItem,
   TextField,
   Typography,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem as SelectMenuItem,
 } from "@mui/material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import PersonIcon from "@mui/icons-material/Person";
@@ -35,6 +31,7 @@ import {
 import { Reply } from "@/types";
 import { formatDate } from "@/utils";
 import DocumentUpload from "@/app/components/document-upload";
+import CreateReviewForm, { ReviewFormData } from "../CreateReviewForm";
 
 interface ChatProps {
   manuscriptId: string;
@@ -49,8 +46,6 @@ interface ReplyFormData {
 const Chat: React.FC<ChatProps> = ({ manuscriptId }) => {
   const [menuAnchorEl, setMenuAnchorEl] = useState<null | HTMLElement>(null);
   const [showCreateReviewForm, setShowCreateReviewForm] = useState(false);
-  const [newReviewComments, setNewReviewComments] = useState("");
-  const [newReviewRecommendation, setNewReviewRecommendation] = useState("");
   const isMenuOpen = Boolean(menuAnchorEl);
   const queryClient = useQueryClient();
   const { notify } = useNotification();
@@ -67,8 +62,6 @@ const Chat: React.FC<ChatProps> = ({ manuscriptId }) => {
     queryKey: ["review", manuscriptId],
     queryFn: () => getReplies(manuscriptId).then((data) => (data && Array.isArray(data) && data.length > 0 ? data[0] : null)),
   });
-
-  console.log(reviewData);
 
   // Mutations for reply, open, close, and create review
   const replyMutation = useMutation({
@@ -111,11 +104,9 @@ const Chat: React.FC<ChatProps> = ({ manuscriptId }) => {
   const createReviewMutation = useMutation({
     mutationFn: createReview,
     onSuccess: () => {
-      setNewReviewComments("");
-      setNewReviewRecommendation("");
       setShowCreateReviewForm(false);
       queryClient.invalidateQueries({ queryKey: ["review", manuscriptId] });
-      notify("Review created successfully");
+      notify("Review created successfully. It will be visible to authors after editor approval.");
     },
     onError: (error) => {
       console.error("Error creating review:", error);
@@ -160,16 +151,8 @@ const Chat: React.FC<ChatProps> = ({ manuscriptId }) => {
   };
 
   // Handle "Create Review" action
-  const handleCreateReviewSubmit = () => {
-    if (!newReviewComments || !newReviewRecommendation) {
-      notify("Comments and recommendation are required");
-      return;
-    }
-    createReviewMutation.mutate({
-      manuscriptId,
-      comments: newReviewComments,
-      recommendation: newReviewRecommendation,
-    });
+  const handleCreateReviewSubmit = (data: ReviewFormData) => {
+    createReviewMutation.mutate(data);
   };
 
   if (isLoading) {
@@ -196,68 +179,30 @@ const Chat: React.FC<ChatProps> = ({ manuscriptId }) => {
 
   if (!reviewData) {
     return (
-      <Card sx={{ p: 2 }}>
-        <Typography sx={{ mb: 2 }}>
-          No chats available. Create a review to start a conversation.
-        </Typography>
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={() => setShowCreateReviewForm(true)}
-        >
-          Create Review
-        </Button>
+      <Box>
+        <Card sx={{ p: 2 }}>
+          <Typography sx={{ mb: 2 }}>
+            No review available. Create a review to start.
+          </Typography>
+          {!showCreateReviewForm && (
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => setShowCreateReviewForm(true)}
+            >
+              Create Review
+            </Button>
+          )}
+        </Card>
         {showCreateReviewForm && (
-          <Box sx={{ mt: 2 }}>
-            <FormControl fullWidth sx={{ mb: 2 }}>
-              <InputLabel>Recommendation</InputLabel>
-              <Select
-                value={newReviewRecommendation}
-                onChange={(e) => setNewReviewRecommendation(e.target.value)}
-                label="Recommendation"
-                size="small"
-                disabled={createReviewMutation.isPending}
-              >
-                <SelectMenuItem value="MINOR_REVISIONS">Minor Revisions</SelectMenuItem>
-                <SelectMenuItem value="MAJOR_REVISIONS">Major Revisions</SelectMenuItem>
-                <SelectMenuItem value="ACCEPT">Accept</SelectMenuItem>
-                <SelectMenuItem value="REJECT">Reject</SelectMenuItem>
-              </Select>
-            </FormControl>
-            <TextField
-              label="Comments"
-              variant="outlined"
-              multiline
-              rows={4}
-              fullWidth
-              value={newReviewComments}
-              onChange={(e) => setNewReviewComments(e.target.value)}
-              sx={{ mb: 2 }}
-              disabled={createReviewMutation.isPending}
-              error={!!createReviewMutation.error}
-              helperText={createReviewMutation.error ? "Failed to create review" : ""}
-            />
-            <Box sx={{ display: "flex", justifyContent: "flex-end", gap: 1 }}>
-              <Button
-                variant="outlined"
-                size="small"
-                onClick={() => setShowCreateReviewForm(false)}
-                disabled={createReviewMutation.isPending}
-              >
-                Cancel
-              </Button>
-              <Button
-                variant="contained"
-                size="small"
-                onClick={handleCreateReviewSubmit}
-                disabled={createReviewMutation.isPending || !newReviewComments || !newReviewRecommendation}
-              >
-                {createReviewMutation.isPending ? "Creating..." : "Submit Review"}
-              </Button>
-            </Box>
-          </Box>
+          <CreateReviewForm
+            manuscriptId={manuscriptId}
+            onSubmit={handleCreateReviewSubmit}
+            onCancel={() => setShowCreateReviewForm(false)}
+            isSubmitting={createReviewMutation.isPending}
+          />
         )}
-      </Card>
+      </Box>
     );
   }
 

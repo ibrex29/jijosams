@@ -1,8 +1,8 @@
 import { Grid } from "@mui/material";
 import { useEffect, useState } from "react";
 
-import { getREManuscript, getReviewerMetrics } from "@/app/api/manuscript";
-import { ManuscriptProps } from "@/types";
+import { getReviewerDashboardAnalytics } from "@/app/api/manuscript";
+import { ReviewerDashboardAnalytics } from "@/types";
 
 import { Accepted } from "./cards/Accepted";
 import { Assigned } from "./cards/Assigned";
@@ -14,28 +14,16 @@ import { StatusBreakdownCard } from "@/app/components/@dashboard/components/@das
 
 const ReviewerMetrics: React.FC = (): React.JSX.Element => {
   const [loading, setLoading] = useState(true);
-  const [manuscripts, setManuscripts] = useState<ManuscriptProps[]>([]);
-  const [data, setData] = useState({
-    totalSubmitted: 0,
-    awaitingReview: 0,
-    assigned: 0,
-    accepted: 0,
-  });
+  const [analytics, setAnalytics] = useState<ReviewerDashboardAnalytics | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const response = await getReviewerMetrics();
-        setData({
-          totalSubmitted: response.manuscriptCounts.submitted,
-          awaitingReview: response.manuscriptCounts.under_review,
-          assigned: response.manuscriptCounts.assigned,
-          accepted: response.manuscriptCounts.accepted,
-        });
-        // fetch list for recent manuscripts panel
-        const list: ManuscriptProps[] = await getREManuscript();
-        if (Array.isArray(list)) setManuscripts(list);
+        const response = await getReviewerDashboardAnalytics();
+        if (response) {
+          setAnalytics(response);
+        }
       } catch (error) {
         console.error("Failed to fetch reviewer metrics:", error);
       } finally {
@@ -46,12 +34,17 @@ const ReviewerMetrics: React.FC = (): React.JSX.Element => {
   }, []);
 
   const statusCounts = {
-    submitted: data.totalSubmitted,
-    underReview: data.awaitingReview,
-    accepted: data.accepted,
-    rejected: 0,
-    total: data.assigned,
+    submitted: analytics?.pipeline.submittedPending.count || 0,
+    underReview: analytics?.pipeline.underReview.count || 0,
+    accepted: analytics?.pipeline.acceptedApproved.count || 0,
+    rejected: analytics?.pipeline.rejected.count || 0,
+    total: analytics?.pipeline.totalManuscripts || 0,
   };
+
+  const recentAssignmentManuscripts =
+    analytics?.recentAssignments
+      ?.map((assignment) => assignment.manuscript)
+      .filter(Boolean) || [];
 
   return (
     <>
@@ -59,28 +52,28 @@ const ReviewerMetrics: React.FC = (): React.JSX.Element => {
         <Grid item lg={3} sm={6} xs={12}>
           <Submitted
             sx={{ height: "100%" }}
-            value={data.totalSubmitted?.toString() || "0"}
+            value={analytics?.cards.submitted?.toString() || "0"}
             loading={loading}
           />
         </Grid>
         <Grid item lg={3} sm={6} xs={12}>
           <AwaitingReview
             sx={{ height: "100%" }}
-            value={data.awaitingReview?.toString() || "0"}
+            value={analytics?.cards.awaitingReview?.toString() || "0"}
             loading={loading}
           />
         </Grid>
         <Grid item lg={3} sm={6} xs={12}>
           <Assigned
             sx={{ height: "100%" }}
-            value={data.assigned?.toString() || "0"}
+            value={analytics?.cards.assigned?.toString() || "0"}
             loading={loading}
           />
         </Grid>
         <Grid item lg={3} sm={6} xs={12}>
           <Accepted
             sx={{ height: "100%" }}
-            value={data.accepted?.toString() || "0"}
+            value={analytics?.cards.accepted?.toString() || "0"}
             loading={loading}
           />
         </Grid>
@@ -92,7 +85,7 @@ const ReviewerMetrics: React.FC = (): React.JSX.Element => {
         </Grid>
         <Grid item xs={12} md={7}>
           <RecentManuscriptsCard
-            manuscripts={manuscripts}
+            manuscripts={recentAssignmentManuscripts}
             loading={loading}
             title="My Review Assignments"
             emptyLabel="You have no manuscripts assigned for review yet."

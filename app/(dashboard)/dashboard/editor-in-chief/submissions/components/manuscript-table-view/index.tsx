@@ -12,11 +12,12 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
+import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import { useState } from "react";
 
 import SectionModal from "@/app/(dashboard)/dashboard/managing-editor/sections/components/section-dialog";
 import ReviewerModal from "@/app/(dashboard)/dashboard/section-editor/submissions/components/reviewer-dialog";
-import ReviewViewerModal from "@/app/(dashboard)/dashboard/common/review-viewer-modal";
+import ChiefEditorReviewViewerModal from "../ChiefEditorReviewViewerModal";
 import {
   assignManuscriptReviewer,
   assignManuscriptSection,
@@ -87,7 +88,6 @@ export default function CEManuscriptTableView({ manuscripts, refetch }: Props) {
       refetch();
       setOpenReviewModal(false);
     } catch (error) {
-      console.error("Error assigning reviewer:", error);
       notify("Failed to assign reviewer");
     }
   };
@@ -103,7 +103,6 @@ export default function CEManuscriptTableView({ manuscripts, refetch }: Props) {
       refetch();
       setOpenReviewModal(false);
     } catch (error) {
-      console.error("Error assigning suggested reviewer:", error);
       notify("Failed to assign suggested reviewer");
     }
   };
@@ -118,7 +117,6 @@ export default function CEManuscriptTableView({ manuscripts, refetch }: Props) {
       refetch();
       setOpenReviewModal(false);
     } catch (error) {
-      console.error("Error unassigning reviewer:", error);
       notify("Failed to unassign reviewer");
     }
   };
@@ -150,7 +148,12 @@ export default function CEManuscriptTableView({ manuscripts, refetch }: Props) {
           </TableHead>
 
           <TableBody>
-            {manuscripts.map((m) => (
+            {manuscripts.map((m) => {
+              const reviewCompleted = m.ActionLog?.some(
+                (log) => log?.action === "REVIEW_COMPLETED",
+              );
+
+              return (
               <TableRow
                 key={m.id}
                 hover
@@ -181,12 +184,24 @@ export default function CEManuscriptTableView({ manuscripts, refetch }: Props) {
                   )}
                 </TableCell>
                 <TableCell>
-                  <Chip
-                    label={m.status || "Submitted"}
-                    size="small"
-                    color="primary"
-                    sx={{ fontSize: "0.75rem" }}
-                  />
+                  <Box display="flex" gap={0.8} flexWrap="wrap" alignItems="center">
+                    <Chip
+                      label={m.status || "Submitted"}
+                      size="small"
+                      color="primary"
+                      sx={{ fontSize: "0.75rem" }}
+                    />
+                    {reviewCompleted && (
+                      <Chip
+                        label="Review Completed"
+                        icon={<CheckCircleOutlineIcon sx={{ fontSize: 14 }} />}
+                        size="small"
+                        color="success"
+                        variant="outlined"
+                        sx={{ fontSize: "0.75rem" }}
+                      />
+                    )}
+                  </Box>
                 </TableCell>
                 <TableCell sx={{ fontSize: "14px" }}>
                   {fDate(new Date(m.createdAt))}
@@ -239,7 +254,8 @@ export default function CEManuscriptTableView({ manuscripts, refetch }: Props) {
                   </Box>
                 </TableCell>
               </TableRow>
-            ))}
+              );
+            })}
           </TableBody>
         </Table>
       </Paper>
@@ -258,6 +274,7 @@ export default function CEManuscriptTableView({ manuscripts, refetch }: Props) {
           manuscript={selectedManuscript}
           open={openReviewModal}
           onClose={() => setOpenReviewModal(false)}
+          reviewerScope="all"
           onAssign={handleAssignReviewer}
           onAssignSuggested={handleAssignSuggestedReviewer}
           onUnassign={handleUnassignReviewer}
@@ -265,11 +282,13 @@ export default function CEManuscriptTableView({ manuscripts, refetch }: Props) {
       )}
 
       {selectedManuscript && (
-        <ReviewViewerModal
+        <ChiefEditorReviewViewerModal
           manuscriptId={selectedManuscript.id}
           manuscriptTitle={selectedManuscript.title}
           open={openReviewViewer}
           onClose={() => setOpenReviewViewer(false)}
+          reviews={selectedManuscript.Review}
+          actionLogs={selectedManuscript.ActionLog}
         />
       )}
     </Box>

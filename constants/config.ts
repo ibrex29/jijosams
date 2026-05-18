@@ -3,7 +3,7 @@
  */
 
 export const baseUrl =
-  process.env.NEXT_PUBLIC_BACKEND_API_URL ?? "https://api.slujst.slu.edu.ng";
+  process.env.NEXT_PUBLIC_BACKEND_API_URL  ;
 
 export const authUrl = `${baseUrl}/v1/auth`;
 
@@ -21,7 +21,10 @@ export const api = {
   assignManuscriptSection: `${baseUrl}/v1/manuscripts/assign-section`,
   authorMetrics: `${baseUrl}/v1/author/status-counts`,
   reviewerMetrics: `${baseUrl}/v1/analytics/reviewer/manuscripts-count`,
+  reviewerDashboardAnalytics: `${baseUrl}/v1/review/dashboard/analytics`,
   globalSearch: `${baseUrl}/v1/publication/global-search`,
+  dashboardAnalytics: `${baseUrl}/v1/manuscripts/dashboard/analytics`,
+  sectionEditorDashboardAnalytics: `${baseUrl}/v1/manuscripts/dashboard/section-editor/analytics`,
 };
 
 export const publication = {
@@ -40,13 +43,17 @@ export const SectionEditor = {
 export const reviewer = {
   getRecommendation: `${baseUrl}/v1/review/recommendations`,
   createReview: `${baseUrl}/v1/review/create-review`,
-    getRepliesAuthor: `${baseUrl}/v1/reply`,
+  getRepliesAuthor: `${baseUrl}/v1/reply`,
   getReplies: `${baseUrl}/v1/reply/manuscript`,
   acceptManuscriptUrl: `${baseUrl}/v1/review/review`,
   createReply: `${baseUrl}/v1/reply/reply`,
   createReplyReviewer: `${baseUrl}/v1/reply/reviewer`,
-
   closeOpenReview: `${baseUrl}/v1/review`,
+  getAllReviews: `${baseUrl}/v1/review/all-review`,
+  approveReview: (reviewId: string) => `${baseUrl}/v1/review/${reviewId}/approve`,
+  getReviewById: (reviewId: string) => `${baseUrl}/v1/review/${reviewId}`,
+  getReviewsByManuscriptId: (manuscriptId: string) => `${baseUrl}/v1/review/manuscript/${manuscriptId}`,
+  completeReview: (manuscriptId: string) => `${baseUrl}/v1/review/complete/${manuscriptId}`,
 };
 
 export const author = {
@@ -60,6 +67,13 @@ export const User = {
   getUser: (id: string) => `${baseUrl}/v1/user/${id}`,
   updateRoleOrSection: (id: string) => `${baseUrl}/v1/user/${id}/role-or-section`,
   updateProfile: (id: string) => `${baseUrl}/v1/user/${id}/profile`,
+};
+
+export const Auth = {
+  requestResetPassword: `${authUrl}/password/request-reset`,
+  validateResetPasswordToken: `${authUrl}/password/validate-token`,
+  resetPassword: `${authUrl}/password/reset`,
+  changePassword: `${authUrl}/password/change`,
 };
 
 export const Role = {

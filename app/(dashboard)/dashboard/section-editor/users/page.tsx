@@ -10,7 +10,7 @@ const SectionEditorUsersPage = () => {
   return (
     <PageLayout>
       <PageTitleBar title="Users" />
-      <UsersTable />
+      <UsersTable restrictToOwnSection />
     </PageLayout>
   );
 };

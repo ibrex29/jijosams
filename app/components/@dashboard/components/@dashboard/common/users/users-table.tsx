@@ -52,6 +52,7 @@ import {
 import useNotification from "@/hooks/useNotification";
 import { getInitials } from "@/utils";
 import { fDate } from "@/utils/format-time";
+import { getSession } from "next-auth/react";
 
 const TITLE_OPTIONS = ["Mr", "Mrs", "Prof", "Dr", "Miss"];
 const SORT_FIELDS = [
@@ -96,12 +97,14 @@ type UsersTableProps = {
   title?: string;
   enableProfileUpdate?: boolean;
   enableRoleUpdate?: boolean;
+  restrictToOwnSection?: boolean;
 };
 
 const UsersTable: React.FC<UsersTableProps> = ({
   title = "Manage Users",
   enableProfileUpdate = true,
   enableRoleUpdate = true,
+  restrictToOwnSection = false,
 }) => {
   const { notify } = useNotification();
 
@@ -118,6 +121,8 @@ const UsersTable: React.FC<UsersTableProps> = ({
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const [roleFilter, setRoleFilter] = useState("");
   const [sectionFilter, setSectionFilter] = useState("");
+  const [lockedSectionId, setLockedSectionId] = useState<string | null>(null);
+  const [sectionResolved, setSectionResolved] = useState(false);
 
   const [roles, setRoles] = useState<RoleOption[]>([]);
   const [sections, setSections] = useState<SectionOption[]>([]);
@@ -154,7 +159,50 @@ const UsersTable: React.FC<UsersTableProps> = ({
     }
   }, []);
 
+  const resolveOwnSection = useCallback(async () => {
+    if (!restrictToOwnSection) {
+      setSectionResolved(true);
+      return;
+    }
+
+    try {
+      const session = await getSession();
+      const email = session?.user?.email?.toLowerCase();
+
+      if (!email) {
+        setLockedSectionId(null);
+        return;
+      }
+
+      const response = await getUsers({
+        page: 1,
+        limit: 50,
+        search: email,
+      });
+
+      const me = response.data.find((u) => u.email?.toLowerCase() === email);
+      const currentSectionId = me?.Editor?.sectionId || me?.Reviewer?.sectionId || null;
+      setLockedSectionId(currentSectionId);
+    } catch (err) {
+      console.error("Failed to resolve current section", err);
+      setLockedSectionId(null);
+    } finally {
+      setSectionResolved(true);
+    }
+  }, [restrictToOwnSection]);
+
   const fetchUsers = useCallback(async () => {
+    if (restrictToOwnSection && !sectionResolved) {
+      return;
+    }
+
+    if (restrictToOwnSection && !lockedSectionId) {
+      setUsers([]);
+      setMeta(null);
+      setError("No section is assigned to your account.");
+      return;
+    }
+
     setIsLoading(true);
     setError(null);
     try {
@@ -165,7 +213,9 @@ const UsersTable: React.FC<UsersTableProps> = ({
         sortField,
         search: debouncedSearch || undefined,
         roleId: roleFilter || undefined,
-        sectionId: sectionFilter || undefined,
+        sectionId: restrictToOwnSection
+          ? lockedSectionId || undefined
+          : sectionFilter || undefined,
       });
       setUsers(response.data);
       setMeta(response.meta);
@@ -175,11 +225,26 @@ const UsersTable: React.FC<UsersTableProps> = ({
     } finally {
       setIsLoading(false);
     }
-  }, [page, limit, sortOrder, sortField, debouncedSearch, roleFilter, sectionFilter]);
+  }, [
+    page,
+    limit,
+    sortOrder,
+    sortField,
+    debouncedSearch,
+    roleFilter,
+    sectionFilter,
+    restrictToOwnSection,
+    sectionResolved,
+    lockedSectionId,
+  ]);
 
   useEffect(() => {
     fetchCollections();
   }, [fetchCollections]);
+
+  useEffect(() => {
+    resolveOwnSection();
+  }, [resolveOwnSection]);
 
   useEffect(() => {
     fetchUsers();
@@ -330,27 +395,36 @@ const UsersTable: React.FC<UsersTableProps> = ({
         </Select>
       </FormControl>
 
-      <FormControl sx={{ minWidth: 160 }} size="small">
-        <InputLabel id="section-filter-label">Section</InputLabel>
-        <Select
-          labelId="section-filter-label"
-          label="Section"
-          value={sectionFilter}
-          onChange={(event) => {
-            setSectionFilter(event.target.value);
-            setPage(1);
-          }}
-        >
-          <MenuItem value="">
-            <em>All</em>
-          </MenuItem>
-          {sections.map((section) => (
-            <MenuItem key={section.id} value={section.id}>
-              {section.name}
+      {!restrictToOwnSection && (
+        <FormControl sx={{ minWidth: 160 }} size="small">
+          <InputLabel id="section-filter-label">Section</InputLabel>
+          <Select
+            labelId="section-filter-label"
+            label="Section"
+            value={sectionFilter}
+            onChange={(event) => {
+              setSectionFilter(event.target.value);
+              setPage(1);
+            }}
+          >
+            <MenuItem value="">
+              <em>All</em>
             </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
+            {sections.map((section) => (
+              <MenuItem key={section.id} value={section.id}>
+                {section.name}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+      )}
+
+      {restrictToOwnSection && (
+        <Chip
+          label={`Section: ${lockedSectionId ? sectionMap.get(lockedSectionId) || lockedSectionId : "Unassigned"}`}
+          variant="outlined"
+        />
+      )}
 
       <TextField
         select

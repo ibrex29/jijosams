@@ -38,22 +38,18 @@ export default function ManuscriptCardGrid({ manuscripts, refetch }: Props) {
     reviewDueDate: string,
   ) => {
     try {
-      console.log(
-        `Assigning reviewer: ${reviewerId} to manuscript: ${manuscriptId} with due date: ${reviewDueDate}`,
-      );
       const response = await assignManuscriptReviewer({
         manuscriptId,
         reviewerIds: [reviewerId],
         reviewDueDate,
       });
-      console.log(response);
 
-      notify("Reviewer assigned successfully ");
+      notify("Reviewer assigned successfully", { mode: "success" });
       refetch();
       setOpenReviewModal(false);
     } catch (error) {
       console.error(`Error assigning reviewer:`, error);
-      notify("Failed to assign reviewer ");
+      notify("Failed to assign reviewer", { mode: "error" });
     }
   };
 
@@ -64,12 +60,12 @@ export default function ManuscriptCardGrid({ manuscripts, refetch }: Props) {
   }) => {
     try {
       await assignSuggestedReviewer(payload);
-      notify("Suggested reviewer added & assigned successfully");
+      notify("Suggested reviewer added & assigned successfully", { mode: "success" });
       refetch();
       setOpenReviewModal(false);
     } catch (error) {
       console.error("Error assigning suggested reviewer:", error);
-      notify("Failed to assign suggested reviewer");
+      notify("Failed to assign suggested reviewer", { mode: "error" });
     }
   };
 
@@ -79,12 +75,12 @@ export default function ManuscriptCardGrid({ manuscripts, refetch }: Props) {
   ) => {
     try {
       await unassignReviewer(manuscriptId, { reviewerIds: [reviewerId] });
-      notify("Reviewer unassigned successfully");
+      notify("Reviewer unassigned successfully", { mode: "success" });
       refetch();
       setOpenReviewModal(false);
     } catch (error) {
       console.error("Error unassigning reviewer:", error);
-      notify("Failed to unassign reviewer");
+      notify("Failed to unassign reviewer", { mode: "error" });
     }
   };
 
@@ -116,6 +112,7 @@ export default function ManuscriptCardGrid({ manuscripts, refetch }: Props) {
         <ReviewViewerModal
           manuscriptId={selectedManuscript.id}
           manuscriptTitle={selectedManuscript.title}
+          preloadedReviews={selectedManuscript.Review}
           open={openReviewViewer}
           onClose={() => setOpenReviewViewer(false)}
         />

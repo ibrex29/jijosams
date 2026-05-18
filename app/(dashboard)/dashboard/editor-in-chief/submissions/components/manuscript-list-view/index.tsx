@@ -14,11 +14,12 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
+import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import { useState } from "react";
 
 import SectionModal from "@/app/(dashboard)/dashboard/managing-editor/sections/components/section-dialog";
 import ReviewerModal from "@/app/(dashboard)/dashboard/section-editor/submissions/components/reviewer-dialog";
-import ReviewViewerModal from "@/app/(dashboard)/dashboard/common/review-viewer-modal";
+import ChiefEditorReviewViewerModal from "../ChiefEditorReviewViewerModal";
 import {
   assignManuscriptReviewer,
   assignManuscriptSection,
@@ -89,7 +90,6 @@ export default function CEManuscriptListView({ manuscripts, refetch }: Props) {
       refetch();
       setOpenReviewModal(false);
     } catch (error) {
-      console.error("Error assigning reviewer:", error);
       notify("Failed to assign reviewer");
     }
   };
@@ -105,7 +105,6 @@ export default function CEManuscriptListView({ manuscripts, refetch }: Props) {
       refetch();
       setOpenReviewModal(false);
     } catch (error) {
-      console.error("Error assigning suggested reviewer:", error);
       notify("Failed to assign suggested reviewer");
     }
   };
@@ -120,7 +119,6 @@ export default function CEManuscriptListView({ manuscripts, refetch }: Props) {
       refetch();
       setOpenReviewModal(false);
     } catch (error) {
-      console.error("Error unassigning reviewer:", error);
       notify("Failed to unassign reviewer");
     }
   };
@@ -128,7 +126,12 @@ export default function CEManuscriptListView({ manuscripts, refetch }: Props) {
   return (
     <Box>
       <List sx={{ p: 0 }}>
-        {manuscripts.map((m, idx) => (
+        {manuscripts.map((m, idx) => {
+          const reviewCompleted = m.ActionLog?.some(
+            (log) => log?.action === "REVIEW_COMPLETED",
+          );
+
+          return (
           <Paper
             key={m.id}
             elevation={1}
@@ -169,6 +172,16 @@ export default function CEManuscriptListView({ manuscripts, refetch }: Props) {
                         label={m.Section?.name ?? "Sectioned"}
                         size="small"
                         color="secondary"
+                        variant="outlined"
+                        sx={{ fontSize: "0.75rem", height: 22 }}
+                      />
+                    )}
+                    {reviewCompleted && (
+                      <Chip
+                        label="Review Completed"
+                        icon={<CheckCircleOutlineIcon sx={{ fontSize: 14 }} />}
+                        size="small"
+                        color="success"
                         variant="outlined"
                         sx={{ fontSize: "0.75rem", height: 22 }}
                       />
@@ -228,7 +241,8 @@ export default function CEManuscriptListView({ manuscripts, refetch }: Props) {
             </ListItem>
             {idx < manuscripts.length - 1 && <Divider />}
           </Paper>
-        ))}
+          );
+        })}
       </List>
 
       {selectedManuscript && (
@@ -245,6 +259,7 @@ export default function CEManuscriptListView({ manuscripts, refetch }: Props) {
           manuscript={selectedManuscript}
           open={openReviewModal}
           onClose={() => setOpenReviewModal(false)}
+          reviewerScope="all"
           onAssign={handleAssignReviewer}
           onAssignSuggested={handleAssignSuggestedReviewer}
           onUnassign={handleUnassignReviewer}
@@ -252,11 +267,13 @@ export default function CEManuscriptListView({ manuscripts, refetch }: Props) {
       )}
 
       {selectedManuscript && (
-        <ReviewViewerModal
+        <ChiefEditorReviewViewerModal
           manuscriptId={selectedManuscript.id}
           manuscriptTitle={selectedManuscript.title}
           open={openReviewViewer}
           onClose={() => setOpenReviewViewer(false)}
+          reviews={selectedManuscript.Review}
+          actionLogs={selectedManuscript.ActionLog}
         />
       )}
     </Box>

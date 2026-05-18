@@ -8,17 +8,17 @@ export const teams = [
       {
         name: "Prof. Nasir Faruk",
         role: "Managing Editor",
-        img: "http://slujst.slu.edu.ng/assets/2025-08-22/image/image-20250822-zz569d-WhatsApp_Image_2025-08-22_at_00.36.00.jpeg",
+        img: "http://jijosams.slu.edu.ng/assets/2025-08-22/image/image-20250822-zz569d-WhatsApp_Image_2025-08-22_at_00.36.00.jpeg",
       },
       {
         name: "Dr. Salisu Garba",
         role: "Asst Managing Editor",
-        img: "http://slujst.slu.edu.ng/assets/2025-08-22/image/image-20250822-nk6ilf-WhatsApp_Image_2025-08-22_at_00.31.19.jpeg",
+        img: "http://jijosams.slu.edu.ng/assets/2025-08-22/image/image-20250822-nk6ilf-WhatsApp_Image_2025-08-22_at_00.31.19.jpeg",
       },
       {
         name: "Prof. Rashid Husain",
         role: "Production Editor",
-        img: "http://slujst.slu.edu.ng/assets/2025-08-22/image/image-20250822-zwdsz8-WhatsApp_Image_2025-08-22_at_00.33.52.jpeg",
+        img: "http://jijosams.slu.edu.ng/assets/2025-08-22/image/image-20250822-zwdsz8-WhatsApp_Image_2025-08-22_at_00.33.52.jpeg",
       },
       {
         name: "Dr. Sani Durumin Iya",
@@ -38,18 +38,18 @@ export const teams = [
       {
         name: "Dr. Muhammad Jamil Ibrahim",
         role: "Asst. Production Editor",
-        img: "http://slujst.slu.edu.ng/assets/2025-08-22/image/image-20250822-xx3dvl-WhatsApp_Image_2025-08-22_at_00.32.59.jpeg",
+        img: "http://jijosams.slu.edu.ng/assets/2025-08-22/image/image-20250822-xx3dvl-WhatsApp_Image_2025-08-22_at_00.32.59.jpeg",
       },
 
       {
         name: "Ibrahim Muhammad",
         role: "Web Manager",
-        img: "https://slujst.slu.edu.ng/assets/2025-08-22/image/image-20250822-9nbvvc-ibrex29.jpeg",
+        img: "https://jijosams.slu.edu.ng/assets/2025-08-22/image/image-20250822-9nbvvc-ibrex29.jpeg",
       },
       {
         name: "Mohammed Bala Nasir",
         role: "Web Manager",
-        img: "http://slujst.slu.edu.ng/assets/2025-08-22/image/image-20250822-ooybdp-nasir-mohammed-bala.png",
+        img: "http://jijosams.slu.edu.ng/assets/2025-08-22/image/image-20250822-ooybdp-nasir-mohammed-bala.png",
       },
     ],
   },
@@ -61,7 +61,7 @@ export const teams = [
       {
         name: "Dr Abdullahi Haruna Birniwa",
         role: "Department of Chemistry",
-        img: "http://slujst.slu.edu.ng/assets/2025-08-22/image/image-20250822-bnuutq-WhatsApp_Image_2025-08-22_at_00.37.59.jpeg",
+        img: "http://jijosams.slu.edu.ng/assets/2025-08-22/image/image-20250822-bnuutq-WhatsApp_Image_2025-08-22_at_00.37.59.jpeg",
         email: "ahbirniwa@slu.edu.ng",
         tel_number: "+234 806 549 6007",
       },

@@ -51,6 +51,12 @@ export const buildFormData = (body: DictOf<any> = {}): FormData =>
     return acc;
   }, new FormData());
 
+export const getJournalSubdomain = (): string =>
+  process.env.NEXT_PUBLIC_JOURNAL_SUBDOMAIN ??
+  (typeof window !== "undefined"
+    ? window.location.hostname.split(".")[0]
+    : "");
+
 export default function handleResponse(
   response: Response,
   responseType: ResponseType,
@@ -91,7 +97,10 @@ export function request(
     const options: RequestInit = {
       ...rest,
       method,
-      headers: headers || {},
+      headers: {
+        "x-journal-subdomain": getJournalSubdomain(),
+        ...(headers || {}),
+      },
     };
 
     // Handle data based on whether it's multipart or JSON
