@@ -56,7 +56,7 @@ const uploadSections: UploadSection[] = [
     name: "proofofPayment",
     label: "Proof of Payment",
     description:
-      "Upload a receipt or screenshot confirming the submission/processing fee payment.",
+      "Upload a receipt or screenshot confirming the submission/processing fee payment in PDF, JPG, JPEG, or PNG format.",
     accept: ".pdf,.jpg,.jpeg,.png",
     icon: <ReceiptOutlinedIcon fontSize="small" />,
     chipLabel: "Required",
@@ -66,7 +66,7 @@ const uploadSections: UploadSection[] = [
     name: "otherDocsLink",
     label: "Additional Documents",
     description:
-      "Optional supplementary files such as cover letter, ethics clearance, or data appendices.",
+      "Optional supplementary files such as cover letter, ethics clearance, or data appendices in PDF or DOCX format.",
     accept: ".pdf,.docx",
     icon: <AttachFileIcon fontSize="small" />,
     chipLabel: "Optional",
@@ -127,7 +127,7 @@ const FileUploadStep: React.FC<FileUploadStepProps> = ({
             Document Uploads
           </Typography>
           <Typography variant="caption" color="text.secondary">
-            Upload your manuscript and supporting documents
+            Upload your manuscript and supporting documents in the accepted formats below
           </Typography>
         </Box>
       </Stack>
