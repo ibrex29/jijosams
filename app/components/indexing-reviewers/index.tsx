@@ -9,7 +9,7 @@ export default function IndexingReviewers() {
     "/images/ResearchGate_Logo.png",
     "/images/academia-logo.svg",
     "/images/crossref-logo.svg",
-    "/images/slu-logo.png",
+    "/images/logo/logo.svg",
   ];
 
   return (

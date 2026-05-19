@@ -30,8 +30,9 @@ const credentialsProviderOptions: any = {
     }
 
     const { email, password } = credentials || { email: "example@gmail.com" };
+    const loginEndpoint = `${authUrl}/login/email`;
     try {
-      const json = await request("POST", `${authUrl}/login/email`, {
+      const json = await request("POST", loginEndpoint, {
         data: { email, password },
       });
 
@@ -49,6 +50,11 @@ const credentialsProviderOptions: any = {
         return user;
       }
     } catch (err) {
+      console.error("Credentials authorize failed", {
+        endpoint: loginEndpoint,
+        email,
+        error: err,
+      });
       return null;
     }
 

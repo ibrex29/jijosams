@@ -125,7 +125,7 @@ export function request(
         handleResponse(response, responseType, resolve, reject),
       )
       .catch((error) => {
-        console.error("Fetch request failed:", error);
+        console.error(`Fetch request failed: ${method} ${path}`, error);
 
         // Handle network errors specifically
         if (error instanceof TypeError && error.message === "Failed to fetch") {

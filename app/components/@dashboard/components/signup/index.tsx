@@ -65,8 +65,8 @@ const SignUpMain: FC = () => {
           <Stack spacing={2}>
             <Box>
               <Image
-                src="/logo/slu_jst_logo.svg"
-                alt="SLU JST Logo"
+                src="/logo/jijosams_logo.svg"
+                alt="JIJOSAMS Logo"
                 width={160}
                 height={100}
                 style={{ objectFit: "contain" }}
@@ -125,13 +125,13 @@ const SignUpMain: FC = () => {
           {isMobile && (
             <Stack alignItems="center" mb={4} spacing={1}>
               <Image
-                src="/logo/slu_jst_logo.svg"
-                alt="SLU JST Logo"
+                src="/logo/jijosams_logo.svg"
+                alt="JIJOSAMS Logo"
                 width={120}
                 height={75}
               />
               <Typography variant="subtitle2" color="text.secondary" fontWeight={600}>
-                SLU Journal of Science &amp; Technology
+                JIJOSAMS Journal
               </Typography>
             </Stack>
           )}

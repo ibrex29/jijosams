@@ -3,7 +3,7 @@
  */
 
 export const baseUrl =
-  process.env.NEXT_PUBLIC_BACKEND_API_URL  ;
+  process.env.BACKEND_API_URL ?? process.env.NEXT_PUBLIC_BACKEND_API_URL;
 
 export const authUrl = `${baseUrl}/v1/auth`;
 

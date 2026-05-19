@@ -7,6 +7,11 @@ export default withAuth(
     const pathname = request.nextUrl.pathname;
     const token = request.nextauth.token;
 
+    // Check if the token is expired or missing
+    if (!token && pathname.startsWith("/dashboard")) {
+      return NextResponse.redirect(new URL("/signin", request.url));
+    }
+
     if (!token && pathname.match(/dashboard/)) {
       return NextResponse.redirect(new URL("/signin", request.url));
     }
